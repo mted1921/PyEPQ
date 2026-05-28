@@ -1,0 +1,152 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.1, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\eldav\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master
+plugins: hypothesis-6.154.1
+collecting ... collected 81 items
+
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_abs_real_negates_negatives PASSED [  1%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_abs_buggy_clamps_negatives PASSED [  2%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_strict_equal_length PASSED [  3%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_strict_rejects_length_mismatch PASSED [  4%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_buggy_modulo_with_equal_length PASSED [  6%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_list PASSED [  7%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_int_dtype PASSED [  8%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_readonly PASSED [  9%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_mutates_in_place PASSED [ 11%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_addInPlace_min_length PASSED [ 12%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_distance_to_self_is_zero PASSED [ 13%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_distance_sqr_matches_distance PASSED [ 14%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_normalize_produces_unit_magnitude PASSED [ 16%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_cross_perpendicular_to_inputs PASSED [ 17%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_quadratic_roots_satisfy_equation PASSED [ 18%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_seed_42_first_five PASSED [ 19%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_setSeed_resets_stream PASSED [ 20%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_nextInt_bounded_is_in_range PASSED [ 22%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_nextBoolean_distribution PASSED [ 23%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRandomDirStatistical::test_outputs_are_unit_vectors PASSED [ 24%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRandomDirStatistical::test_uniformity_on_sphere PASSED [ 25%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_sqr SKIPPED [ 27%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_cubeRoot SKIPPED [ 28%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_gcd_via_binomial_proxy SKIPPED [ 29%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erf_lib SKIPPED [ 30%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erf_literal SKIPPED [ 32%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erfc_lib SKIPPED [ 33%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_lib SKIPPED [ 34%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_literal SKIPPED [ 35%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammq_lib SKIPPED [ 37%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_lib SKIPPED [ 38%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_literal SKIPPED [ 39%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_chiSquaredConfidenceLevel SKIPPED [ 40%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_li SKIPPED [ 41%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_Legendre SKIPPED [ 43%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_magnitude SKIPPED [ 44%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_distance SKIPPED [ 45%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_normalize SKIPPED [ 46%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_cross SKIPPED [ 48%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_dot SKIPPED [ 49%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_angleBetween SKIPPED [ 50%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_add SKIPPED [ 51%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_plus_vv SKIPPED [ 53%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_plus_vs SKIPPED [ 54%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_minus_vv SKIPPED [ 55%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_minus_vs SKIPPED [ 56%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_multiply_sv SKIPPED [ 58%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_multiply_vv SKIPPED [ 59%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_divide SKIPPED [ 60%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_negative_arr SKIPPED [ 61%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_negative_scalar SKIPPED [ 62%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_plusEquals SKIPPED [ 64%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_addInPlace SKIPPED [ 65%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_timesEquals SKIPPED [ 66%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_divideEquals SKIPPED [ 67%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_abs_buggy_parity SKIPPED [ 69%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_ebeDivide_parity_equal_length SKIPPED [ 70%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_cubicSolver_parity SKIPPED [ 71%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_toContinuedFraction_silent_mode SKIPPED [ 72%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_quadraticSolver SKIPPED [ 74%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_cubicSolver2_parity SKIPPED [ 75%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_solveCubic_parity SKIPPED [ 76%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_polynomial SKIPPED [ 77%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_closestTo SKIPPED [ 79%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_bound_double SKIPPED [ 80%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_bound_int SKIPPED [ 81%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_positive SKIPPED [ 82%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_binomialCoefficient_small SKIPPED [ 83%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_sum SKIPPED [ 85%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_max SKIPPED [ 86%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_min SKIPPED [ 87%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_infinityNorm SKIPPED [ 88%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_pNorm SKIPPED [ 90%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_isNaN_false SKIPPED [ 91%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_isNaN_true SKIPPED [ 92%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_convolve SKIPPED [ 93%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestContinuedFractions::test_toContinuedFraction_parity SKIPPED [ 95%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestContinuedFractions::test_toDecimal_parity SKIPPED [ 96%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRNGSeedParity::test_javaRandom_matches_jdk SKIPPED [ 97%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRNGSeedParity::test_expRand_matches_after_matched_seed SKIPPED [ 98%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJamaMatrixBridge::test_createRowMatrix_shape_and_get SKIPPED [100%]
+
+=========================== short test summary info ===========================
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:376: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:381: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:386: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:401: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:406: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:411: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:416: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:421: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:427: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:432: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:437: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:444: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:454: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:460: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:474: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:480: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:488: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:494: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:500: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:508: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:522: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:532: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:540: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:547: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:555: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:561: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:567: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:575: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:583: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:589: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:602: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:613: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:622: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:631: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:649: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:656: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:665: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:678: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:690: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:703: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:715: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:725: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:733: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:745: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:751: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:761: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:767: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:774: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:779: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:784: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:789: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:795: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:801: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:807: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:813: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:828: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:840: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:857: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:863: parity disabled (set EPQ_PARITY=1)
+SKIPPED [1] src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:878: parity disabled (set EPQ_PARITY=1)
+======================= 21 passed, 60 skipped in 2.49s ========================
