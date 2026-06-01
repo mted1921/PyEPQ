@@ -1,0 +1,471 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.1, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\eldav\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master
+plugins: hypothesis-6.154.1
+python : Windows fatal exception: access violation
+At line:1 char:164
++ ... RITY = "1"; python -m pytest src\gov\nist\microanalysis\PyEPQ\Utility ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Windows fatal e...ccess violation:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+Current thread 0x000036f4 (most recent call first):
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\jpype\_core.py", line 373 in startJVM
+  File 
+"C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master\src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py", 
+line 110 in <module>
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py", line 
+197 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1387 in _gcd_import
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py", line 88 in import_module
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py", line 587 in 
+import_path
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 507 in 
+importtestmodule
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 560 in 
+_getobj
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 289 in obj
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 576 in 
+_register_setup_module_fixture
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 563 in 
+collect
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\runner.py", line 398 in 
+collect
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\runner.py", line 353 in 
+from_call
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\runner.py", line 400 in 
+pytest_make_collect_report
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_callers.py", line 121 in 
+_multicall
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_manager.py", line 120 in 
+_hookexec
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_hooks.py", line 512 in 
+__call__
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\runner.py", line 576 in 
+collect_one_node
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 883 in 
+_collect_one_node
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 1020 in 
+genitems
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 857 in 
+perform_collect
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 382 in 
+pytest_collection
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_callers.py", line 121 in 
+_multicall
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_manager.py", line 120 in 
+_hookexec
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_hooks.py", line 512 in 
+__call__
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 371 in _main
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 318 in 
+wrap_session
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 365 in 
+pytest_cmdline_main
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_callers.py", line 121 in 
+_multicall
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_manager.py", line 120 in 
+_hookexec
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_hooks.py", line 512 in 
+__call__
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\config\__init__.py", line 199 
+in main
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\config\__init__.py", line 223 
+in console_main
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pytest\__main__.py", line 9 in 
+<module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+collecting ... collected 81 items
+
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_abs_real_negates_negatives PASSED [  1%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_abs_buggy_clamps_negatives PASSED [  2%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_strict_equal_length PASSED [  3%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_strict_rejects_length_mismatch PASSED [  4%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_buggy_modulo_with_equal_length PASSED [  6%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_list PASSED [  7%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_int_dtype PASSED [  8%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_readonly PASSED [  9%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_mutates_in_place PASSED [ 11%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_addInPlace_min_length PASSED [ 12%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_distance_to_self_is_zero PASSED [ 13%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_distance_sqr_matches_distance PASSED [ 14%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_normalize_produces_unit_magnitude PASSED [ 16%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_cross_perpendicular_to_inputs PASSED [ 17%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_quadratic_roots_satisfy_equation FAILED [ 18%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_seed_42_first_five PASSED [ 19%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_setSeed_resets_stream PASSED [ 20%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_nextInt_bounded_is_in_range PASSED [ 22%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_nextBoolean_distribution PASSED [ 23%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRandomDirStatistical::test_outputs_are_unit_vectors PASSED [ 24%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRandomDirStatistical::test_uniformity_on_sphere PASSED [ 25%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_sqr PASSED [ 27%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_cubeRoot PASSED [ 28%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_gcd_via_binomial_proxy PASSED [ 29%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erf_lib FAILED [ 30%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erf_literal PASSED [ 32%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erfc_lib FAILED [ 33%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_lib FAILED [ 34%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_literal PASSED [ 35%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammq_lib FAILED [ 37%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_lib FAILED [ 38%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_literal PASSED [ 39%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_chiSquaredConfidenceLevel FAILED [ 40%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_li PASSED [ 41%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_Legendre FAILED [ 43%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_magnitude FAILED [ 44%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_distance PASSED [ 45%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_normalize PASSED [ 46%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_cross PASSED [ 48%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_dot FAILED [ 49%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_angleBetween PASSED [ 50%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_add PASSED [ 51%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_plus_vv PASSED [ 53%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_plus_vs PASSED [ 54%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_minus_vv PASSED [ 55%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_minus_vs PASSED [ 56%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_multiply_sv PASSED [ 58%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_multiply_vv PASSED [ 59%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_divide PASSED [ 60%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_negative_arr PASSED [ 61%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_negative_scalar PASSED [ 62%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_plusEquals PASSED [ 64%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_addInPlace PASSED [ 65%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_timesEquals PASSED [ 66%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_divideEquals PASSED [ 67%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_abs_buggy_parity PASSED [ 69%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_ebeDivide_parity_equal_length PASSED [ 70%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_cubicSolver_parity PASSED [ 71%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_toContinuedFraction_silent_mode PASSED [ 72%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_quadraticSolver PASSED [ 74%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_cubicSolver2_parity PASSED [ 75%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_solveCubic_parity PASSED [ 76%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_polynomial PASSED [ 77%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_closestTo PASSED [ 79%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_bound_double PASSED [ 80%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_bound_int PASSED [ 81%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_positive PASSED [ 82%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_binomialCoefficient_small PASSED [ 83%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_sum FAILED [ 85%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_max PASSED [ 86%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_min PASSED [ 87%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_infinityNorm PASSED [ 88%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_pNorm FAILED [ 90%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_isNaN_false PASSED [ 91%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_isNaN_true PASSED [ 92%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_convolve PASSED [ 93%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestContinuedFractions::test_toContinuedFraction_parity ERROR [ 95%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestContinuedFractions::test_toDecimal_parity PASSED [ 96%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRNGSeedParity::test_javaRandom_matches_jdk PASSED [ 97%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRNGSeedParity::test_expRand_matches_after_matched_seed PASSED [ 98%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJamaMatrixBridge::test_createRowMatrix_shape_and_get FAILED [100%]
+
+=================================== ERRORS ====================================
+__ ERROR at setup of TestContinuedFractions.test_toContinuedFraction_parity ___
+file C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master\src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py, line 846
+      @given(st.floats(min_value=-100.0, max_value=100.0,
+                       allow_nan=False, allow_infinity=False),
+             st.floats(min_value=1e-9, max_value=1e-3))
+      @slow
+      def test_toContinuedFraction_parity(self, val, tol, capsys):
+E       fixture 'val' not found
+>       available fixtures: cache, capfd, capfdbinary, caplog, capsys, capsysbinary, capteesys, doctest_namespace, monkeypatch, pytestconfig, record_property, record_testsuite_property, record_xml_attribute, recwarn, subtests, tmp_path, tmp_path_factory, tmpdir, tmpdir_factory
+>       use 'pytest --fixtures [testpath]' for help on them.
+
+C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master\src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:846
+================================== FAILURES ===================================
+__________ TestSelfConsistency.test_quadratic_roots_satisfy_equation __________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:300: in test_quadratic_roots_satisfy_equation
+    def test_quadratic_roots_satisfy_equation(self, a, b, c):
+               ^^^^^^^
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:315: in test_quadratic_roots_satisfy_equation
+    assert abs(a * r * r + b * r + c) < 1e-6 * max(1.0, abs(a))
+E   assert np.float64(1.0) < (1e-06 * 1.0)
+E    +  where np.float64(1.0) = abs(((((-1.0 * np.float64(0.0)) * np.float64(0.0)) + (0.0 * np.float64(0.0))) + 1.0))
+E    +  and   1.0 = max(1.0, 1.0)
+E    +    where 1.0 = abs(-1.0)
+E   Falsifying example: test_quadratic_roots_satisfy_equation(
+E       self=<test_parity_math2.TestSelfConsistency object at 0x0000024AC15EA8D0>,
+E       a=-1.0,
+E       b=0.0,
+E       c=1.0,
+E   )
+______________________ TestSpecialFunctions.test_erf_lib ______________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:420: in test_erf_lib
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:422: in test_erf_lib
+    assert _close(JavaMath2.erf(x), PyMath2.erf(x), TOL_LIB)
+E   AssertionError: assert False
+E    +  where False = _close(0.8427007900291826, 0.8427007929497148, 1e-12)
+E    +    where 0.8427007900291826 = <java method 'erf' of 'gov.nist.microanalysis.Utility.Math2'>(1.0)
+E    +      where <java method 'erf' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.erf
+E    +    and   0.8427007929497148 = <function Math2.erf at 0x0000024A9C073600>(1.0)
+E    +      where <function Math2.erf at 0x0000024A9C073600> = PyMath2.erf
+E   Falsifying example: test_erf_lib(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x0000024A9C0B9F90>,
+E       x=1.0,
+E   )
+_____________________ TestSpecialFunctions.test_erfc_lib ______________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:430: in test_erfc_lib
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:432: in test_erfc_lib
+    assert _close(JavaMath2.erfc(x), PyMath2.erfc(x), TOL_LIB)
+E   AssertionError: assert False
+E    +  where False = _close(0.15729920997081737, 0.15729920705028516, 1e-12)
+E    +    where 0.15729920997081737 = <java method 'erfc' of 'gov.nist.microanalysis.Utility.Math2'>(1.0)
+E    +      where <java method 'erfc' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.erfc
+E    +    and   0.15729920705028516 = <function Math2.erfc at 0x0000024A9C0736A0>(1.0)
+E    +      where <function Math2.erfc at 0x0000024A9C0736A0> = PyMath2.erfc
+E   Falsifying example: test_erfc_lib(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x0000024A9C0C9350>,
+E       x=1.0,
+E   )
+____________________ TestSpecialFunctions.test_gammap_lib _____________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:435: in test_gammap_lib
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:437: in test_gammap_lib
+    assert _close(JavaMath2.gammap(a, x), PyMath2.gammap(a, x), TOL_LIB)
+E   AssertionError: assert False
+E    +  where False = _close(0.6321205487807914, 0.6321205588285577, 1e-12)
+E    +    where 0.6321205487807914 = <java method 'gammap' of 'gov.nist.microanalysis.Utility.Math2'>(1.0, 1.0)
+E    +      where <java method 'gammap' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.gammap
+E    +    and   0.6321205588285577 = <function Math2.gammap at 0x0000024A9C0737E0>(1.0, 1.0)
+E    +      where <function Math2.gammap at 0x0000024A9C0737E0> = PyMath2.gammap
+E   Falsifying example: test_gammap_lib(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x0000024A9C0C9480>,
+E       a=1.0,
+E       x=1.0,
+E   )
+_____________________ TestSpecialFunctions.test_gammq_lib _____________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:446: in test_gammq_lib
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:448: in test_gammq_lib
+    assert _close(JavaMath2.gammq(a, x), PyMath2.gammq(a, x), TOL_LIB)
+E   AssertionError: assert False
+E    +  where False = _close(0.3678794512192086, 0.36787944117144245, 1e-12)
+E    +    where 0.3678794512192086 = <java method 'gammq' of 'gov.nist.microanalysis.Utility.Math2'>(1.0, 1.0)
+E    +      where <java method 'gammq' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.gammq
+E    +    and   0.36787944117144245 = <function Math2.gammq at 0x0000024A9C073740>(1.0, 1.0)
+E    +      where <function Math2.gammq at 0x0000024A9C073740> = PyMath2.gammq
+E   Falsifying example: test_gammq_lib(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x0000024A9C01A690>,
+E       a=1.0,
+E       x=1.0,
+E   )
+____________________ TestSpecialFunctions.test_gammaln_lib ____________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:451: in test_gammaln_lib
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:453: in test_gammaln_lib
+    assert _close(JavaMath2.gammaln(x), PyMath2.gammaln(x), TOL_LIB)
+E   AssertionError: assert False
+E    +  where False = _close(17.502307845875293, 17.502307845873887, 1e-12)
+E    +    where 17.502307845875293 = <java method 'gammaln' of 'gov.nist.microanalysis.Utility.Math2'>(12.0)
+E    +      where <java method 'gammaln' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.gammaln
+E    +    and   17.502307845873887 = <function Math2.gammaln at 0x0000024A9C073920>(12.0)
+E    +      where <function Math2.gammaln at 0x0000024A9C073920> = PyMath2.gammaln
+E   Falsifying example: test_gammaln_lib(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x0000024A9C01A7A0>,
+E       x=12.0,
+E   )
+_____________ TestSpecialFunctions.test_chiSquaredConfidenceLevel _____________
+Math2.java:174: in gov.nist.microanalysis.Utility.Math2.chiSquaredConfidenceLevel
+    ???
+E   Exception: Java Exception
+
+The above exception was the direct cause of the following exception:
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:463: in test_chiSquaredConfidenceLevel
+    st.integers(min_value=1, max_value=20))
+        ^^^^^^^
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:468: in test_chiSquaredConfidenceLevel
+    assert _close(JavaMath2.chiSquaredConfidenceLevel(confidence, df),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   java.lang.java.lang.IllegalArgumentException: java.lang.IllegalArgumentException: Input range does not straddle a zero in FindRoot.perform()
+E   Falsifying example: test_chiSquaredConfidenceLevel(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x0000024AED0CDC50>,
+E       confidence=0.5,
+E       df=1,
+E   )
+_____________________ TestSpecialFunctions.test_Legendre ______________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:479: in test_Legendre
+    st.integers(min_value=0, max_value=10))
+        ^^^^^^^
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:483: in test_Legendre
+    assert _close(JavaMath2.Legendre(x, n),
+E   AssertionError: assert False
+E    +  where False = _close(-0.3659341755409401, -0.36593417554095253, 1e-14)
+E    +    where -0.3659341755409401 = <java method 'Legendre' of 'gov.nist.microanalysis.Utility.Math2'>(0.9173328396249647, 10)
+E    +      where <java method 'Legendre' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.Legendre
+E    +    and   -0.36593417554095253 = <function Math2.Legendre at 0x0000024A9C07D300>(0.9173328396249647, 10)
+E    +      where <function Math2.Legendre at 0x0000024A9C07D300> = PyMath2.Legendre
+E   Falsifying example: test_Legendre(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x0000024A9C0B15E0>,
+E       x=0.9173328396249647,
+E       n=10,
+E   )
+______________________ TestVectorGeometry.test_magnitude ______________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:493: in test_magnitude
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:495: in test_magnitude
+    assert _close(JavaMath2.magnitude(_jarr(v)),
+E   AssertionError: assert False
+E    +  where False = _close(1235496.419531914, 1235496.4195319142, 1e-14)
+E    +    where 1235496.419531914 = <java method 'magnitude' of 'gov.nist.microanalysis.Utility.Math2'>(<java array 'double[]'>)
+E    +      where <java method 'magnitude' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.magnitude
+E    +      and   <java array 'double[]'> = _jarr([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...])
+E    +    and   1235496.4195319142 = <function Math2.magnitude at 0x0000024A9C073C40>([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, ...])
+E    +      where <function Math2.magnitude at 0x0000024A9C073C40> = PyMath2.magnitude
+E   Falsifying example: test_magnitude(
+E       self=<test_parity_math2.TestVectorGeometry object at 0x0000024A9C0BA350>,
+E       v=[0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        876466.0,
+E        8003.973027899512,
+E        870743.7567596727],
+E   )
+_________________________ TestVectorGeometry.test_dot _________________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:519: in test_dot
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:523: in test_dot
+    assert _close(JavaMath2.dot(_jarr(a), _jarr(b)),
+E   AssertionError: assert False
+E    +  where False = _close(558200004224.7468, 558200004224.747, 1e-14)
+E    +    where 558200004224.7468 = <java method 'dot' of 'gov.nist.microanalysis.Utility.Math2'>(<java array 'double[]'>, <java array 'double[]'>)
+E    +      where <java method 'dot' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.dot
+E    +      and   <java array 'double[]'> = _jarr([1.7468879783991724, 999975.0, 0.0, 0.0, 24464.0, 0.0, ...])
+E    +      and   <java array 'double[]'> = _jarr([1.0, 8444.0, 0.0, 0.0, 5974.0, 0.0, ...])
+E    +    and   558200004224.747 = <function Math2.dot at 0x0000024A9C0227A0>([1.7468879783991724, 999975.0, 0.0, 0.0, 24464.0, 0.0, ...], [1.0, 8444.0, 0.0, 0.0, 5974.0, 0.0, ...])
+E    +      where <function Math2.dot at 0x0000024A9C0227A0> = PyMath2.dot
+E   Falsifying example: test_dot(
+E       self=<test_parity_math2.TestVectorGeometry object at 0x0000024AC160E450>,
+E       a=[1.7468879783991724,
+E        999975.0,
+E        0.0,
+E        0.0,
+E        24464.0,
+E        0.0,
+E        738353.0,
+E        0.0,
+E        0.0,
+E        25.0,
+E        0.0,
+E        0.0,
+E        196.0,
+E        0.0,
+E        1.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0],
+E       b=[1.0,
+E        8444.0,
+E        0.0,
+E        0.0,
+E        5974.0,
+E        0.0,
+E        744373.0,
+E        0.0,
+E        1.296875,
+E        146.0,
+E        0.0,
+E        11.0,
+E        133.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0],
+E   )
+__________________________ TestRangeAndMisc.test_sum __________________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:793: in test_sum
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:795: in test_sum
+    assert _close(JavaMath2.sum(_jarr(v)), PyMath2.sum(v), TOL_LITERAL)
+E   AssertionError: assert False
+E    +  where False = _close(1048577.2758582665, 1048577.2758582663, 1e-14)
+E    +    where 1048577.2758582665 = <java method 'sum' of 'gov.nist.microanalysis.Utility.Math2'>(<java array 'double[]'>)
+E    +      where <java method 'sum' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.sum
+E    +      and   <java array 'double[]'> = _jarr([0.0, 0.0, 0.0, 0.0, 0.0, 1.2605956849874929, ...])
+E    +    and   1048577.2758582663 = <function Math2.sum at 0x0000024A9C073D80>([0.0, 0.0, 0.0, 0.0, 0.0, 1.2605956849874929, ...])
+E    +      where <function Math2.sum at 0x0000024A9C073D80> = PyMath2.sum
+E   Falsifying example: test_sum(
+E       self=<test_parity_math2.TestRangeAndMisc object at 0x0000024AC160F9B0>,
+E       v=[0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        0.0,
+E        1.2605956849874929,
+E        48576.53011712129,
+E        999999.4851454602],
+E   )
+_________________________ TestRangeAndMisc.test_pNorm _________________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:814: in test_pNorm
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:816: in test_pNorm
+    assert _close(JavaMath2.pNorm(_jarr(v), float(p)),
+E   AssertionError: assert False
+E    +  where False = _close(476713.99999999965, 476713.9999999997, 1e-12)
+E    +    where 476713.99999999965 = <java method 'pNorm' of 'gov.nist.microanalysis.Utility.Math2'>(<java array 'double[]'>, 3.0)
+E    +      where <java method 'pNorm' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.pNorm
+E    +      and   <java array 'double[]'> = _jarr([2.0, 476714.0])
+E    +      and   3.0 = float(3.0)
+E    +    and   476713.9999999997 = <function Math2.pNorm at 0x0000024A9C07D1C0>([2.0, 476714.0], 3.0)
+E    +      where <function Math2.pNorm at 0x0000024A9C07D1C0> = PyMath2.pNorm
+E   Falsifying example: test_pNorm(
+E       self=<test_parity_math2.TestRangeAndMisc object at 0x0000024AC15DC250>,
+E       v=[2.0, 476714.0],
+E       p=3.0,
+E   )
+___________ TestJamaMatrixBridge.test_createRowMatrix_shape_and_get ___________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:908: in test_createRowMatrix_shape_and_get
+    assert j.getRowDimension() == p.getRowDimension() == 1
+E   AssertionError: assert 3 == 1
+E    +  where 3 = <java bound method 'getRowDimension' of 'Jama.Matrix'>()
+E    +    where <java bound method 'getRowDimension' of 'Jama.Matrix'> = <java object 'Jama.Matrix'>.getRowDimension
+E    +  and   1 = getRowDimension()
+E    +    where getRowDimension = JamaMatrix(shape=(1, 3)).getRowDimension
+=========================== short test summary info ===========================
+ERROR src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestContinuedFractions::test_toContinuedFraction_parity
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_quadratic_roots_satisfy_equation
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erf_lib
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erfc_lib
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_lib
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammq_lib
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_lib
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_chiSquaredConfidenceLevel
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_Legendre
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_magnitude
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_dot
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_sum
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_pNorm
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJamaMatrixBridge::test_createRowMatrix_shape_and_get
+=================== 13 failed, 67 passed, 1 error in 42.37s ===================

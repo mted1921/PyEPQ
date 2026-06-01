@@ -1,0 +1,243 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.1, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\eldav\AppData\Local\Programs\Python\Python313\python.exe
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master
+plugins: hypothesis-6.154.1
+python : Windows fatal exception: access violation
+At line:1 char:164
++ ... RITY = "1"; python -m pytest src\gov\nist\microanalysis\PyEPQ\Utility ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Windows fatal e...ccess violation:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+Current thread 0x0000244c (most recent call first):
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\jpype\_core.py", line 373 in startJVM
+  File 
+"C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master\src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py", 
+line 112 in <module>
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py", line 
+197 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1387 in _gcd_import
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\importlib\__init__.py", line 88 in import_module
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\pathlib.py", line 587 in 
+import_path
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 507 in 
+importtestmodule
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 560 in 
+_getobj
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 289 in obj
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 576 in 
+_register_setup_module_fixture
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\python.py", line 563 in 
+collect
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\runner.py", line 398 in 
+collect
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\runner.py", line 353 in 
+from_call
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\runner.py", line 400 in 
+pytest_make_collect_report
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_callers.py", line 121 in 
+_multicall
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_manager.py", line 120 in 
+_hookexec
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_hooks.py", line 512 in 
+__call__
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\runner.py", line 576 in 
+collect_one_node
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 883 in 
+_collect_one_node
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 1020 in 
+genitems
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 857 in 
+perform_collect
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 382 in 
+pytest_collection
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_callers.py", line 121 in 
+_multicall
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_manager.py", line 120 in 
+_hookexec
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_hooks.py", line 512 in 
+__call__
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 371 in _main
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 318 in 
+wrap_session
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\main.py", line 365 in 
+pytest_cmdline_main
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_callers.py", line 121 in 
+_multicall
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_manager.py", line 120 in 
+_hookexec
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pluggy\_hooks.py", line 512 in 
+__call__
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\config\__init__.py", line 199 
+in main
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\config\__init__.py", line 223 
+in console_main
+  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pytest\__main__.py", line 9 in 
+<module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+collecting ... collected 81 items
+
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_abs_real_negates_negatives PASSED [  1%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_abs_buggy_clamps_negatives PASSED [  2%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_strict_equal_length PASSED [  3%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_strict_rejects_length_mismatch PASSED [  4%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_ebeDivide_buggy_modulo_with_equal_length PASSED [  6%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_list PASSED [  7%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_int_dtype PASSED [  8%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_rejects_readonly PASSED [  9%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_plusEquals_mutates_in_place PASSED [ 11%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationGuards::test_addInPlace_min_length PASSED [ 12%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_distance_to_self_is_zero PASSED [ 13%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_distance_sqr_matches_distance PASSED [ 14%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_normalize_produces_unit_magnitude PASSED [ 16%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_cross_perpendicular_to_inputs PASSED [ 17%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSelfConsistency::test_quadratic_roots_satisfy_equation PASSED [ 18%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_seed_42_first_five PASSED [ 19%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_setSeed_resets_stream PASSED [ 20%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_nextInt_bounded_is_in_range PASSED [ 22%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJavaRandomFixedSequence::test_nextBoolean_distribution PASSED [ 23%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRandomDirStatistical::test_outputs_are_unit_vectors PASSED [ 24%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRandomDirStatistical::test_uniformity_on_sphere PASSED [ 25%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_sqr PASSED [ 27%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_cubeRoot PASSED [ 28%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestTinyHelpers::test_gcd_via_binomial_proxy PASSED [ 29%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erf_lib PASSED [ 30%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erf_literal PASSED [ 32%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_erfc_lib PASSED [ 33%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_lib FAILED [ 34%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_literal PASSED [ 35%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammq_lib FAILED [ 37%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_lib FAILED [ 38%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_literal PASSED [ 39%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_chiSquaredConfidenceLevel PASSED [ 40%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_li PASSED [ 41%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_Legendre PASSED [ 43%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_magnitude PASSED [ 44%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_distance PASSED [ 45%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_normalize PASSED [ 46%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_cross PASSED [ 48%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_dot PASSED [ 49%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_angleBetween PASSED [ 50%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_add PASSED [ 51%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_plus_vv PASSED [ 53%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_plus_vs PASSED [ 54%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_minus_vv PASSED [ 55%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_minus_vs PASSED [ 56%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_multiply_sv PASSED [ 58%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_multiply_vv PASSED [ 59%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_divide PASSED [ 60%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_negative_arr PASSED [ 61%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestElementwiseArithmetic::test_negative_scalar PASSED [ 62%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_plusEquals PASSED [ 64%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_addInPlace PASSED [ 65%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_timesEquals PASSED [ 66%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_divideEquals PASSED [ 67%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_abs_buggy_parity PASSED [ 69%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_ebeDivide_parity_equal_length PASSED [ 70%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_cubicSolver_parity PASSED [ 71%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_toContinuedFraction_silent_mode PASSED [ 72%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_quadraticSolver FAILED [ 74%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_cubicSolver2_parity PASSED [ 75%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_solveCubic_parity PASSED [ 76%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_polynomial PASSED [ 77%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_closestTo PASSED [ 79%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_bound_double PASSED [ 80%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_bound_int PASSED [ 81%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_positive PASSED [ 82%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_binomialCoefficient_small PASSED [ 83%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_sum PASSED [ 85%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_max PASSED [ 86%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_min PASSED [ 87%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_infinityNorm PASSED [ 88%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_pNorm PASSED [ 90%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_isNaN_false PASSED [ 91%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_isNaN_true PASSED [ 92%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRangeAndMisc::test_convolve PASSED [ 93%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestContinuedFractions::test_toContinuedFraction_parity PASSED [ 95%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestContinuedFractions::test_toDecimal_parity PASSED [ 96%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRNGSeedParity::test_javaRandom_matches_jdk PASSED [ 97%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRNGSeedParity::test_expRand_matches_after_matched_seed PASSED [ 98%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJamaMatrixBridge::test_createRowMatrix_shape_and_get PASSED [100%]
+
+================================== FAILURES ===================================
+____________________ TestSpecialFunctions.test_gammap_lib _____________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:452: in test_gammap_lib
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:454: in test_gammap_lib
+    assert _close(JavaMath2.gammap(a, x), PyMath2.gammap(a, x), TOL_NR_LIB)
+E   AssertionError: assert False
+E    +  where False = _close(0.5065111611355386, 0.5065121821350855, 1e-06)
+E    +    where 0.5065111611355386 = <java method 'gammap' of 'gov.nist.microanalysis.Utility.Math2'>(417.0, 417.0)
+E    +      where <java method 'gammap' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.gammap
+E    +    and   0.5065121821350855 = <function Math2.gammap at 0x000001E5F0D78540>(417.0, 417.0)
+E    +      where <function Math2.gammap at 0x000001E5F0D78540> = PyMath2.gammap
+E   Falsifying example: test_gammap_lib(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x000001E5F0E31350>,
+E       a=417.0,
+E       x=417.0,
+E   )
+_____________________ TestSpecialFunctions.test_gammq_lib _____________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:463: in test_gammq_lib
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:465: in test_gammq_lib
+    assert _close(JavaMath2.gammq(a, x), PyMath2.gammq(a, x), TOL_NR_LIB)
+E   AssertionError: assert False
+E    +  where False = _close(0.4934888388644614, 0.4934878178649145, 1e-06)
+E    +    where 0.4934888388644614 = <java method 'gammq' of 'gov.nist.microanalysis.Utility.Math2'>(417.0, 417.0)
+E    +      where <java method 'gammq' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.gammq
+E    +    and   0.4934878178649145 = <function Math2.gammq at 0x000001E5F0D784A0>(417.0, 417.0)
+E    +      where <function Math2.gammq at 0x000001E5F0D784A0> = PyMath2.gammq
+E   Falsifying example: test_gammq_lib(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x000001E5F0CD2F10>,
+E       a=417.0,
+E       x=417.0,
+E   )
+____________________ TestSpecialFunctions.test_gammaln_lib ____________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:468: in test_gammaln_lib
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:472: in test_gammaln_lib
+    assert _close(JavaMath2.gammaln(x), PyMath2.gammaln(x),
+E   AssertionError: assert False
+E    +  where False = _close(17.502307845875293, 17.502307845873887, 1e-12, rtol=1e-14)
+E    +    where 17.502307845875293 = <java method 'gammaln' of 'gov.nist.microanalysis.Utility.Math2'>(12.0)
+E    +      where <java method 'gammaln' of 'gov.nist.microanalysis.Utility.Math2'> = JavaMath2.gammaln
+E    +    and   17.502307845873887 = <function Math2.gammaln at 0x000001E5F0D78680>(12.0)
+E    +      where <function Math2.gammaln at 0x000001E5F0D78680> = PyMath2.gammaln
+E   Falsifying example: test_gammaln_lib(
+E       self=<test_parity_math2.TestSpecialFunctions object at 0x000001E5F0CD3020>,
+E       x=12.0,
+E   )
+__________________ TestPolynomialRoots.test_quadraticSolver ___________________
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:738: in test_quadraticSolver
+    @slow
+          
+src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:748: in test_quadraticSolver
+    assert _roots_close(j, p, TOL_COMPOUND)
+E   AssertionError: assert False
+E    +  where False = _roots_close(<java array 'double[]'>, array([-0., nan]), 1e-10)
+E   Falsifying example: test_quadraticSolver(
+E       self=<test_parity_math2.TestPolynomialRoots object at 0x000001E5F0DAAD50>,
+E       a=1.0,
+E       b=0.0,
+E       c=0.0,
+E   )
+E   Explanation:
+E       These lines were always and only run by failing examples:
+E           C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\numpy\_core\arrayprint.py:923
+E           C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\numpy\_core\arrayprint.py:1099
+=========================== short test summary info ===========================
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_lib
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammq_lib
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_lib
+FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPolynomialRoots::test_quadraticSolver
+======================== 4 failed, 77 passed in 8.15s =========================

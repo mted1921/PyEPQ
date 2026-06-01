@@ -48,12 +48,19 @@ from scipy import special as _sp_special
 from scipy import stats as _sp_stats
 
 # Single source of truth -- no local stand-in classes.
+# Three import paths, tried in order:
+#   1. Relative import (works when Math2_ver1 is loaded as part of a package).
+#   2. Bare-name import (works when the Utility directory is on sys.path
+#      directly -- e.g. via the test file's sys.path manipulation).
+#   3. Fully-qualified dotted path (works when the source tree is laid out
+#      as a Python package with the appropriate __init__.py files).
 try:
     from ._epq_compat import EPQException, JavaRandom, JamaMatrix, F64Array
 except ImportError:
-    # Fall back when this file is loaded outside the package (e.g.
-    # when the Utility directory is on sys.path directly).
-    from _epq_compat import EPQException, JavaRandom, JamaMatrix, F64Array  # type: ignore
+    try:
+        from _epq_compat import EPQException, JavaRandom, JamaMatrix, F64Array  # type: ignore
+    except ImportError:
+        from gov.nist.microanalysis.PyEPQ.Utility._epq_compat import EPQException, JavaRandom, JamaMatrix, F64Array  # type: ignore
 
 
 # Explicit export list prevents `from Math2_ver1 import *` from shadowing
@@ -83,6 +90,18 @@ class Math2:
         ("JAVA-BUG-4", "toContinuedFraction",
          "Prints intermediate convergents to stdout (leftover debug). "
          "Pass `verbose=False` to suppress.", True),
+        ("JAVA-BUG-5", "createRowMatrix",
+         "Misleading name: returns a column matrix (Nx1), not a row "
+         "matrix (1xN), because Jama's `new Matrix(vals, m=vals.length)` "
+         "treats vals as column-packed. Discovered via parity testing. "
+         "Use `createRowMatrix_strict` for an actual (1, N) row matrix.", True),
+        ("JAVA-BUG-6", "solveCubic",
+         "Three-real-roots branch uses `-2*q*cos(...)` where the correct "
+         "Cardano formula is `2*sqrt(q)*cos(...)`. Off by a factor of "
+         "sqrt(q). For e.g. x^3 - 6x^2 + 11x - 6 = 0, Java returns "
+         "{~1.42, ~2.58, 2} instead of {1, 2, 3}. The faithful Python "
+         "port reproduces this. Discovered via boundary testing. The "
+         "one-real-root branch appears correct.", False),
         ("RNG-DEVIATION-1", "randomDir",
          "Java uses Math.random() (independent of `rgen`); Python port "
          "uses `rgen` so a single seed determinises everything. This "
@@ -612,6 +631,12 @@ class Math2:
             return np.array([x, x, x], dtype=np.float64)
         elif h <= 0:
             i = math.sqrt((g * g) / 4.0 - h)
+            # JAVA-BUG-3 amplification: for denormal-tiny inputs, g**2
+            # can underflow to 0 making i==0; Java IEEE-754 then yields
+            # 0/0 -> NaN -> acos(NaN) -> NaN-laden output. Python's
+            # math.* raises on 0/0, so short-circuit to match Java.
+            if i == 0.0:
+                return np.array([np.nan, np.nan, np.nan], dtype=np.float64)
             j = Math2.cubeRoot(i)
             k = math.acos(-(g / (2.0 * i)))
             m = math.cos(k / 3.0)
@@ -891,11 +916,28 @@ class Math2:
 
     @staticmethod
     def createRowMatrix(vals: ArrayLike) -> JamaMatrix:
-        """Returns a JamaMatrix (shape 1xN) -- a proper port of Jama's
-        ``new Matrix(double[], int)``. Restores Java callers' ability
-        to chain ``.times(...)``, ``.solve(...)``, etc.
+        """JAVA-BUG-5: the method name is misleading.
 
-        For raw numpy access: ``Math2.createRowMatrix(v).getArray()``.
+        Java source:
+            new Matrix(vals, vals.length)
+        Jama's ``new Matrix(double[] vals, int m)`` constructs an
+        m-row column-packed matrix; with m == vals.length the result
+        is shape (N, 1) -- a column vector, NOT a row matrix.
+
+        The first revision of this port returned shape (1, N) per the
+        name; that disagreed with the Java reference. Now we match
+        Java exactly. Callers wanting a true row matrix should use
+        ``createRowMatrix_strict`` below (named for what the method
+        actually delivers when fixed).
+        """
+        arr = np.asarray(vals, dtype=np.float64).reshape(-1, 1)
+        return JamaMatrix(arr)
+
+    @staticmethod
+    def createRowMatrix_strict(vals: ArrayLike) -> JamaMatrix:
+        """Strict variant: returns shape (1, N) as the name implies.
+        Use this when you actually want a row matrix; ``createRowMatrix``
+        is preserved-with-bug for parity with the Java reference.
         """
         arr = np.asarray(vals, dtype=np.float64).reshape(1, -1)
         return JamaMatrix(arr)
