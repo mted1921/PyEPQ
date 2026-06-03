@@ -6,17 +6,19 @@ rootdir: C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master
 plugins: hypothesis-6.154.1
 python : Windows fatal exception: access violation
 At line:1 char:164
-+ ... RITY = "1"; python -m coverage run --branch --source="src\gov\nist\mi ...
++ ... RITY = "1"; python -m pytest src\gov\nist\microanalysis\PyEPQ\Utility ...
 +                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : NotSpecified: (Windows fatal e...ccess violation:String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
 
-Current thread 0x00000388 (most recent call first):
+Current thread 0x00004b28 (most recent call first):
   File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\jpype\_core.py", line 373 in startJVM
+  File "C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master\src\gov\nist\microanalysis\PyEPQ\Utility\tests\_parity_lib.py", 
+line 251 in setup_parity
   File 
 "C:\Users\eldav\Desktop\Dev\GitHub\EPQ-master\src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py", 
-line 112 in <module>
+line 115 in <module>
   File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\_pytest\assertion\rewrite.py", line 
 197 in exec_module
   File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
@@ -80,18 +82,9 @@ in main
 in console_main
   File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\pytest\__main__.py", line 9 in 
 <module>
-  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\coverage\execfile.py", line 213 in run
-  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\coverage\cmdline.py", line 1043 in 
-do_run
-  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\coverage\cmdline.py", line 853 in 
-command_line
-  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\coverage\cmdline.py", line 1164 in 
-main
-  File "C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\coverage\__main__.py", line 12 in 
-<module>
   File "<frozen runpy>", line 88 in _run_code
   File "<frozen runpy>", line 198 in _run_module_as_main
-collecting ... collected 208 items
+collecting ... collected 209 items
 
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_abs_real_negates_negatives PASSED [  0%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestStrictVariants::test_abs_buggy_clamps_negatives PASSED [  0%]
@@ -117,7 +110,7 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRandomD
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_erf[0.0-0.0] PASSED [ 10%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_erf[1.0-0.8427007929497149] PASSED [ 11%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_erf[-1.0--0.8427007929497149] PASSED [ 11%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_erf[2.0-0.9953222650189527] PASSED [ 12%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_erf[2.0-0.9953222650189527] PASSED [ 11%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_erf[inf-1.0] PASSED [ 12%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_erf[-inf--1.0] PASSED [ 12%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_erf[nan-nan] PASSED [ 13%]
@@ -140,11 +133,11 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundar
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gammaln[3.0-0.6931471805599453] PASSED [ 21%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gammaln[4.0-1.791759469228055] PASSED [ 22%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gammaln[5.0-3.1780538303479458] PASSED [ 22%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gammaln[10.0-12.801827480081469] PASSED [ 23%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gammaln[10.0-12.801827480081469] PASSED [ 22%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[0.0-0.0] PASSED [ 23%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[1.0-1.0] PASSED [ 24%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[1.0-1.0] PASSED [ 23%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[-1.0--1.0] PASSED [ 24%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[8.0-2.0] PASSED [ 25%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[8.0-2.0] PASSED [ 24%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[-8.0--2.0] PASSED [ 25%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[27.0-3.0] PASSED [ 25%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_cubeRoot[-27.0--3.0] PASSED [ 26%]
@@ -163,13 +156,13 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundar
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gcd[10-15-5] PASSED [ 32%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gcd[7-13-1] PASSED [ 33%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gcd[12-18-6] PASSED [ 33%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gcd[-12-18-6] PASSED [ 34%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gcd[-12-18-6] PASSED [ 33%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_gcd[0-0-0] PASSED [ 34%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_positive[5.0-5.0] PASSED [ 35%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_positive[5.0-5.0] PASSED [ 34%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_positive[0.0-0.0] PASSED [ 35%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_positive[-5.0-0.0] PASSED [ 36%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_positive[-5.0-0.0] PASSED [ 35%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_positive[1e-300-1e-300] PASSED [ 36%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_negative_scalar[5.0-0.0] PASSED [ 37%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_negative_scalar[5.0-0.0] PASSED [ 36%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_negative_scalar[0.0-0.0] PASSED [ 37%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_negative_scalar[-5.0--5.0] PASSED [ 37%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_bound_double[5.0-0.0-10.0-5.0] PASSED [ 38%]
@@ -186,17 +179,17 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundar
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_bound_int[0-0-10-0] PASSED [ 43%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[0.0-0-1.0] PASSED [ 44%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[0.5-0-1.0] PASSED [ 44%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[0.0-1-0.0] PASSED [ 45%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[0.0-1-0.0] PASSED [ 44%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[0.5-1-0.5] PASSED [ 45%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[0.0-2--0.5] PASSED [ 46%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[0.0-2--0.5] PASSED [ 45%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[1.0-5-1.0] PASSED [ 46%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[1.0-10-1.0] PASSED [ 47%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[1.0-10-1.0] PASSED [ 46%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[-1.0-4-1.0] PASSED [ 47%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[-1.0-5--1.0] PASSED [ 48%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_Legendre[-1.0-5--1.0] PASSED [ 47%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_sqr[0.0-0.0] PASSED [ 48%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_sqr[1.0-1.0] PASSED [ 49%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_sqr[1.0-1.0] PASSED [ 48%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_sqr[-1.0-1.0] PASSED [ 49%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_sqr[2.0-4.0] PASSED [ 50%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_sqr[2.0-4.0] PASSED [ 49%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_li_raises_on_boundary PASSED [ 50%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_approxEquals[1.0-1.0-0.1-True] PASSED [ 50%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryScalars::test_approxEquals[1.0-1.05-0.1-True] PASSED [ 51%]
@@ -209,19 +202,19 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundar
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_distance_3_4_5 PASSED [ 54%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_normalize_unit_preserved PASSED [ 55%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_normalize_3_4 PASSED [ 55%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_dot_orthogonal PASSED [ 56%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_dot_orthogonal PASSED [ 55%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_dot_parallel PASSED [ 56%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_dot_known PASSED [ 57%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_dot_known PASSED [ 56%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_cross_basis_vectors PASSED [ 57%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_cross_parallel_is_zero PASSED [ 58%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_cross_parallel_is_zero PASSED [ 57%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_sum_known PASSED [ 58%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_abs_buggy_clamps PASSED [ 59%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_abs_buggy_clamps PASSED [ 58%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_abs_real_correct PASSED [ 59%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_pointBetween_endpoints PASSED [ 60%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_pointBetween_endpoints PASSED [ 59%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_angleBetween_orthogonal PASSED [ 60%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_angleBetween_parallel PASSED [ 61%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_angleBetween_parallel PASSED [ 60%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_angleBetween_antiparallel PASSED [ 61%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_angleBetween_zero_vector_returns_zero PASSED [ 62%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_angleBetween_zero_vector_returns_zero PASSED [ 61%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_pNorm_p1_equals_sum_of_abs PASSED [ 62%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_pNorm_p2_equals_magnitude PASSED [ 62%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryVectors::test_infinityNorm PASSED [ 63%]
@@ -232,8 +225,9 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundar
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_polynomial_linear PASSED [ 65%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_polynomial_quadratic PASSED [ 66%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_closestTo_exact_match PASSED [ 66%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_closestTo_picks_nearest PASSED [ 67%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_solveCubic_known_roots FAILED [ 67%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_closestTo_picks_nearest PASSED [ 66%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_solveCubic_triple_root_works PASSED [ 67%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_solveCubic_zero_cubic PASSED [ 67%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryMisc::test_continued_fraction_integer PASSED [ 68%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryMisc::test_continued_fraction_half PASSED [ 68%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryMisc::test_toDecimal_inverts_toContinuedFraction PASSED [ 69%]
@@ -250,9 +244,9 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecial
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_lib PASSED [ 74%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammap_literal PASSED [ 75%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammq_lib PASSED [ 75%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_lib PASSED [ 75%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_lib PASSED [ 76%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_gammaln_literal PASSED [ 76%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_chiSquaredConfidenceLevel PASSED [ 76%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_chiSquaredConfidenceLevel PASSED [ 77%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_li PASSED [ 77%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestSpecialFunctions::test_Legendre PASSED [ 77%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestVectorGeometry::test_magnitude PASSED [ 78%]
@@ -275,7 +269,7 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutatio
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_addInPlace PASSED [ 86%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_timesEquals PASSED [ 87%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestMutationParity::test_divideEquals PASSED [ 87%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_abs_buggy_parity PASSED [ 87%]
+src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_abs_buggy_parity PASSED [ 88%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_ebeDivide_parity_equal_length PASSED [ 88%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_cubicSolver_parity PASSED [ 88%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestPreservedBugs::test_toContinuedFraction_silent_mode PASSED [ 89%]
@@ -302,20 +296,4 @@ src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRNGSeed
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestRNGSeedParity::test_expRand_matches_after_matched_seed PASSED [ 99%]
 src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestJamaMatrixBridge::test_createRowMatrix_shape_and_get PASSED [100%]
 
-================================== FAILURES ===================================
-_____________ TestBoundaryPolynomial.test_solveCubic_known_roots ______________
-src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py:815: in test_solveCubic_known_roots
-    assert _bdry_close(roots[0], 1.0, atol=1e-10)
-E   assert np.False_
-E    +  where np.False_ = _bdry_close(np.float64(1.4226497308103743), 1.0, atol=1e-10)
-=========================== short test summary info ===========================
-FAILED src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_math2.py::TestBoundaryPolynomial::test_solveCubic_known_roots
-================== 1 failed, 207 passed in 65.13s (0:01:05) ===================
-C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\coverage\inorout.py:561: CoverageWarning: 
-Module src\gov\nist\microanalysis\PyEPQ\Utility\Math2_ver1 was never imported. (module-not-imported); see 
-https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-module-not-imported
-  self.warn(f"Module {pkg} was never imported.", slug="module-not-imported")
-C:\Users\eldav\AppData\Local\Programs\Python\Python313\Lib\site-packages\coverage\control.py:958: CoverageWarning: No 
-data was collected. (no-data-collected); see 
-https://coverage.readthedocs.io/en/7.14.1/messages.html#warning-no-data-collected
-  self._warn("No data was collected.", slug="no-data-collected")
+============================ 209 passed in 40.33s =============================

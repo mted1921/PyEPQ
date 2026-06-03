@@ -1,0 +1,7 @@
+cycle,length,position,class_name
+1,2,0,SpectrumUtils
+1,2,1,EDSDetector
+2,2,0,IXRayDetector
+2,2,1,SpectrumProperties
+3,2,0,IXRayWindowProperties
+3,2,1,SpectrumProperties

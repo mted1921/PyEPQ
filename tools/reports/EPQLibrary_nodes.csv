@@ -1,0 +1,144 @@
+class_name,file,package,kind,modifiers,extends,implements,in_degree,out_degree,internal_degree,instability,depth,reachable,pagerank,betweenness,in_cycle,is_leaf,is_dead,total_imports,n_internal,n_java_stdlib,n_javax_stdlib,n_external,n_nist_other,n_nist_epqdatabase,n_nist_epqimage,n_nist_epqlibrary,n_nist_epqtests,n_nist_epqtools,n_nist_jythongui,n_nist_nistmonte,n_nist_utility
+AbsoluteIonizationCrossSection,AbsoluteIonizationCrossSection.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,IonizationCrossSection,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,4,0,2,0,0,0,0,0,0,0,0,0,0,2
+AbsorptionCorrection,AbsorptionCorrection.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+AlgorithmClass,AlgorithmClass.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmUser,Comparable,34,1,35,0.0286,1,1,0.093604,0.002048,False,False,False,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+AlgorithmUser,AlgorithmUser.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,,,5,0,5,0.0,0,0,0.083769,0.0,False,True,False,3,0,3,0,0,0,0,0,0,0,0,0,0,0
+Armstrong1982Base,Armstrong1982Base.java,gov.nist.microanalysis.EPQLibrary,class,public,ZAFCorrectionAlgorithm,,3,0,3,0.0,0,0,0.010065,0.0,False,True,False,3,2,0,0,0,0,0,0,0,0,0,0,0,1
+Armstrong1982Correction,Armstrong1982Correction.java,gov.nist.microanalysis.EPQLibrary,class,public final,Armstrong1982Base,,0,1,1,1.0,1,1,0.002835,0.0,False,False,False,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+Armstrong1982ParticleCorrection,Armstrong1982ParticleCorrection.java,gov.nist.microanalysis.EPQLibrary,class,public,Armstrong1982Base,,0,1,1,1.0,1,1,0.002835,0.0,False,False,False,4,0,1,0,0,0,0,0,0,0,0,0,0,3
+Armstrong1982ParticleMC,Armstrong1982ParticleMC.java,gov.nist.microanalysis.EPQLibrary,class,public,Armstrong1982Base,,0,1,1,1.0,1,1,0.002835,0.0,False,False,False,3,0,0,0,0,0,0,0,0,0,0,0,1,2
+AtomicShell,AtomicShell.java,gov.nist.microanalysis.EPQLibrary,class,final public,,"Comparable, Cloneable",3,0,3,0.0,0,0,0.004182,0.0,False,True,False,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+AverageSpectrum,AverageSpectrum.java,gov.nist.microanalysis.EPQLibrary,class,public,BaseSpectrum,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+BackscatterCoefficient,BackscatterCoefficient.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+BackscatterFactor,BackscatterFactor.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,4,0,3,0,0,0,0,0,0,0,0,0,0,1
+BadgerFilmExport,BadgerFilmExport.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,12,0,12,0,0,0,0,0,0,0,0,0,0,0
+BaseSpectrum,BaseSpectrum.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,,ISpectrumData,4,1,5,0.2,1,1,0.025737,0.0004,False,False,False,4,0,3,0,0,0,0,0,0,0,1,0,0,0
+BetheElectronEnergyLoss,BetheElectronEnergyLoss.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+Bremsstrahlung,Bremsstrahlung.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,4,0,3,0,0,0,0,0,0,0,0,0,0,1
+BremsstrahlungAnalytic,BremsstrahlungAnalytic.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,3,3,1.0,5,16,0.002835,0.0,False,False,False,13,3,6,0,0,0,0,0,0,0,0,0,0,4
+BremsstrahlungAngularDistribution,BremsstrahlungAngularDistribution.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,5,0,2,0,1,0,0,0,0,0,0,0,0,2
+BrowningEmpiricalCrossSection,BrowningEmpiricalCrossSection.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+CaveatBase,CaveatBase.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+CharacteristicXRayGeneration,CharacteristicXRayGeneration.java,gov.nist.microanalysis.EPQLibrary,class,public abstract,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+CITZAF,CITZAF.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,20,0,19,0,0,0,0,0,0,0,0,0,0,1
+Composition,Composition.java,gov.nist.microanalysis.EPQLibrary,class,public,,"Comparable, Cloneable, Serializable",3,0,3,0.0,0,0,0.01166,0.0,False,True,False,24,0,21,0,0,0,0,0,0,0,0,0,0,3
+CompositionFromKRatios,CompositionFromKRatios.java,gov.nist.microanalysis.EPQLibrary,class,public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,20,0,18,0,0,0,0,0,0,0,0,0,0,2
+CompositionOptimizer,CompositionOptimizer.java,gov.nist.microanalysis.EPQLibrary,class,public,EPMAOptimizer,,0,2,2,1.0,5,14,0.002835,0.0,False,False,False,12,3,7,0,0,0,0,0,0,0,0,0,0,2
+ComputeZAF,ComputeZAF.java,gov.nist.microanalysis.EPQLibrary,class,public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,4,0,3,0,0,0,0,0,0,0,0,0,0,1
+ConductiveCoating,ConductiveCoating.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,2,0,1,0,0,0,0,0,0,0,0,0,0,1
+CorrectionAlgorithm,CorrectionAlgorithm.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,Comparable,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,7,1,4,0,0,0,0,0,0,0,0,0,0,2
+CzyzewskiMottCrossSection,CzyzewskiMottCrossSection.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,6,0,6,0,0,0,0,0,0,0,0,0,0,0
+CzyzewskiMottScatteringAngle,CzyzewskiMottScatteringAngle.java,gov.nist.microanalysis.EPQLibrary,class,public,RandomizedScatter,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+DerivedSpectrum,DerivedSpectrum.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,BaseSpectrum,,5,1,6,0.1667,2,2,0.013278,0.00045,False,False,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+BasicSiLiLineshape,BasicSiLiLineshape.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,DetectorLineshapeModel,,0,2,2,1.0,5,14,0.002835,0.0,False,False,False,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+DetectorCalibration,DetectorCalibration.java,gov.nist.microanalysis.EPQLibrary.Detector,class,abstract public,,Comparable,1,2,3,0.6667,1,4,0.004871,0.0001,False,False,False,5,2,3,0,0,0,0,0,0,0,0,0,0,0
+DetectorLineshapeModel,DetectorLineshapeModel.java,gov.nist.microanalysis.EPQLibrary.Detector,class,abstract public,,Cloneable,8,1,9,0.1111,4,13,0.014672,0.001398,False,False,False,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+DetectorProperties,DetectorProperties.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,,Cloneable,0,2,2,1.0,4,13,0.002835,0.0,False,False,False,4,2,1,0,0,0,0,0,0,0,0,0,0,1
+EDSCalibration,EDSCalibration.java,gov.nist.microanalysis.EPQLibrary.Detector,class,abstract public,DetectorCalibration,,5,3,8,0.375,4,14,0.007186,0.002322,False,False,False,2,2,0,0,0,0,0,0,0,0,0,0,0,0
+EDSDetector,EDSDetector.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,,IXRayDetector,16,10,26,0.3846,3,12,0.051249,0.014209,True,False,False,25,9,10,0,2,0,0,0,0,0,1,0,2,1
+ElectronProbe,ElectronProbe.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,,Comparable,0,2,2,1.0,1,4,0.002835,0.0,False,False,False,3,2,0,0,0,0,0,0,0,0,0,0,0,1
+FanoSiLiLineshape,FanoSiLiLineshape.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,DetectorLineshapeModel,,0,2,2,1.0,5,14,0.002835,0.0,False,False,False,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+GridMountedWindow,GridMountedWindow.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,XRayWindow,,0,4,4,1.0,3,13,0.002835,0.0,False,False,False,3,3,0,0,0,0,0,0,0,0,0,0,0,0
+IXRayDetector,IXRayDetector.java,gov.nist.microanalysis.EPQLibrary.Detector,interface,public,ActionListener,,3,1,4,0.25,0,2,0.048534,5e-05,True,False,False,2,1,1,0,0,0,0,0,0,0,0,0,0,0
+IXRayWindowProperties,IXRayWindowProperties.java,gov.nist.microanalysis.EPQLibrary.Detector,interface,public,Cloneable,,4,1,5,0.2,0,2,0.044571,0.0,True,False,False,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+MeasuredCalibration,MeasuredCalibration.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,EDSCalibration,,0,13,13,1.0,8,28,0.002835,0.0,False,False,False,23,12,3,0,1,0,0,0,0,0,0,0,0,7
+MicrocalCalibration,MicrocalCalibration.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,EDSCalibration,,0,13,13,1.0,5,24,0.002835,0.0,False,False,False,15,12,2,0,0,0,0,0,0,0,0,0,0,1
+SDDCalibration,SDDCalibration.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,SiLiCalibration,,1,4,5,0.8,6,24,0.004119,0.000699,False,False,False,4,3,1,0,0,0,0,0,0,0,0,0,0,0
+SiLiCalibration,SiLiCalibration.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,EDSCalibration,,1,11,12,0.9167,5,23,0.00371,0.001398,False,False,False,14,10,3,0,0,0,0,0,0,0,0,0,0,1
+XRayWindow,XRayWindow.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,,IXRayWindowProperties,1,10,11,0.9091,2,12,0.003437,0.000325,False,False,False,11,9,2,0,0,0,0,0,0,0,0,0,0,0
+XRayWindow2,XRayWindow2.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,,IXRayWindowProperties,0,8,8,1.0,2,9,0.002835,0.0,False,False,False,8,7,0,0,0,0,0,0,0,0,0,0,0,1
+XRayWindow3,XRayWindow3.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,,IXRayWindowProperties,0,4,4,1.0,1,5,0.002835,0.0,False,False,False,7,3,2,0,0,0,0,0,0,0,0,0,0,2
+XRayWindowFactory,XRayWindowFactory.java,gov.nist.microanalysis.EPQLibrary.Detector,class,public,,,0,8,8,1.0,2,11,0.002835,0.0,False,False,False,10,8,1,0,0,0,0,0,0,0,0,0,0,1
+DuaneHuntLimit,DuaneHuntLimit.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+EdgeEnergy,EdgeEnergy.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,7,0,5,0,0,0,0,0,0,0,0,0,0,2
+EditableSpectrum,EditableSpectrum.java,gov.nist.microanalysis.EPQLibrary,class,public,BaseSpectrum,,2,1,3,0.3333,2,2,0.007995,0.001448,False,False,False,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+ElectronRange,ElectronRange.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+Element,Element.java,gov.nist.microanalysis.EPQLibrary,class,public,,"Comparable, Serializable",8,0,8,0.0,0,0,0.009619,0.0,False,True,False,10,0,9,0,0,0,0,0,0,0,0,0,0,1
+EPMAOptimizer,EPMAOptimizer.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,,,1,1,2,0.5,4,13,0.00404,0.0,False,False,False,15,4,9,0,0,0,0,0,0,0,0,0,0,2
+EPQException,EPQException.java,gov.nist.microanalysis.EPQLibrary,class,public,Exception,,8,0,8,0.0,0,0,0.009346,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+EPQFatalException,EPQFatalException.java,gov.nist.microanalysis.EPQLibrary,class,public,RuntimeException,,3,0,3,0.0,0,0,0.003614,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ExtremumSpectrum,ExtremumSpectrum.java,gov.nist.microanalysis.EPQLibrary,class,public,BaseSpectrum,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,4,0,4,0,0,0,0,0,0,0,0,0,0,0
+FilteredSpectrum,FilteredSpectrum.java,gov.nist.microanalysis.EPQLibrary,class,public,DerivedSpectrum,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,4,1,1,0,0,0,0,0,0,0,0,0,0,2
+FilterFit,FilterFit.java,gov.nist.microanalysis.EPQLibrary,class,public,LinearSpectrumFit,,0,2,2,1.0,6,15,0.002835,0.0,False,False,False,16,2,12,0,0,0,0,0,0,0,0,0,0,2
+FittingFilter,FittingFilter.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,3,0,1,0,0,0,0,0,0,0,0,0,0,2
+Fluorescence,Fluorescence.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,4,0,3,0,0,0,0,0,0,0,0,0,0,1
+FluorescenceYield,FluorescenceYield.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+FluorescenceYieldMean,FluorescenceYieldMean.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+FromSI,FromSI.java,gov.nist.microanalysis.EPQLibrary,class,final public,,,4,0,4,0.0,0,0,0.008086,0.0,False,True,False,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+Gas,Gas.java,gov.nist.microanalysis.EPQLibrary,class,public,Material,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+GasMixture,GasMixture.java,gov.nist.microanalysis.EPQLibrary,class,public,Material,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,3,0,0,0,0,0,0,0,0,0,0,0
+GasScatteringCrossSection,GasScatteringCrossSection.java,gov.nist.microanalysis.EPQLibrary,class,public,RandomizedScatter,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+GaussianSumSpectrum,GaussianSumSpectrum.java,gov.nist.microanalysis.EPQLibrary,class,public,EditableSpectrum,,0,3,3,1.0,5,14,0.002835,0.0,False,False,False,4,2,1,0,0,0,0,0,0,0,0,0,0,1
+IonizationCrossSection,IonizationCrossSection.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,2,1,3,0.3333,2,2,0.007655,0.0002,False,False,False,3,0,0,0,0,0,0,0,0,0,0,0,0,3
+IonizationDepthRatio,IonizationDepthRatio.java,gov.nist.microanalysis.EPQLibrary,class,public abstract,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+ISpectrumData,ISpectrumData.java,gov.nist.microanalysis.EPQLibrary,interface,public,Comparable,,3,0,3,0.0,0,0,0.029255,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ISpectrumTransformation,ISpectrumTransformation.java,gov.nist.microanalysis.EPQLibrary,interface,public,,,1,0,1,0.0,0,0,0.00404,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+IterationAlgorithm,IterationAlgorithm.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,9,0,8,0,0,0,0,0,0,0,0,0,0,1
+ITransform,ITransform.java,gov.nist.microanalysis.EPQLibrary,interface,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+JumpRatio,JumpRatio.java,gov.nist.microanalysis.EPQLibrary,class,public abstract,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+KRatioSet,KRatioSet.java,gov.nist.microanalysis.EPQLibrary,class,public,,Cloneable,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,13,0,10,0,0,0,0,0,0,0,0,0,0,3
+LenardCoefficient,LenardCoefficient.java,gov.nist.microanalysis.EPQLibrary,class,public abstract,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+LinearSpectrumFit,LinearSpectrumFit.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,LinearLeastSquares,,1,2,3,0.6667,5,14,0.00404,5e-05,False,False,False,6,2,3,0,0,0,0,0,0,0,0,0,0,1
+LitReference,LitReference.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,4,0,4,0,0,0,0,0,0,0,0,0,0,0
+MACCache,MACCache.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+MajorMinorTrace,MajorMinorTrace.java,gov.nist.microanalysis.EPQLibrary,enum,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+MapImage,MapImage.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,20,1,14,1,0,0,0,0,0,0,2,0,0,2
+MassAbsorptionCoefficient,MassAbsorptionCoefficient.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,3,1,4,0.25,2,2,0.003492,0.0003,False,False,False,18,1,13,0,0,0,0,0,0,0,0,0,0,4
+Material,Material.java,gov.nist.microanalysis.EPQLibrary,class,public,Composition,,9,1,10,0.1,1,1,0.009809,0.00045,False,False,False,6,0,5,0,0,0,0,0,0,0,0,0,0,1
+MaterialFactory,MaterialFactory.java,gov.nist.microanalysis.EPQLibrary,class,public,,,5,0,5,0.0,0,0,0.004086,0.0,False,True,False,14,0,13,0,0,0,0,0,0,0,1,0,0,0
+MeanIonizationPotential,MeanIonizationPotential.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+MicrocalSpectrumFitter,MicrocalSpectrumFitter.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,1,1,1.0,5,14,0.002835,0.0,False,False,False,19,2,9,0,1,0,0,0,0,0,0,0,0,7
+MLLSQSignature,MLLSQSignature.java,gov.nist.microanalysis.EPQLibrary,class,public,,Cloneable,0,1,1,1.0,4,13,0.002835,0.0,False,False,False,9,2,6,0,0,0,0,0,0,0,0,0,0,1
+MuCal,MuCal.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+MultiSpectrumMetrics,MultiSpectrumMetrics.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,7,0,6,0,0,0,0,0,0,0,0,0,0,1
+NISTMottScatteringAngle,NISTMottScatteringAngle.java,gov.nist.microanalysis.EPQLibrary,class,public,RandomizedScatter,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,7,0,6,0,0,0,0,0,0,0,0,0,0,1
+NISTXRayTransitionDB,NISTXRayTransitionDB.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,8,0,8,0,0,0,0,0,0,0,0,0,0,0
+NoisySpectrum,NoisySpectrum.java,gov.nist.microanalysis.EPQLibrary,class,public,DerivedSpectrum,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,2,0,1,0,0,0,0,0,0,0,0,0,0,1
+Oxidizer,Oxidizer.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,12,0,8,0,0,0,0,0,0,0,0,0,0,4
+PandPDatabase,PandPDatabase.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,2,0,1,0,0,0,0,0,0,0,0,0,0,1
+PAP1991,PAP1991.java,gov.nist.microanalysis.EPQLibrary,class,public,CorrectionAlgorithm.PhiRhoZAlgorithm,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+ParticleSignature,ParticleSignature.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,18,0,15,0,0,0,0,0,0,0,0,0,0,3
+PeakROISearch,PeakROISearch.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,7,0,5,0,0,0,0,0,0,0,0,0,0,2
+PeakStripping,PeakStripping.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+PhysicalConstants,PhysicalConstants.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ProportionalIonizationCrossSection,ProportionalIonizationCrossSection.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,IonizationCrossSection,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+QuantificationOptimizer,QuantificationOptimizer.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,,,1,0,1,0.0,0,0,0.005245,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+QuantificationOptimizer2,QuantificationOptimizer2.java,gov.nist.microanalysis.EPQLibrary,class,public,QuantificationOptimizer,,0,1,1,1.0,1,1,0.002835,0.0,False,False,False,14,5,7,0,0,0,0,0,0,0,1,0,0,1
+QuantificationOutline,QuantificationOutline.java,gov.nist.microanalysis.EPQLibrary,class,public,,,1,1,2,0.5,4,13,0.00404,0.0,False,False,False,24,3,17,0,0,0,0,0,0,0,0,0,0,4
+QuantificationPlan,QuantificationPlan.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,14,2,10,0,0,0,0,0,0,0,0,0,0,2
+QuantifyUsingStandards,QuantifyUsingStandards.java,gov.nist.microanalysis.EPQLibrary,class,public,QuantificationOutline,,0,2,2,1.0,5,14,0.002835,0.0,False,False,False,25,5,16,0,0,0,0,0,0,0,1,0,0,3
+QuantifyUsingSTEMinSEM,QuantifyUsingSTEMinSEM.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,1,1,1.0,4,13,0.002835,0.0,False,False,False,13,3,8,0,0,0,0,0,0,0,0,0,0,2
+QuantifyUsingZetaFactors,QuantifyUsingZetaFactors.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,1,1,1.0,4,13,0.002835,0.0,False,False,False,20,1,14,0,0,0,0,0,0,0,2,0,0,3
+RandomizedScatter,RandomizedScatter.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,4,1,5,0.2,2,2,0.012474,0.0004,False,False,False,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+RandomizedScatterFactory,RandomizedScatterFactory.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+RegionOfInterestSet,RegionOfInterestSet.java,gov.nist.microanalysis.EPQLibrary,class,public,,"Iterable, Comparable",0,1,1,1.0,5,14,0.002835,0.0,False,False,False,8,1,5,0,0,0,0,0,0,0,0,0,0,2
+Riveros1993,Riveros1993.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+ROISpectrum,ROISpectrum.java,gov.nist.microanalysis.EPQLibrary,class,public,DerivedSpectrum,,0,3,3,1.0,4,14,0.002835,0.0,False,False,False,7,2,4,0,0,0,0,0,0,0,1,0,0,0
+ROISpectrumNaive,ROISpectrumNaive.java,gov.nist.microanalysis.EPQLibrary,class,public,DerivedSpectrum,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,3,1,0,0,0,0,0,0,0,0,0,0,0,2
+SamplePreparation,SamplePreparation.java,gov.nist.microanalysis.EPQLibrary,class,public abstract,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,2,0,0,0,0,0,0,0,0,0,0,0,0,2
+SampleShape,SampleShape.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,9,0,3,0,0,0,0,0,0,0,0,0,4,2
+ScreenedRutherfordScatteringAngle,ScreenedRutherfordScatteringAngle.java,gov.nist.microanalysis.EPQLibrary,class,public,RandomizedScatter,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+SpectrumFitResult,SpectrumFitResult.java,gov.nist.microanalysis.EPQLibrary,class,public,,,1,2,3,0.6667,7,25,0.00302,0.00015,False,False,False,19,3,12,0,0,0,0,0,0,0,0,0,0,4
+SpectrumFitter8,SpectrumFitter8.java,gov.nist.microanalysis.EPQLibrary,class,public,,,1,2,3,0.6667,5,14,0.00302,0.000275,False,False,False,31,4,14,0,0,0,1,0,0,0,0,0,0,12
+SpectrumMath,SpectrumMath.java,gov.nist.microanalysis.EPQLibrary,class,public,DerivedSpectrum,,0,1,1,1.0,3,3,0.002835,0.0,False,False,False,1,1,0,0,0,0,0,0,0,0,0,0,0,0
+SpectrumProperties,SpectrumProperties.java,gov.nist.microanalysis.EPQLibrary,class,public,,"Cloneable, Serializable",14,2,16,0.125,0,2,0.09536,0.002497,True,False,False,29,2,23,0,0,0,0,0,0,0,0,0,0,4
+SpectrumSimulator,SpectrumSimulator.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,2,2,1.0,4,15,0.002835,0.0,False,False,False,9,1,7,0,0,0,0,0,0,0,0,0,0,1
+SpectrumSmoothing,SpectrumSmoothing.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,ISpectrumTransformation,0,2,2,1.0,2,3,0.002835,0.0,False,False,False,3,1,2,0,0,0,0,0,0,0,0,0,0,0
+SpectrumUtils,SpectrumUtils.java,gov.nist.microanalysis.EPQLibrary,class,final public,,,7,1,8,0.125,3,12,0.0255,0.005444,True,False,False,27,1,19,0,0,0,0,0,0,0,0,0,0,7
+StageCoordinate,StageCoordinate.java,gov.nist.microanalysis.EPQLibrary,class,public,,Cloneable,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,6,0,4,0,0,0,0,0,0,0,0,0,0,2
+StandardBundle,StandardBundle.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,1,1,1.0,4,13,0.002835,0.0,False,False,False,25,3,19,0,0,0,0,0,0,0,3,0,0,0
+StandardsDatabase2,StandardsDatabase2.java,gov.nist.microanalysis.EPQLibrary,class,public,,Cloneable,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,23,0,18,0,0,0,1,0,0,0,2,0,0,2
+STEMinSEMCorrection,STEMinSEMCorrection.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,8,0,6,0,0,0,0,0,0,0,0,0,0,2
+StoppingPower,StoppingPower.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,3,0,2,0,0,0,0,0,0,0,0,0,0,1
+Strategy,Strategy.java,gov.nist.microanalysis.EPQLibrary,class,public,,Cloneable,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,6,0,6,0,0,0,0,0,0,0,0,0,0,0
+SurfaceIonization,SurfaceIonization.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+ToSI,ToSI.java,gov.nist.microanalysis.EPQLibrary,class,final public,,,8,0,8,0.0,0,0,0.006195,0.0,False,True,False,1,0,0,0,0,0,0,0,0,0,0,0,0,1
+TransitionEnergy,TransitionEnergy.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,8,0,7,0,0,0,0,0,0,0,0,0,0,1
+TransitionProbabilities,TransitionProbabilities.java,gov.nist.microanalysis.EPQLibrary,class,abstract public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,11,0,10,0,0,0,0,0,0,0,0,0,0,1
+VariableWidthFittingFilter,VariableWidthFittingFilter.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,1,1,1.0,5,15,0.002835,0.0,False,False,False,4,1,2,0,0,0,0,0,0,0,0,0,0,1
+VectorSet,VectorSet.java,gov.nist.microanalysis.EPQLibrary,class,public,,,0,0,0,0.0,0,0,0.002835,0.0,False,True,True,13,0,11,0,0,0,0,0,0,0,1,0,0,1
+XPP1989Ext,XPP1989Ext.java,gov.nist.microanalysis.EPQLibrary,class,public,XPP1991,,0,1,1,1.0,1,1,0.002835,0.0,False,False,False,4,3,0,0,0,0,0,0,0,0,0,0,0,1
+XPP1991,XPP1991.java,gov.nist.microanalysis.EPQLibrary,class,public,CorrectionAlgorithm.PhiRhoZAlgorithm,CorrectionAlgorithm.IAbsorptionSensitivity,1,0,1,0.0,0,0,0.005245,0.0,False,True,False,4,0,2,0,0,0,0,0,0,0,0,0,0,2
+XRayTransition,XRayTransition.java,gov.nist.microanalysis.EPQLibrary,class,final public,,"Comparable, Cloneable",6,0,6,0.0,0,0,0.010795,0.0,False,True,False,4,0,2,0,0,0,0,0,0,0,0,0,0,2
+XRayTransitionSet,XRayTransitionSet.java,gov.nist.microanalysis.EPQLibrary,class,public,,"Comparable, Cloneable, Iterable",2,0,2,0.0,0,0,0.007377,0.0,False,True,False,9,0,9,0,0,0,0,0,0,0,0,0,0,0
+ZetaFactor,ZetaFactor.java,gov.nist.microanalysis.EPQLibrary,class,public,AlgorithmClass,,0,1,1,1.0,2,2,0.002835,0.0,False,False,False,10,0,8,0,0,0,0,0,0,0,0,0,0,2

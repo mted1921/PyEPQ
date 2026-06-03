@@ -80,217 +80,42 @@ the tolerance ladder (TOL_EXACT through TOL_NR_LIB).
 from __future__ import annotations
 
 import math
-import os
-import sys
-from pathlib import Path
 
 import numpy as np
 import pytest
-from hypothesis import given, settings, strategies as st
+from hypothesis import given, strategies as st
 
-
-# ======================================================================
-# Path setup: make Math2_ver1 importable without a packaged install
-# ======================================================================
-# tests/ -> Utility/ -> PyEPQ/  (parent.parent.parent isn't needed; we
-# only need the Utility dir on sys.path so Math2_ver1 and _epq_compat
-# resolve.)
-_UTILITY_DIR = Path(__file__).resolve().parent.parent
-if str(_UTILITY_DIR) not in sys.path:
-    sys.path.insert(0, str(_UTILITY_DIR))
+# All shared parity infrastructure lives in _parity_lib. Importing it
+# also fixes sys.path so Math2_ver1 and _epq_compat resolve below. See
+# CONVERSION_GUIDE.md "The Parity Harness" for the library's full API
+# and the per-file template this file follows verbatim.
+from _parity_lib import (
+    # gating + JVM setup
+    setup_parity, jclass, needs_java, PARITY_ENABLED,
+    # tolerances
+    TOL_EXACT, TOL_LITERAL, TOL_LIB, TOL_NR_LIB,
+    TOL_COMPOUND, TOL_FINDROOT, TOL_REL,
+    # hypothesis strategies + profiles
+    finite, positive, nr_arg, small, vec3, vec_n, nonzero_vec_n,
+    slow, slow_fuzz,
+    # JPype helpers
+    _jarr, _to_pylist,
+    # comparators
+    _close, _arr_close, _roots_close, _bdry_close,
+    # boundary constants
+    _NAN, _INF,
+)
 
 from Math2_ver1 import Math2 as PyMath2  # noqa: E402
 from _epq_compat import EPQException, JavaRandom, JamaMatrix  # noqa: E402
 
-
-# ======================================================================
-# Parity gating: JVM + JAR + opt-in env var
-# ======================================================================
-PARITY_ENABLED: bool = bool(os.environ.get("EPQ_PARITY"))
-
-try:
-    import jpype
-    _JPYPE_OK = True
-except ImportError:
-    _JPYPE_OK = False
-
-# Classpath assembly:
-# * EPQ_JAR env var (if set) pins the primary EPQ jar.
-# * Otherwise, look for epq.jar / EPQ.jar in the tests/ directory.
-# * Fall back to <repo_root>/lib/EPQ.jar.
-# * Plus: every *.jar in the tests/ directory is added (Jama, etc.).
-_HERE = Path(__file__).resolve().parent
-_LOCAL_CANDIDATES = [_HERE / "epq.jar", _HERE / "EPQ.jar"]
-_FALLBACK_JAR = Path(__file__).resolve().parents[5] / "lib" / "EPQ.jar"
-_DEFAULT_JAR = next((p for p in _LOCAL_CANDIDATES if p.is_file()), _FALLBACK_JAR)
-_JAR_PATH = Path(os.environ.get("EPQ_JAR", str(_DEFAULT_JAR)))
-
-# Extra jars: every .jar in tests/ except the primary one. Lets users
-# drop dependency jars (jama-1.0.3.jar, commons-math, etc.) alongside
-# epq.jar without editing this file.
-_EXTRA_JARS = [
-    str(p) for p in sorted(_HERE.glob("*.jar"))
-    if p.resolve() != _JAR_PATH.resolve()
-]
-_JAR_OK = _JAR_PATH.is_file()
-
-# Compose a single gate. Each parity test takes @needs_java.
-_PARITY_READY = PARITY_ENABLED and _JPYPE_OK and _JAR_OK
-_skip_reason = (
-    "parity disabled (set EPQ_PARITY=1)" if not PARITY_ENABLED else
-    "jpype1 not installed (pip install jpype1)" if not _JPYPE_OK else
-    f"EPQ jar not found at {_JAR_PATH} (set EPQ_JAR=...)" if not _JAR_OK else
-    "ok"
-)
-needs_java = pytest.mark.skipif(not _PARITY_READY, reason=_skip_reason)
-
-
-# JVM startup happens once at module import. Subsequent tests share it.
-JavaMath2 = None        # type: ignore
-JavaRandomImpl = None   # type: ignore
-DecimalFormat = None    # type: ignore
-JDoubleArr = None       # type: ignore
-
-if _PARITY_READY:
-    if not jpype.isJVMStarted():
-        # --enable-native-access silences Java 25's "restricted method"
-        # warning that JPype's native loader triggers.
-        jpype.startJVM(
-            "--enable-native-access=ALL-UNNAMED",
-            classpath=[str(_JAR_PATH), *_EXTRA_JARS],
-        )
-    # JPype's `from <pkg> import` hook has quirks with non-standard
-    # top-level Java domains ("gov", "Jama") even after
-    # registerDomain(); JClass() bypasses the hook entirely and is
-    # the documented stable API for loading Java classes by name.
-    JavaMath2 = jpype.JClass("gov.nist.microanalysis.Utility.Math2")
-    JavaRandomImpl = jpype.JClass("java.util.Random")
-    DecimalFormat = jpype.JClass("java.text.DecimalFormat")
-    JDoubleArr = jpype.JArray(jpype.JDouble)
-
-
-# ======================================================================
-# Tolerances
-# ======================================================================
-# Naming: TOL_<context>. Tighter for literal ports, looser for
-# scipy/numpy substitutions which use different algorithms.
-TOL_EXACT: float = 0.0         # bit-equal results expected
-TOL_LITERAL: float = 1e-14     # Python literal port vs Java (~1 ULP)
-TOL_LIB: float = 1e-12         # scipy/numpy substitution vs Java
-TOL_NR_LIB: float = 1e-4       # scipy substitution vs Java NR. Java NR's EPS is
-                               # 3e-7 in theory, but convergence degrades at large
-                               # args; gammap(525, 525) observed at ~1e-5.
-TOL_COMPOUND: float = 1e-10    # iterative / chained operations
-TOL_FINDROOT: float = 1e-2     # Java FindRoot configured with eps=1e-3
-TOL_REL: float = 1e-12         # relative tolerance for vector reductions.
-                               # Theoretical FLOP-order summation error is N^2 * eps;
-                               # for N up to ~20 and double-precision eps, that's
-                               # ~1e-13 -- 1e-12 gives a small safety margin.
-
-
-# ======================================================================
-# JPype helpers
-# ======================================================================
-def _jarr(xs) -> "jpype.JArray":
-    """Python sequence -> Java double[] (JPype handles the bridging)."""
-    return JDoubleArr(list(xs))
-
-
-def _to_pylist(jarr) -> list:
-    """Java double[] -> Python list."""
-    return [float(x) for x in jarr]
-
-
-def _close(java_val, py_val, tol: float, rtol: float = 0.0) -> bool:
-    """Compare scalar Java/Python results within abs+rel tolerance.
-    ``rtol`` scales with max(|j|, |p|) -- needed when result magnitudes
-    are large enough that 1 ULP exceeds the absolute tolerance.
-    """
-    if java_val is None and py_val is None:
-        return True
-    if java_val is None or py_val is None:
-        return False
-    j, p = float(java_val), float(py_val)
-    return abs(j - p) <= tol + rtol * max(abs(j), abs(p))
-
-
-def _arr_close(java_arr, py_arr, tol: float) -> bool:
-    """Compare 1-D array results within element-wise absolute tolerance.
-    Java nulls are tolerated; both being None / size 0 counts as equal."""
-    if java_arr is None and (py_arr is None or len(py_arr) == 0):
-        return True
-    if java_arr is None or py_arr is None:
-        return False
-    j = _to_pylist(java_arr)
-    p = list(map(float, py_arr))
-    if len(j) != len(p):
-        return False
-    return all(abs(a - b) <= tol for a, b in zip(j, p))
-
-
-def _roots_close(java_arr, py_arr, tol: float) -> bool:
-    """Compare two root sets (order-independent) within tolerance.
-    Roots are matched greedily nearest-first. NaN entries on either side
-    are treated as matching IFF the other side has the same number of
-    NaNs (preserved-Java IEEE-754 quirk: solvers can produce NaN/Inf
-    'roots' for degenerate inputs and Python's port must mirror)."""
-    if java_arr is None and (py_arr is None or len(py_arr) == 0):
-        return True
-    if java_arr is None or py_arr is None:
-        return False
-    j = _to_pylist(java_arr)
-    p = list(map(float, py_arr))
-    if len(j) != len(p):
-        return False
-    # Separate NaNs out; finite roots must agree, NaN-counts must match.
-    j_finite = sorted(x for x in j if math.isfinite(x))
-    p_finite = sorted(x for x in p if math.isfinite(x))
-    j_nans = sum(1 for x in j if math.isnan(x))
-    p_nans = sum(1 for x in p if math.isnan(x))
-    if j_nans != p_nans:
-        return False
-    if len(j_finite) != len(p_finite):
-        return False
-    return all(abs(a - b) <= tol for a, b in zip(j_finite, p_finite))
-
-
-# ======================================================================
-# Hypothesis strategies (reusable)
-# ======================================================================
-finite = st.floats(allow_nan=False, allow_infinity=False,
-                   min_value=-1e6, max_value=1e6)
-positive = st.floats(min_value=1e-3, max_value=1e3,
-                     allow_nan=False, allow_infinity=False)
-# Narrower range for NR-substituted special functions. Java's NR
-# gammap/gammq use a 100-iteration series + EPS=3e-7; convergence
-# degrades sharply for a > ~100. Test scipy-vs-Java parity within the
-# domain Java's NR is reliable; literal-port tests cover the full range.
-nr_arg = st.floats(min_value=1e-3, max_value=50.0,
-                   allow_nan=False, allow_infinity=False)
-small = st.floats(min_value=-10.0, max_value=10.0,
-                  allow_nan=False, allow_infinity=False)
-
-vec3 = st.lists(finite, min_size=3, max_size=3)
-vec_n = st.lists(finite, min_size=2, max_size=20)
-nonzero_vec_n = vec_n.filter(lambda v: any(abs(x) > 1e-6 for x in v))
-
-
-# Hypothesis settings.
-#
-# `slow` is the CI/local profile: derandomized (same inputs every run) for
-# stable, reproducible results. 500 examples is the sweet spot -- enough to
-# cover the input space well without dragging CI past a couple minutes.
-#
-# `slow_fuzz` is the nightly-explorer profile: NOT derandomized, with 10000
-# examples. Run it overnight (or in a separate CI job) to hunt for new edge
-# cases. When it finds one, pin the input as a boundary case in
-# `TestBoundaryValues` so the deterministic suite catches it from then on.
-#
-# Run nightly fuzz with:
-#   $env:EPQ_PARITY="1"; pytest test_parity_math2.py -m fuzz --tb=short
-# (After tagging slow_fuzz tests with @pytest.mark.fuzz, if you split them.)
-slow = settings(max_examples=500, deadline=None, derandomize=True)
-slow_fuzz = settings(max_examples=10000, deadline=None)
+# Start the JVM (if parity is enabled) and load Math2 + commonly-used
+# Java helpers. `jclass()` returns None when parity is disabled, in
+# which case @needs_java skips the tests that would touch Java.
+ctx = setup_parity("gov.nist.microanalysis.Utility.Math2")
+JavaMath2 = ctx.java_class
+JavaRandomImpl = jclass("java.util.Random")
+DecimalFormat = jclass("java.text.DecimalFormat")
 
 
 # ######################################################################
@@ -498,20 +323,9 @@ class TestRandomDirStatistical:
 # them on every subsequent run.
 # ######################################################################
 
-# Helper: assert two floats are close, handling NaN/Inf semantics.
-def _bdry_close(actual: float, expected: float, atol: float = 1e-14,
-                rtol: float = 0.0) -> bool:
-    if math.isnan(expected):
-        return math.isnan(actual)
-    if math.isinf(expected):
-        return math.isinf(actual) and (actual > 0) == (expected > 0)
-    if math.isnan(actual) or math.isinf(actual):
-        return False
-    return abs(actual - expected) <= atol + rtol * max(abs(actual), abs(expected))
-
-
-_NAN = float("nan")
-_INF = float("inf")
+# `_bdry_close`, `_NAN`, `_INF` are imported from _parity_lib at the
+# top of this file. See _parity_lib._bdry_close for the NaN/Inf
+# handling semantics expected by the tables below.
 
 
 class TestBoundaryScalars:
@@ -1454,11 +1268,12 @@ class TestJamaMatrixBridge:
 
     def test_createRowMatrix_shape_and_get(self):
         # Jama is a separate jar (jama-1.0.3.jar) -- often not bundled
-        # in the EPQ jar. Soft-skip rather than hard-fail when it's
-        # missing from the classpath. Use JClass for the same reason
-        # as the module-level loads (avoids JPype import-hook quirks).
+        # in the EPQ jar. Soft-skip rather than hard-fail when missing.
+        # `jclass()` returns None if parity is disabled and raises
+        # ClassNotFoundException if the class isn't on the classpath.
         try:
-            jpype.JClass("Jama.Matrix")
+            if jclass("Jama.Matrix") is None:
+                pytest.skip("parity disabled")
         except Exception as e:
             pytest.skip(f"Jama not on classpath: {e}")
         vals = [1.0, 2.0, 3.0]
