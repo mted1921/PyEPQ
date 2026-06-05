@@ -62,6 +62,14 @@ except ImportError:
     except ImportError:
         from gov.nist.microanalysis.PyEPQ.Utility._epq_compat import EPQException, JavaRandom, JamaMatrix, F64Array  # type: ignore
 
+try:
+    from .FindRoot_ver1 import FindRoot as _FindRoot
+except ImportError:
+    try:
+        from FindRoot_ver1 import FindRoot as _FindRoot  # type: ignore
+    except ImportError:
+        from gov.nist.microanalysis.PyEPQ.Utility.FindRoot_ver1 import FindRoot as _FindRoot  # type: ignore
+
 
 # Explicit export list prevents `from Math2_ver1 import *` from shadowing
 # Python builtins (sum, max, min, abs, slice). The intended call style
@@ -290,11 +298,41 @@ class Math2:
         return float(_sp_special.gammainc(a, x))
 
     @staticmethod
+    def chiSquaredConfidenceLevel_literal(confidence: float, degreesOfFreedom: int) -> float:
+        """Literal port of Java chiSquaredConfidenceLevel using FindRoot_ver1.
+
+        Mirrors Java exactly: anonymous FindRoot subclass with
+            function(x) = gammap(dof/2, x/2) - confidence
+        searched on [1.0, 2*dof+50] with eps=1e-3 and iMax=100.
+
+        Raises ValueError if the search range does not straddle a zero
+        (matches Java's IllegalArgumentException on those inputs).
+        """
+        dof: float = float(degreesOfFreedom)
+
+        class _ChiSqFR(_FindRoot):
+            def initialize(self, vars: list) -> None:
+                self._dof: float = vars[0]
+                self._conf: float = vars[1]
+
+            def function(self, x0: float) -> float:
+                return Math2.gammap(0.5 * self._dof, 0.5 * x0) - self._conf
+
+        fr: _ChiSqFR = _ChiSqFR()
+        fr.initialize([dof, confidence])
+        return fr.perform(1.0, 2.0 * dof + 50.0, 1.0e-3, 100)
+
+    @staticmethod
     def chiSquaredConfidenceLevel(confidence: float, degreesOfFreedom: int) -> float:
         assert 0.0 < confidence < 1.0, "Confidence must be in the range (0, 1)."
         assert degreesOfFreedom > 0, "Degrees of freedom must be 1 or larger."
         if not (0.0 < confidence < 1.0) or degreesOfFreedom <= 0:
             return float("nan")
+        return Math2.chiSquaredConfidenceLevel_literal(confidence, degreesOfFreedom)
+
+    @staticmethod
+    def _chiSquaredConfidenceLevel_scipy(confidence: float, degreesOfFreedom: int) -> float:
+        """scipy.stats.chi2.ppf — kept as a reference; never raises on valid inputs."""
         return float(_sp_stats.chi2.ppf(confidence, degreesOfFreedom))
 
     @staticmethod

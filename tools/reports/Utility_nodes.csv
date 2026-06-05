@@ -1,45 +1,45 @@
 class_name,file,package,kind,modifiers,extends,implements,in_degree,out_degree,internal_degree,instability,depth,reachable,pagerank,betweenness,in_cycle,is_leaf,is_dead,total_imports,n_internal,n_java_stdlib,n_javax_stdlib,n_external,n_nist_other,n_nist_epqdatabase,n_nist_epqimage,n_nist_epqlibrary,n_nist_epqtests,n_nist_epqtools,n_nist_jythongui,n_nist_nistmonte,n_nist_utility
-AdaptiveRungeKutta,AdaptiveRungeKutta.java,gov.nist.microanalysis.Utility,class,abstract public,,,1,0,1,0.0,0,0,0.039742,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-AutoComplete,AutoComplete.java,gov.nist.microanalysis.Utility,class,public,PlainDocument,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,17,0,10,7,0,0,0,0,0,0,0,0,0,0
-ComboBoxCellEditor,ComboBoxCellEditor.java,gov.nist.microanalysis.Utility,class,public,AbstractCellEditor,"ActionListener, TableCellEditor, Serializable",0,0,0,0.0,0,0,0.021482,0.0,False,True,True,7,0,3,4,0,0,0,0,0,0,0,0,0,0
-Constraint,Constraint.java,gov.nist.microanalysis.Utility,interface,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-CSVReader,CSVReader.java,gov.nist.microanalysis.Utility,class,abstract public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,9,0,8,0,0,0,0,0,1,0,0,0,0,0
-DescriptiveStatistics,DescriptiveStatistics.java,gov.nist.microanalysis.Utility,class,public,,Comparable,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
-EachRowEditor,EachRowEditor.java,gov.nist.microanalysis.Utility,class,public,,TableCellEditor,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,11,0,4,7,0,0,0,0,0,0,0,0,0,0
-ElementComboBoxModel,ElementComboBoxModel.java,gov.nist.microanalysis.Utility,class,public,,ComboBoxModel,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,9,0,5,3,0,0,0,0,1,0,0,0,0,0
-ElementTreePanel,ElementTreePanel.java,gov.nist.microanalysis.Utility,class,public,JPanel,"CaretListener, DocumentListener, PropertyChangeListener, TreeSelectionListener",0,0,0,0.0,0,0,0.021482,0.0,False,True,True,29,0,7,22,0,0,0,0,0,0,0,0,0,0
-ExponentFormat,ExponentFormat.java,gov.nist.microanalysis.Utility,class,public,NumberFormat,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,3,0,3,0,0,0,0,0,0,0,0,0,0,0
-FindRoot,FindRoot.java,gov.nist.microanalysis.Utility,class,abstract public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-HalfUpFormat,HalfUpFormat.java,gov.nist.microanalysis.Utility,class,public,DecimalFormat,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,4,0,4,0,0,0,0,0,0,0,0,0,0,0
-Histogram,Histogram.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,6,0,4,0,0,0,0,0,2,0,0,0,0,0
-HTMLFormat,HTMLFormat.java,gov.nist.microanalysis.Utility,class,public,NumberFormat,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,5,0,5,0,0,0,0,0,0,0,0,0,0,0
-HTMLList,HTMLList.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,4,0,3,1,0,0,0,0,0,0,0,0,0,0
-HtmlSelection,HtmlSelection.java,gov.nist.microanalysis.Utility,class,public,,Transferable,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,10,0,10,0,0,0,0,0,0,0,0,0,0,0
-Integrator,Integrator.java,gov.nist.microanalysis.Utility,class,abstract public,AdaptiveRungeKutta,,0,1,1,1.0,1,1,0.021482,0.0,False,False,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-Interval,Interval.java,gov.nist.microanalysis.Utility,class,public,,Comparable,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,3,0,3,0,0,0,0,0,0,0,0,0,0,0
-LazyEvaluate,LazyEvaluate.java,gov.nist.microanalysis.Utility,class,public abstract,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-LevenbergMarquardt2,LevenbergMarquardt2.java,gov.nist.microanalysis.Utility,class,public,,,1,0,1,0.0,0,0,0.039742,0.0,False,True,False,6,0,3,0,2,0,0,0,1,0,0,0,0,0
-LevenbergMarquardtConstrained,LevenbergMarquardtConstrained.java,gov.nist.microanalysis.Utility,class,public,LevenbergMarquardt2,,0,1,1,1.0,1,1,0.021482,0.0,False,False,False,2,0,0,0,1,0,0,0,1,0,0,0,0,0
-LevenbergMarquardtParameterized,LevenbergMarquardtParameterized.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,14,3,9,0,1,0,0,0,1,0,0,0,0,0
-LinearLeastSquares,LinearLeastSquares.java,gov.nist.microanalysis.Utility,class,abstract public,,,1,0,1,0.0,0,0,0.039742,0.0,False,True,False,4,0,1,0,2,0,0,0,1,0,0,0,0,0
-LinearLeastSquaresMS,LinearLeastSquaresMS.java,gov.nist.microanalysis.Utility,class,abstract public,LinearLeastSquares,,0,1,1,1.0,1,1,0.021482,0.0,False,False,False,2,0,1,0,0,0,0,0,1,0,0,0,0,0
-LinearRegression,LinearRegression.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,0,0,1,0,0,0,0,0,0,0,0,0
-Math2,Math2.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,5,0,3,0,1,0,0,0,1,0,0,0,0,0
-MCIntegrator,MCIntegrator.java,gov.nist.microanalysis.Utility,class,abstract public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
-MCUncertaintyEngine,MCUncertaintyEngine.java,gov.nist.microanalysis.Utility,class,abstract public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,4,0,4,0,0,0,0,0,0,0,0,0,0,0
-MemberSet,MemberSet.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
-MultiDHistogram,MultiDHistogram.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,4,0,4,0,0,0,0,0,0,0,0,0,0,0
-Pair,Pair.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
-PoissonDeviate,PoissonDeviate.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
-PrintUtilities,PrintUtilities.java,gov.nist.microanalysis.Utility,class,public,,Printable,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,10,0,9,1,0,0,0,0,0,0,0,0,0,0
-ProgressEvent,ProgressEvent.java,gov.nist.microanalysis.Utility,class,public,ActionEvent,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
-Simplex,Simplex.java,gov.nist.microanalysis.Utility,class,abstract public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,2,0,2,0,0,0,0,0,0,0,0,0,0,0
-SpectrumPropertiesTableModel,SpectrumPropertiesTableModel.java,gov.nist.microanalysis.Utility,class,public,AbstractTableModel,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,6,0,1,1,0,0,0,0,4,0,0,0,0,0
-StageRelocation,StageRelocation.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,2,0,1,0,0,0,0,0,1,0,0,0,0,0
-TextUtilities,TextUtilities.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
-Transform3D,Transform3D.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,1,0,0,0,1,0,0,0,0,0,0,0,0,0
-Translate2D,Translate2D.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,3,0,3,0,0,0,0,0,0,0,0,0,0,0
-UncertainValue,UncertainValue.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-UncertainValue2,UncertainValue2.java,gov.nist.microanalysis.Utility,class,final public,Number,Comparable,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,14,0,12,0,1,0,0,0,1,0,0,0,0,0
-UncertainValueMC,UncertainValueMC.java,gov.nist.microanalysis.Utility,class,public,Number,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,2,0,2,0,0,0,0,0,0,0,0,0,0,0
-UtilException,UtilException.java,gov.nist.microanalysis.Utility,class,public,Exception,,0,0,0,0.0,0,0,0.021482,0.0,False,True,True,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+AdaptiveRungeKutta,AdaptiveRungeKutta.java,gov.nist.microanalysis.Utility,class,abstract public,,,1,1,2,0.5,1,1,0.017579,0.0,False,False,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+AutoComplete,AutoComplete.java,gov.nist.microanalysis.Utility,class,public,PlainDocument,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,17,0,10,7,0,0,0,0,0,0,0,0,0,0
+ComboBoxCellEditor,ComboBoxCellEditor.java,gov.nist.microanalysis.Utility,class,public,AbstractCellEditor,"ActionListener, TableCellEditor, Serializable",0,0,0,0.0,0,0,0.012336,0.0,False,True,True,7,0,3,4,0,0,0,0,0,0,0,0,0,0
+Constraint,Constraint.java,gov.nist.microanalysis.Utility,interface,public,,,2,1,3,0.3333,3,6,0.019196,0.0,False,False,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+CSVReader,CSVReader.java,gov.nist.microanalysis.Utility,class,abstract public,,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,9,0,8,0,0,0,0,0,1,0,0,0,0,0
+DescriptiveStatistics,DescriptiveStatistics.java,gov.nist.microanalysis.Utility,class,public,,Comparable,1,1,2,0.5,3,6,0.015831,0.0,False,False,False,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+EachRowEditor,EachRowEditor.java,gov.nist.microanalysis.Utility,class,public,,TableCellEditor,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,11,0,4,7,0,0,0,0,0,0,0,0,0,0
+ElementComboBoxModel,ElementComboBoxModel.java,gov.nist.microanalysis.Utility,class,public,,ComboBoxModel,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,9,0,5,3,0,0,0,0,1,0,0,0,0,0
+ElementTreePanel,ElementTreePanel.java,gov.nist.microanalysis.Utility,class,public,JPanel,"CaretListener, DocumentListener, PropertyChangeListener, TreeSelectionListener",0,0,0,0.0,0,0,0.012336,0.0,False,True,True,29,0,7,22,0,0,0,0,0,0,0,0,0,0
+ExponentFormat,ExponentFormat.java,gov.nist.microanalysis.Utility,class,public,NumberFormat,,1,1,2,0.5,1,1,0.032367,0.0,False,False,False,3,0,3,0,0,0,0,0,0,0,0,0,0,0
+FindRoot,FindRoot.java,gov.nist.microanalysis.Utility,class,abstract public,,,1,0,1,0.0,0,0,0.101819,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+HalfUpFormat,HalfUpFormat.java,gov.nist.microanalysis.Utility,class,public,DecimalFormat,,4,0,4,0.0,0,0,0.072985,0.0,False,True,False,4,0,4,0,0,0,0,0,0,0,0,0,0,0
+Histogram,Histogram.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,6,0,4,0,0,0,0,0,2,0,0,0,0,0
+HTMLFormat,HTMLFormat.java,gov.nist.microanalysis.Utility,class,public,NumberFormat,,0,1,1,1.0,1,1,0.012336,0.0,False,False,False,5,0,5,0,0,0,0,0,0,0,0,0,0,0
+HTMLList,HTMLList.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,4,0,3,1,0,0,0,0,0,0,0,0,0,0
+HtmlSelection,HtmlSelection.java,gov.nist.microanalysis.Utility,class,public,,Transferable,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,10,0,10,0,0,0,0,0,0,0,0,0,0,0
+Integrator,Integrator.java,gov.nist.microanalysis.Utility,class,abstract public,AdaptiveRungeKutta,,0,2,2,1.0,2,2,0.012336,0.0,False,False,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Interval,Interval.java,gov.nist.microanalysis.Utility,class,public,,Comparable,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,3,0,3,0,0,0,0,0,0,0,0,0,0,0
+LazyEvaluate,LazyEvaluate.java,gov.nist.microanalysis.Utility,class,public abstract,,,1,0,1,0.0,0,0,0.017579,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+LevenbergMarquardt2,LevenbergMarquardt2.java,gov.nist.microanalysis.Utility,class,public,,,2,2,4,0.5,3,6,0.019196,0.001107,False,False,False,6,0,3,0,2,0,0,0,1,0,0,0,0,0
+LevenbergMarquardtConstrained,LevenbergMarquardtConstrained.java,gov.nist.microanalysis.Utility,class,public,LevenbergMarquardt2,,1,3,4,0.75,4,8,0.014958,0.0,False,False,False,2,0,0,0,1,0,0,0,1,0,0,0,0,0
+LevenbergMarquardtParameterized,LevenbergMarquardtParameterized.java,gov.nist.microanalysis.Utility,class,public,,,0,4,4,1.0,5,9,0.012336,0.0,False,False,False,14,3,9,0,1,0,0,0,1,0,0,0,0,0
+LinearLeastSquares,LinearLeastSquares.java,gov.nist.microanalysis.Utility,class,abstract public,,,1,2,3,0.6667,3,6,0.022822,0.003322,False,False,False,4,0,1,0,2,0,0,0,1,0,0,0,0,0
+LinearLeastSquaresMS,LinearLeastSquaresMS.java,gov.nist.microanalysis.Utility,class,abstract public,LinearLeastSquares,,0,1,1,1.0,4,7,0.012336,0.0,False,False,False,2,0,1,0,0,0,0,0,1,0,0,0,0,0
+LinearRegression,LinearRegression.java,gov.nist.microanalysis.Utility,class,public,,,0,2,2,1.0,2,3,0.012336,0.0,False,False,False,1,0,0,0,1,0,0,0,0,0,0,0,0,0
+Math2,Math2.java,gov.nist.microanalysis.Utility,class,public,,,10,1,11,0.0909,1,1,0.105277,0.009967,False,False,False,5,0,3,0,1,0,0,0,1,0,0,0,0,0
+MCIntegrator,MCIntegrator.java,gov.nist.microanalysis.Utility,class,abstract public,,,0,1,1,1.0,2,2,0.012336,0.0,False,False,False,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+MCUncertaintyEngine,MCUncertaintyEngine.java,gov.nist.microanalysis.Utility,class,abstract public,,,0,3,3,1.0,4,8,0.012336,0.0,False,False,False,4,0,4,0,0,0,0,0,0,0,0,0,0,0
+MemberSet,MemberSet.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+MultiDHistogram,MultiDHistogram.java,gov.nist.microanalysis.Utility,class,public,,,0,1,1,1.0,2,2,0.012336,0.0,False,False,False,4,0,4,0,0,0,0,0,0,0,0,0,0,0
+Pair,Pair.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+PoissonDeviate,PoissonDeviate.java,gov.nist.microanalysis.Utility,class,public,,,0,1,1,1.0,2,2,0.012336,0.0,False,False,False,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+PrintUtilities,PrintUtilities.java,gov.nist.microanalysis.Utility,class,public,,Printable,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,10,0,9,1,0,0,0,0,0,0,0,0,0,0
+ProgressEvent,ProgressEvent.java,gov.nist.microanalysis.Utility,class,public,ActionEvent,,0,1,1,1.0,2,2,0.012336,0.0,False,False,False,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+Simplex,Simplex.java,gov.nist.microanalysis.Utility,class,abstract public,,,2,1,3,0.3333,1,1,0.020201,0.000554,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+SpectrumPropertiesTableModel,SpectrumPropertiesTableModel.java,gov.nist.microanalysis.Utility,class,public,AbstractTableModel,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,6,0,1,1,0,0,0,0,4,0,0,0,0,0
+StageRelocation,StageRelocation.java,gov.nist.microanalysis.Utility,class,public,,,0,2,2,1.0,2,4,0.012336,0.0,False,False,False,2,0,1,0,0,0,0,0,1,0,0,0,0,0
+TextUtilities,TextUtilities.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,1,0,1,0,0,0,0,0,0,0,0,0,0,0
+Transform3D,Transform3D.java,gov.nist.microanalysis.Utility,class,public,,,0,0,0,0.0,0,0,0.012336,0.0,False,True,True,1,0,0,0,1,0,0,0,0,0,0,0,0,0
+Translate2D,Translate2D.java,gov.nist.microanalysis.Utility,class,public,,,0,4,4,1.0,2,5,0.012336,0.0,False,False,False,3,0,3,0,0,0,0,0,0,0,0,0,0,0
+UncertainValue,UncertainValue.java,gov.nist.microanalysis.Utility,class,public,,,0,1,1,1.0,3,6,0.012336,0.0,False,False,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+UncertainValue2,UncertainValue2.java,gov.nist.microanalysis.Utility,class,final public,Number,Comparable,9,4,13,0.3077,2,5,0.094266,0.023256,False,False,False,14,0,12,0,1,0,0,0,1,0,0,0,0,0
+UncertainValueMC,UncertainValueMC.java,gov.nist.microanalysis.Utility,class,public,Number,,1,1,2,0.5,3,6,0.015831,0.0,False,False,False,2,0,2,0,0,0,0,0,0,0,0,0,0,0
+UtilException,UtilException.java,gov.nist.microanalysis.Utility,class,public,Exception,,5,0,5,0.0,0,0,0.072345,0.0,False,True,False,0,0,0,0,0,0,0,0,0,0,0,0,0,0

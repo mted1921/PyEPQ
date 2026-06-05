@@ -122,8 +122,8 @@ if str(_PORT_DIR) not in sys.path:
 # Parity gating
 # ============================================================================
 
-PARITY_ENABLED: bool = bool(os.environ.get("EPQ_PARITY"))
-
+#PARITY_ENABLED: bool = bool(os.environ.get("EPQ_PARITY"))
+PARITY_ENABLED: bool = True  # DEV OVERRIDE -- set to False to disable parity testing without
 try:
     import jpype
     _JPYPE_OK: bool = True

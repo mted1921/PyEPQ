@@ -142,6 +142,7 @@ class JavaClassInfo:
     extends: tuple[str, ...]
     implements: tuple[str, ...]
     imports: tuple[str, ...]
+    body: str               # comment/string-stripped source; used for implicit-dep scan
 
 
 @dataclass(frozen=True)
@@ -237,6 +238,7 @@ def parse_java_file(path: Path) -> JavaClassInfo:
         extends=extends,
         implements=implements,
         imports=imports,
+        body=src,
     )
 
 
@@ -292,6 +294,15 @@ def build_dependency_graph(
                 continue
             if simple in internal_names:
                 G.add_edge(c.class_name, simple, kind="import")
+            else:
+                # Inner-class import: e.g. gov.nist...LM2.FitFunction where
+                # FitFunction is not a top-level class.  The actual dependency
+                # is on the enclosing top-level class; find it as the first
+                # segment after stripping the package prefix.
+                suffix: str = fqn[len(package_fqn) + 1:]   # e.g. "LM2.FitFunction"
+                outer: str = suffix.split(".")[0]
+                if outer and outer in internal_names and outer != c.class_name:
+                    G.add_edge(c.class_name, outer, kind="import")
 
         for parent in c.extends:
             if parent in internal_names and parent != c.class_name:
@@ -299,6 +310,25 @@ def build_dependency_graph(
         for iface in c.implements:
             if iface in internal_names and iface != c.class_name:
                 G.add_edge(c.class_name, iface, kind="implements")
+
+    # Implicit same-package dependencies: Java classes in the same package
+    # are visible without any import statement, so a class can reference a
+    # peer by bare name and the dependency won't appear in the import list.
+    # Scan each class's stripped body for whole-word occurrences of every
+    # other class name in the package and add edges that aren't already
+    # covered by an explicit import/extends/implements edge.
+    if internal_names:
+        _implicit_pat = re.compile(
+            r'\b(' + '|'.join(re.escape(n) for n in sorted(internal_names)) + r')\b'
+        )
+        for c in classes:
+            if not c.class_name:
+                continue
+            for _m in _implicit_pat.finditer(c.body):
+                name = _m.group(1)
+                if name == c.class_name or G.has_edge(c.class_name, name):
+                    continue
+                G.add_edge(c.class_name, name, kind="implicit")
 
     return G
 
@@ -532,15 +562,28 @@ def nodes_dataframe(a: PackageAnalysis) -> pd.DataFrame:
 
 
 def edges_dataframe(a: PackageAnalysis) -> pd.DataFrame:
-    """One row per dependency (import / extends / implements)."""
+    """One row per dependency (import / extends / implements / implicit)."""
     rows: list[dict[str, object]] = []
     internal_names: set[str] = set(a.metrics.keys())
+    file_of: dict[str, str] = {
+        c.class_name: c.file for c in a.classes if c.class_name
+    }
     for c in a.classes:
         if not c.class_name:
             continue
         for fqn in c.imports:
             simple: str = fqn.rsplit(".", 1)[-1]
             cat: str = classify_import(fqn, a.package_fqn)
+            # An import is an internal target if the simple name is a known
+            # top-level class, OR if it's an inner-class import whose outer
+            # class is a known top-level class (e.g. LM2.FitFunction -> LM2).
+            _is_internal: bool = False
+            if cat == "internal" and simple != "*":
+                if simple in internal_names:
+                    _is_internal = True
+                else:
+                    _outer = fqn[len(a.package_fqn) + 1:].split(".")[0]
+                    _is_internal = bool(_outer and _outer in internal_names)
             rows.append({
                 "source_class": c.class_name,
                 "source_file": c.file,
@@ -548,9 +591,7 @@ def edges_dataframe(a: PackageAnalysis) -> pd.DataFrame:
                 "dep_simple": simple,
                 "dep_category": cat,
                 "rel_type": "import",
-                "is_internal_target": (cat == "internal"
-                                       and simple != "*"
-                                       and simple in internal_names),
+                "is_internal_target": _is_internal,
             })
         for parent in c.extends:
             rows.append({
@@ -571,6 +612,18 @@ def edges_dataframe(a: PackageAnalysis) -> pd.DataFrame:
                 "dep_category": "internal" if iface in internal_names else "unknown",
                 "rel_type": "implements",
                 "is_internal_target": iface in internal_names,
+            })
+    # Implicit same-package edges detected by body scan (no import statement).
+    for u, v, data in a.graph.edges(data=True):
+        if data.get("kind") == "implicit":
+            rows.append({
+                "source_class": u,
+                "source_file": file_of.get(u, ""),
+                "dep_fqn": f"{a.package_fqn}.{v}",
+                "dep_simple": v,
+                "dep_category": "internal",
+                "rel_type": "implicit",
+                "is_internal_target": True,
             })
     return pd.DataFrame(rows)
 

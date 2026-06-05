@@ -18,7 +18,9 @@ For porting a Java file to Python.
 > following CONVERSION_GUIDE.md R1-R10.
 >
 > First produce the Step 1 conversion specification at
-> `<path>/File_ver1.spec.md`.
+> `PyEPQ/<Package>/spec/<ClassName>.spec.md`
+> (e.g. `Math2.java` in `Utility` → `PyEPQ/Utility/spec/Math2.spec.md`).
+> Create the `spec/` directory if it does not exist.
 >
 > Then implement the literal port: split overloads (R4), add mutation
 > guards (R5), replicate Java signum (R8), preserve Java bugs in
