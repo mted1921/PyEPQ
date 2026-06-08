@@ -11,10 +11,11 @@ stand-in does not catch ``raise EPQException()`` from module B.
 
 Exported types
 --------------
-EPQException : Exception subclass, port of the Java EPQException.
-JavaRandom   : Bit-exact reimplementation of java.util.Random.
-JamaMatrix   : Minimal numpy-backed shim for Jama.Matrix.
-F64Array     : Type alias for NDArray[np.float64].
+EPQException  : Exception subclass, port of the Java EPQException.
+JavaRandom    : Bit-exact reimplementation of java.util.Random.
+JavaTreeSet   : Sorted-set replacement for java.util.TreeSet.
+JamaMatrix    : Minimal numpy-backed shim for Jama.Matrix.
+F64Array      : Type alias for NDArray[np.float64].
 
 This file has no project-internal dependencies; it is safe to import
 from any other converted module without circular-import risk.
@@ -22,15 +23,16 @@ from any other converted module without circular-import risk.
 
 from __future__ import annotations
 
+import bisect
 import math
 import time
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 
-__all__ = ["EPQException", "JavaRandom", "JamaMatrix", "F64Array"]
+__all__ = ["EPQException", "JavaRandom", "JavaTreeSet", "JamaMatrix", "F64Array"]
 
 
 F64Array = NDArray[np.float64]
@@ -160,6 +162,61 @@ class JavaRandom:
         self._next_gaussian = v2 * mult
         self._have_next_gaussian = True
         return v1 * mult
+
+
+# ======================================================================
+# JavaTreeSet
+# ======================================================================
+
+class JavaTreeSet:
+    """Replacement for java.util.TreeSet<T> where T implements Comparable.
+
+    Provides the exact subset of TreeSet's API used by EPQ converted classes:
+    - ``add(item)``   — insert maintaining sorted order; returns False if duplicate
+    - ``floor(item)`` — greatest element ≤ item, or None
+    - ``__iter__``    — iterate in ascending order
+    - ``__len__``     — element count
+
+    **Requirements on stored elements:**
+    Elements must implement both:
+    - ``__lt__`` (used by bisect for insertion position)
+    - ``compareTo(other) -> int`` (returns -1 / 0 / +1, used for equality in add/floor)
+
+    These are the Python equivalents of Java's ``Comparable<T>`` contract. Any
+    correctly ported Java class that ``implements Comparable`` will satisfy them
+    via the R2 ``compareTo`` → ``__lt__``/``compareTo()`` mapping.
+
+    Unlike Python's ``SortedList`` (sortedcontainers), this class requires no
+    third-party dependency and implements floor() directly, matching Java's
+    NavigableSet.floor() semantics.
+    """
+
+    def __init__(self) -> None:
+        self._list: list[Any] = []
+
+    def add(self, item: Any) -> bool:
+        """Insert item in sorted order. Returns False (no-op) if already present."""
+        idx: int = bisect.bisect_left(self._list, item)
+        if idx < len(self._list) and self._list[idx].compareTo(item) == 0:
+            return False
+        self._list.insert(idx, item)
+        return True
+
+    def floor(self, item: Any) -> Optional[Any]:
+        """Return the greatest element ≤ item, or None if no such element exists."""
+        idx: int = bisect.bisect_right(self._list, item)
+        if idx == 0:
+            return None
+        return self._list[idx - 1]
+
+    def __iter__(self):
+        return iter(self._list)
+
+    def __len__(self) -> int:
+        return len(self._list)
+
+    def __repr__(self) -> str:
+        return f"JavaTreeSet({self._list!r})"
 
 
 # ======================================================================

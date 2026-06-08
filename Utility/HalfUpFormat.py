@@ -20,6 +20,17 @@ CHANGES
 - `Math.*` calls replaced by Python `math.*` / builtins.
 - MEDIUM_MATHEMATICAL_SPACE made a module-level constant (still accessible
   as `HalfUpFormat._MEDIUM_MATHEMATICAL_SPACE` for compatibility).
+
+------------------------------------------------------------------------
+Original Java source (gov.nist.microanalysis.Utility.HalfUpFormat)
+------------------------------------------------------------------------
+/**
+ * Deals with the annoying default rounding scheme used by DecimalForamt and
+ * implements the NIST suggested space grouping scheme.
+ *
+ * @author nicholas
+ */
+------------------------------------------------------------------------
 """
 from __future__ import annotations
 

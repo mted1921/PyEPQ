@@ -7,6 +7,26 @@ CHANGES
 - Constructor overloads split into classmethods (R4):
   from_string, from_string_throwable, from_throwable.
 - `serialVersionUID` retained as a class-level constant (R2).
+
+------------------------------------------------------------------------
+Original Java source (gov.nist.microanalysis.Utility.UtilException)
+------------------------------------------------------------------------
+/**
+ * <p>
+ * Defines a class for non-fatal exceptions occuring in the utility library.
+ * </p>
+ * <p>
+ * Copyright: Pursuant to title 17 Section 105 of the United States Code this
+ * software is not subject to copyright protection and is in the public domain
+ * </p>
+ * <p>
+ * Company: National Institute of Standards and Technology
+ * </p>
+ *
+ * @author Nicholas W. M. Ritchie
+ * @version 1.0
+ */
+------------------------------------------------------------------------
 """
 from __future__ import annotations
 

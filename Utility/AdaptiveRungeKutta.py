@@ -28,6 +28,61 @@ CHANGES
 - integrate() is the primary public method backed by scipy.integrate.solve_ivp
   (RK45). The faithful Cash-Karp translation is available as integrate_literal().
   Deviations from Java documented as SCIPY-DEV-1..4 in integrate().
+
+------------------------------------------------------------------------
+Original Java source (gov.nist.microanalysis.Utility.AdaptiveRungeKutta)
+------------------------------------------------------------------------
+/**
+ * <p>
+ * An adaptive step size Runge-Kutta algorithm for numerically evaluating
+ * differential equations. This implementation can optionally save intermediate
+ * points along the ODE trajectory at a user specified interval. Using this
+ * option may limit the step size and thus
+ * </p>
+ * <p>
+ * See Press, Teulolsky, Vetterling &amp; Flannery, Numerical Recipes in C,
+ * Second Edition pp 714-722
+ * </p>
+ * <p>
+ * Example:<br>
+ * </p>
+ *
+ * <pre>
+ * AdaptiveRungeKutta trial = new AdaptiveRungeKutta(2) {
+ *    void derivatives(double x, double[] y, double[] dydx) {
+ *       dydx[0] = -Math.sin(x);
+ *       dydx[1] = Math.cos(x);
+ *    }
+ * };
+ * </pre>
+ *
+ * <pre>
+ * try {
+ *    double[] yst = {1.0, 0.0};
+ *    trial.setSaveInterval(Math.PI / 16.0);
+ *    trial.integrate(0.0, 2.0 * Math.PI, yst, 1.0e-6, 0.01);
+ * } catch (UtilException ex) {
+ *    System.err.println(ex.toString());
+ * }
+ * for (int i = 0; i &lt; trial.getNSaved(); ++i)
+ *    System.out.println(trial.getX(i) + &quot;\t&quot; + trial.getY(i)[0] + &quot;\t&quot; + trial.getY(i)[1]);
+ * </pre>
+ * <p>
+ * NOTE: This algorithm is not thread-safe. Use each instance in one and only
+ * one thread.
+ * </p>
+ * <p>
+ * Copyright: Pursuant to title 17 Section 105 of the United States Code this
+ * software is not subject to copyright protection and is in the public domain
+ * </p>
+ * <p>
+ * Company: National Institute of Standards and Technology
+ * </p>
+ *
+ * @author Nicholas W. M. Ritchie
+ * @version 1.0
+ */
+------------------------------------------------------------------------
 """
 from __future__ import annotations
 
@@ -39,7 +94,7 @@ from typing import Optional
 import numpy as np
 
 from _epq_compat import F64Array
-from UtilException_ver1 import UtilException
+from gov.nist.microanalysis.PyEPQ.Utility.UtilException import UtilException
 
 
 # IEEE-754 double maximum — identical to Java's Double.MAX_VALUE.

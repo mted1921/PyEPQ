@@ -23,7 +23,7 @@ CHANGES IN REV 2 (see CONVERSION_GUIDE.md rules)
   `addInPlace`) call `_require_mutable_f64` on their target arg.
   Lists, tuples, and wrong-dtype arrays now raise TypeError instead
   of silently no-opping.
-* R2: Numerical Recipes literal ports (`_erf_literal`, `_gammaln_literal`,
+* R2: Numerical Recipes literal ports (`erf_literal`, `gammaln_literal`,
   etc.) are retained alongside the scipy substitutions for parity
   testing. Public APIs default to scipy.
 * R6: Preserved Java bugs are tagged with `# JAVA-BUG-N` markers and
@@ -34,13 +34,33 @@ CHANGES IN REV 2 (see CONVERSION_GUIDE.md rules)
   Java callers' ability to chain `.times(...)`, `.solve(...)`, etc.
 * `randomDir` now uses Math2.rgen instead of an independent module RNG.
   This is a DELIBERATE departure from Java -- see RNG-DEVIATION-1 below.
+
+------------------------------------------------------------------------
+Original Java source (gov.nist.microanalysis.Utility.Math2)
+------------------------------------------------------------------------
+/**
+ * <p>
+ * Useful math functions not provided in the standard libraries.
+ * </p>
+ * <p>
+ * Copyright: Pursuant to title 17 Section 105 of the United States Code this
+ * software is not subject to copyright protection and is in the public domain
+ * </p>
+ * <p>
+ * Company: National Institute of Standards and Technology
+ * </p>
+ *
+ * @author Nicholas W. M. Ritchie
+ * @version 1.0
+ */
+------------------------------------------------------------------------
 """
 
 from __future__ import annotations
 
 import math
 import sys
-from typing import Optional, Sequence, Union
+from typing import Callable, Optional, Sequence, Union
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -63,12 +83,12 @@ except ImportError:
         from gov.nist.microanalysis.PyEPQ.Utility._epq_compat import EPQException, JavaRandom, JamaMatrix, F64Array  # type: ignore
 
 try:
-    from .FindRoot_ver1 import FindRoot as _FindRoot
+    from .FindRoot import FindRoot as _FindRoot
 except ImportError:
     try:
-        from FindRoot_ver1 import FindRoot as _FindRoot  # type: ignore
+        from FindRoot import FindRoot as _FindRoot  # type: ignore
     except ImportError:
-        from gov.nist.microanalysis.PyEPQ.Utility.FindRoot_ver1 import FindRoot as _FindRoot  # type: ignore
+        from gov.nist.microanalysis.PyEPQ.Utility.FindRoot import FindRoot as _FindRoot  # type: ignore
 
 
 # Explicit export list prevents `from Math2_ver1 import *` from shadowing
@@ -108,8 +128,14 @@ class Math2:
          "Cardano formula is `2*sqrt(q)*cos(...)`. Off by a factor of "
          "sqrt(q). For e.g. x^3 - 6x^2 + 11x - 6 = 0, Java returns "
          "{~1.42, ~2.58, 2} instead of {1, 2, 3}. The faithful Python "
-         "port reproduces this. Discovered via boundary testing. The "
-         "one-real-root branch appears correct.", False),
+         "port reproduces this. Discovered via boundary testing.", False),
+        ("JAVA-BUG-7", "solveCubic",
+         "One-real-root branch computes `B = q / a` where `a` is the "
+         "quadratic coefficient parameter; the correct Cardano identity "
+         "requires `B = q / A` where `A` is the local cube-root variable. "
+         "Java case-sensitivity confusion between parameter `a` and local `A`. "
+         "The guard `a == 0.0` is also wrong (should be `A == 0.0`). "
+         "Use `solveCubic_strict` for the corrected computation.", True),
         ("RNG-DEVIATION-1", "randomDir",
          "Java uses Math.random() (independent of `rgen`); Python port "
          "uses `rgen` so a single seed determinises everything. This "
@@ -140,7 +166,7 @@ class Math2:
     # Internal guards
     # ==================================================================
     @staticmethod
-    def _require_mutable_f64(arr, name: str = "arr") -> None:
+    def _require_mutable_f64(arr: np.ndarray, name: str = "arr") -> None:
         """Type guard for in-place methods (CONVERSION_GUIDE R5).
 
         Java's ``double[]`` is always a mutable double-precision buffer.
@@ -188,7 +214,7 @@ class Math2:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _gammaln_literal(xx: float) -> float:
+    def gammaln_literal(xx: float) -> float:
         """Literal NR Lanczos port with the NR coefficients."""
         coeff = (76.18009172947146, -86.50532032941677, 24.01409824083091,
                  -1.231739572450155, 0.1208650973866179e-2,
@@ -219,7 +245,7 @@ class Math2:
             s += delta
             if abs(delta) < abs(s) * EPS:
                 break
-        return s * math.exp(-x + a * math.log(x) - Math2._gammaln_literal(a))
+        return s * math.exp(-x + a * math.log(x) - Math2.gammaln_literal(a))
 
     @staticmethod
     def _gcf_literal(a: float, x: float) -> float:
@@ -245,10 +271,10 @@ class Math2:
             h *= delta
             if abs(delta - 1.0) < EPS:
                 break
-        return math.exp(-x + a * math.log(x) - Math2._gammaln_literal(a)) * h
+        return math.exp(-x + a * math.log(x) - Math2.gammaln_literal(a)) * h
 
     @staticmethod
-    def _gammap_literal(a: float, x: float) -> float:
+    def gammap_literal(a: float, x: float) -> float:
         assert x >= 0.0
         assert a > 0.0
         if x < a + 1.0:
@@ -256,7 +282,7 @@ class Math2:
         return 1.0 - Math2._gcf_literal(a, x)
 
     @staticmethod
-    def _gammq_literal(a: float, x: float) -> float:
+    def gammq_literal(a: float, x: float) -> float:
         assert x >= 0.0
         assert a > 0.0
         if x < a + 1.0:
@@ -264,16 +290,16 @@ class Math2:
         return Math2._gcf_literal(a, x)
 
     @staticmethod
-    def _erf_literal(x: float) -> float:
+    def erf_literal(x: float) -> float:
         if x < 0.0:
-            return -Math2._gammap_literal(0.5, x * x)
-        return Math2._gammap_literal(0.5, x * x)
+            return -Math2.gammap_literal(0.5, x * x)
+        return Math2.gammap_literal(0.5, x * x)
 
     @staticmethod
-    def _erfc_literal(x: float) -> float:
+    def erfc_literal(x: float) -> float:
         if x < 0.0:
-            return 1.0 + Math2._gammap_literal(0.5, x * x)
-        return Math2._gammq_literal(0.5, x * x)
+            return 1.0 + Math2.gammap_literal(0.5, x * x)
+        return Math2.gammq_literal(0.5, x * x)
 
     # ---- Public APIs (scipy-backed; same names as Java) ----
 
@@ -326,13 +352,6 @@ class Math2:
     def chiSquaredConfidenceLevel(confidence: float, degreesOfFreedom: int) -> float:
         assert 0.0 < confidence < 1.0, "Confidence must be in the range (0, 1)."
         assert degreesOfFreedom > 0, "Degrees of freedom must be 1 or larger."
-        if not (0.0 < confidence < 1.0) or degreesOfFreedom <= 0:
-            return float("nan")
-        return Math2.chiSquaredConfidenceLevel_literal(confidence, degreesOfFreedom)
-
-    @staticmethod
-    def _chiSquaredConfidenceLevel_scipy(confidence: float, degreesOfFreedom: int) -> float:
-        """scipy.stats.chi2.ppf — kept as a reference; never raises on valid inputs."""
         return float(_sp_stats.chi2.ppf(confidence, degreesOfFreedom))
 
     @staticmethod
@@ -888,7 +907,7 @@ class Math2:
         return np.correlate(padded, k_arr, mode="valid")
 
     @staticmethod
-    def toString(vec: ArrayLike, nf=None) -> str:
+    def toString(vec: ArrayLike, nf: Optional[Callable[[float], str]] = None) -> str:
         """Comma-joined string. ``nf`` is the Java NumberFormat; here we
         accept any callable (e.g. ``lambda x: f"{x:.3f}"``) or None."""
         arr = np.asarray(vec)
@@ -981,6 +1000,26 @@ class Math2:
         return JamaMatrix(arr)
 
     @staticmethod
+    def solveCubic_strict(a: float, b: float, c: float) -> F64Array:
+        """Strict variant of `solveCubic`: fixes JAVA-BUG-7 in the one-real-root branch.
+        Uses `q / A` (cube-root local) instead of `q / a` (quadratic coefficient param).
+        JAVA-BUG-6 in the three-real-roots branch is not fixed here (no strict variant).
+        """
+        q: float = (a * a - 3.0 * b) / 9.0
+        r: float = (2.0 * a * a * a - 9.0 * a * b + 27.0 * c) / 54.0
+        if r * r < q * q * q:
+            th: float = math.acos(r / (q ** 1.5))
+            return np.array([
+                -2.0 * q * math.cos(th / 3.0) - a / 3.0,
+                -2.0 * q * math.cos((th + 2.0 * math.pi) / 3.0) - a / 3.0,
+                -2.0 * q * math.cos((th - 2.0 * math.pi) / 3.0) - a / 3.0,
+            ], dtype=np.float64)
+        sign_r: float = 0.0 if r == 0.0 else math.copysign(1.0, r)
+        A: float = -sign_r * (abs(r) + math.sqrt(r * r - q * q * q)) ** (1.0 / 3.0)
+        B: float = 0.0 if A == 0.0 else q / A
+        return np.array([A + B - a / 3.0], dtype=np.float64)
+
+    @staticmethod
     def gcd(a: int, b: int) -> int:
         """math.gcd: C-implemented, iterative, arbitrary precision."""
         return math.gcd(int(a), int(b))
@@ -997,6 +1036,7 @@ class Math2:
         r = (2.0 * a * a * a - 9.0 * a * b + 27.0 * c) / 54.0
         if r * r < q * q * q:
             th = math.acos(r / (q ** 1.5))
+            # JAVA-BUG-6: uses -2*q*cos(...); correct Cardano is 2*sqrt(q)*cos(...)
             return np.array([
                 -2.0 * q * math.cos(th / 3.0) - a / 3.0,
                 -2.0 * q * math.cos((th + 2.0 * math.pi) / 3.0) - a / 3.0,
@@ -1005,7 +1045,7 @@ class Math2:
         # CONVERSION_GUIDE R8: replicate Java Math.signum(0) == 0 exactly.
         sign_r = 0.0 if r == 0.0 else math.copysign(1.0, r)
         A = -sign_r * (abs(r) + math.sqrt(r * r - q * q * q)) ** (1.0 / 3.0)
-        B = 0.0 if a == 0.0 else q / a
+        B = 0.0 if a == 0.0 else q / a  # JAVA-BUG-7: `a` (param) should be `A` (local)
         return np.array([A + B - a / 3.0], dtype=np.float64)
 
     @staticmethod

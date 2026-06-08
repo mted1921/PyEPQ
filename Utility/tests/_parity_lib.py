@@ -122,8 +122,8 @@ if str(_PORT_DIR) not in sys.path:
 # Parity gating
 # ============================================================================
 
-#PARITY_ENABLED: bool = bool(os.environ.get("EPQ_PARITY"))
-PARITY_ENABLED: bool = True  # DEV OVERRIDE -- set to False to disable parity testing without
+# PARITY_ENABLED: bool = bool(os.environ.get("EPQ_PARITY"))  # restore to re-enable env-var gating
+PARITY_ENABLED: bool = True  # DEV OVERRIDE — safe because conftest.py pre-starts the JVM
 try:
     import jpype
     _JPYPE_OK: bool = True
@@ -374,3 +374,22 @@ def _bdry_close(actual: float, expected: float,
 
 _NAN: float = float("nan")
 _INF: float = float("inf")
+
+
+# ============================================================================
+# Test runner helper
+# ============================================================================
+
+def run_tests(test_file: str) -> None:
+    """Run pytest on *test_file* and stream output to the terminal.
+
+    conftest.py auto-tees the output to test_output.txt, so no separate
+    capture logic is needed here.  Typical usage::
+
+        if __name__ == "__main__":
+            from _parity_lib import run_tests; run_tests(__file__)
+    """
+    import subprocess
+    raise SystemExit(
+        subprocess.call([sys.executable, "-m", "pytest", test_file, "-v"])
+    )

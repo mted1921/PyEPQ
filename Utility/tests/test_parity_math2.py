@@ -773,8 +773,8 @@ class TestSpecialFunctions:
 
     @given(small)
     @slow
-    def test_erf_literal(self, x):
-        assert _close(JavaMath2.erf(x), PyMath2._erf_literal(x), TOL_LITERAL)
+    def testerf_literal(self, x):
+        assert _close(JavaMath2.erf(x), PyMath2.erf_literal(x), TOL_LITERAL)
 
     @given(small)
     @slow
@@ -787,14 +787,14 @@ class TestSpecialFunctions:
         # Restricted to a, x in [1e-3, 50] -- where Java's 100-iter NR
         # series converges reliably. Wider args have known degradation
         # that's a Java NR limitation, not a port issue. The literal-
-        # port test above (test_gammap_literal) covers wider ranges.
+        # port test above (testgammap_literal) covers wider ranges.
         assert _close(JavaMath2.gammap(a, x), PyMath2.gammap(a, x), TOL_NR_LIB)
 
     @given(positive, positive)
     @slow
-    def test_gammap_literal(self, a, x):
+    def testgammap_literal(self, a, x):
         assert _close(JavaMath2.gammap(a, x),
-                      PyMath2._gammap_literal(a, x), TOL_LITERAL)
+                      PyMath2.gammap_literal(a, x), TOL_LITERAL)
 
     @given(nr_arg, nr_arg)
     @slow
@@ -813,10 +813,10 @@ class TestSpecialFunctions:
 
     @given(positive)
     @slow
-    def test_gammaln_literal(self, x):
+    def testgammaln_literal(self, x):
         # Literal port uses identical NR coefficients -> exact match.
         assert _close(JavaMath2.gammaln(x),
-                      PyMath2._gammaln_literal(x), TOL_LITERAL)
+                      PyMath2.gammaln_literal(x), TOL_LITERAL)
 
     @given(st.floats(min_value=0.01, max_value=0.99),
            st.integers(min_value=1, max_value=20))
@@ -1295,22 +1295,4 @@ class TestJamaMatrixBridge:
 
 
 if __name__ == "__main__":
-    # Quick path: `python test_parity_math2.py` runs only Part 1 (fast).
-    # Output is tee'd to test_output.txt alongside this file in real time.
-    import pathlib
-    import subprocess
-
-    _out_path = pathlib.Path(__file__).parent / "test_output.txt"
-    _proc = subprocess.Popen(
-        [sys.executable, "-m", "pytest", __file__, "-v"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        encoding="utf-8",
-    )
-    with open(_out_path, "w", encoding="utf-8") as _fh:
-        for _line in _proc.stdout:
-            sys.stdout.write(_line)
-            _fh.write(_line)
-    _proc.wait()
-    sys.exit(_proc.returncode)
+    from _parity_lib import run_tests; run_tests(__file__)

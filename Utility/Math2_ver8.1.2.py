@@ -7,6 +7,26 @@ Rev 1: Initial strict literal translation from Java, complying with R1-R10.
        All array iterations, Numerical Recipes loops, and Java floating
        point quirks are preserved explicitly without library substitutions
        except where bridging anonymous classes requires it.
+
+------------------------------------------------------------------------
+Original Java source (gov.nist.microanalysis.Utility.Math2)
+------------------------------------------------------------------------
+/**
+ * <p>
+ * Useful math functions not provided in the standard libraries.
+ * </p>
+ * <p>
+ * Copyright: Pursuant to title 17 Section 105 of the United States Code this
+ * software is not subject to copyright protection and is in the public domain
+ * </p>
+ * <p>
+ * Company: National Institute of Standards and Technology
+ * </p>
+ *
+ * @author Nicholas W. M. Ritchie
+ * @version 1.0
+ */
+------------------------------------------------------------------------
 """
 
 from __future__ import annotations

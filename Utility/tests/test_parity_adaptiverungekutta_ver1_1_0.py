@@ -1,4 +1,4 @@
-r"""
+﻿r"""
 test_parity_adaptiverungekutta.py -- parity harness for AdaptiveRungeKutta_ver1.py
 
 Structure
@@ -57,8 +57,8 @@ from _parity_lib import (
     _NAN, _INF,
 )
 
-from AdaptiveRungeKutta_ver1 import AdaptiveRungeKutta as PyARK
-from UtilException_ver1 import UtilException
+from AdaptiveRungeKutta import AdaptiveRungeKutta as PyARK
+from UtilException import UtilException
 
 
 # ---------------------------------------------------------------------------
@@ -624,20 +624,4 @@ class TestAdaptiveRungeKuttaParity:
 # ############################################################################
 
 if __name__ == "__main__":
-    import pathlib
-    import subprocess
-
-    _out_path = pathlib.Path(__file__).parent / "test_output.txt"
-    _proc = subprocess.Popen(
-        [sys.executable, "-m", "pytest", __file__, "-v"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-        encoding="utf-8",
-    )
-    with open(_out_path, "w", encoding="utf-8") as _fh:
-        for _line in _proc.stdout:
-            sys.stdout.write(_line)
-            _fh.write(_line)
-    _proc.wait()
-    sys.exit(_proc.returncode)
+    from _parity_lib import run_tests; run_tests(__file__)

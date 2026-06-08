@@ -9,6 +9,28 @@ CHANGES
 - `ArithmeticException`      → `ArithmeticError`.
 - `EvaluationCount()` return type kept as `float` to match Java's declared
   `public double` signature; internal `mNEvals` field remains `int`.
+
+------------------------------------------------------------------------
+Original Java source (gov.nist.microanalysis.Utility.FindRoot)
+------------------------------------------------------------------------
+/**
+ * <p>
+ * A simple root finder based on Jack Crenshaw's "world's best root finder."
+ * Derive a class from this that implements function (and optionally also
+ * initialize). Anonymous classes work nicely for this.
+ * </p>
+ * <p>
+ * Copyright: Pursuant to title 17 Section 105 of the United States Code this
+ * software is not subject to copyright protection and is in the public domain
+ * </p>
+ * <p>
+ * Company: National Institute of Standards and Technology
+ * </p>
+ *
+ * @author Nicholas W. M. Ritchie
+ * @version 1.0
+ */
+------------------------------------------------------------------------
 """
 from __future__ import annotations
 
