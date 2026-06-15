@@ -1,15 +1,142 @@
 # EPQ Agent Prompts
 
-Copy-paste prompts for AI-agent-driven EPQ Java → Python workflows.
-Each prompt is self-contained — attach the listed context files and send.
+Version 1 · 2026-06-15
 
-**Workflow order:**
-1. Port agent (Prompt 1) → produces `<Class>_ver1_1_0.py`
-2. Manual review against CONVERSION_GUIDE.md
-3. Harness agent (Prompt 2) → produces `tests/test_parity_<class>_ver1_1_0.py`
-4. Run tests: `python tests/test_parity_<class>_ver1_1_0.py`
-5. If failures → Repair agent (Prompt 3) → attach `test_output.txt` + port + test + Java source
-6. Repeat steps 4–5 until all tests pass
+Copy-paste prompts for AI-agent-driven EPQ Java → Python work. Each prompt is a
+self-contained unit — attach the listed context files and send. Prompt numbers
+are reference labels, not an execution sequence.
+
+---
+
+## Prompt 0 — Conversion Spec
+
+**Attach before sending:**
+1. The Java source file to analyse
+2. `UTILITY_LEDGER.md` — to identify sibling port filenames for the dependency table
+
+---
+
+You are producing the conversion specification for a single Java class.
+Your only task is to write the spec file. Do **not** write any Python code.
+
+Output filename: `spec/<CLASS_NAME>.spec.md`
+
+### Step 1 — Parse the Java source
+
+Extract:
+- `CLASS_NAME` — from `public [abstract] class <NAME>`
+- `IS_ABSTRACT` — whether the class declaration includes `abstract`
+- Every `public` and `protected` field, constant, and method signature
+- Every Java `import` statement (inbound dependencies)
+- Any `abstract` method declarations (extension points)
+
+### Step 2 — Write the spec
+
+```markdown
+# <CLASS_NAME> Conversion Spec
+
+## Java class
+`gov.nist.microanalysis.Utility.<CLASS_NAME>`
+
+Source: `src/gov/nist/microanalysis/Utility/<CLASS_NAME>.java`
+
+---
+
+## Inbound dependencies (Java imports)
+- List each EPQ-internal import and what it provides.
+- Note any Jama, javax.swing, java.awt, java.io imports separately.
+
+---
+
+## Outbound dependents (callers of public methods)
+Summarise what other classes call this one (grep `<CLASS_NAME>` in `src/`).
+If no grep is possible, state "not audited".
+
+---
+
+## Public API surface
+
+| Java signature | Python signature | Notes |
+|---|---|---|
+| (one row per public constructor and method) | | |
+
+For each abstract method, mark it `@abstractmethod` in the Notes column.
+For each overloaded group, list all overloads.
+
+---
+
+## Private / protected members
+
+| Java | Python |
+|---|---|
+| (fields and helpers worth noting) | |
+
+---
+
+## Overloaded methods (split plan)
+For each group of Java overloads, state the Python translation:
+- Same-type overloads with a default argument → single function with defaults.
+- Different-type overloads → suffix-split per R4 (`_vv`, `_vs`, `_arr`, `_scalar`, etc.).
+- Describe the dispatcher strategy if applicable.
+
+---
+
+## Mutable-output methods
+List every method that mutates a caller-supplied array in place
+(R5: `_require_mutable_f64` guard needed). Cite the Java line.
+
+---
+
+## Touchpoints into Jama / javax.swing / java.awt / java.io
+If none: "None."
+
+---
+
+## Abstract class strategy
+(Only if IS_ABSTRACT.)
+State which abstract methods exist, what the extension contract is, and
+that direct JPype parity is blocked by M4. Specify the concrete-subclass
+strategy for the parity harness.
+
+---
+
+## Java-specific translation decisions
+
+| Java pattern | Python translation | Rule |
+|---|---|---|
+| (one row per non-obvious mapping) | | |
+
+---
+
+## Suspected Java bugs
+For each suspected bug:
+- Quote the **exact Java source line**.
+- State the disposition: Preserve (port the bug verbatim in `_literal`) /
+  Fix (scipy/numpy primary corrects it) / Flag (needs human review).
+
+If none: "None identified."
+
+---
+
+## Static init order
+Note any `static {}` blocks or cross-class static references that require
+lazy resolution. If none: "None."
+
+---
+
+## Thread safety
+Copy the Java docstring note if present; otherwise assess from the source.
+```
+
+### Step 3 — Checklist
+
+- [ ] Every `public` constructor and method appears in the API surface table
+- [ ] Every Java `import` listed under inbound dependencies
+- [ ] Overloads explicitly planned (default args vs. suffix-split)
+- [ ] Mutable-output methods identified and R5 noted
+- [ ] Abstract methods flagged in the table and M4 strategy stated
+- [ ] Every suspected bug cites the exact Java source line
+- [ ] No Python code written
 
 ---
 
@@ -17,9 +144,12 @@ Each prompt is self-contained — attach the listed context files and send.
 
 **Attach before sending:**
 1. The Java source file to convert
-2. `_epq_compat.py`
-3. `CONVERSION_GUIDE.md`
-4. `Math2.py` (style reference)
+2. `spec/<CLASS_NAME>.spec.md` — **required** (produced by Prompt 0; reviewed and approved before this step)
+3. `_epq_compat.py`
+4. `CONVERSION_GUIDE.md`
+5. `Math2_ver8_1_5.py` (style reference)
+6. `UTILITY_LEDGER.md` — **required when the Java class imports other Utility classes**
+   (tells you the exact current filename of each sibling port)
 
 ---
 
@@ -38,7 +168,7 @@ Output filename: `<CLASS_NAME>_ver1_1_0.py`
 
 ### Step 2 — Write the port
 
-Use `Math2.py` as the style reference throughout.
+Use `Math2_ver8_1_5.py` as the style reference throughout.
 
 **File header** — copy the Java `/** ... */` Javadoc verbatim:
 ```python
@@ -81,7 +211,7 @@ except ImportError:
 - **R3** — Import `EPQException`, `JavaRandom`, `JavaTreeSet`, `JamaMatrix`, `F64Array` from `_epq_compat` only — never define local replacements. Use `JavaTreeSet` wherever Java used `java.util.TreeSet`; never reimplement it locally.
 - **R4** — Split Java overloads into type-suffixed functions (`_vv`, `_vs`, `_arr`, `_scalar`, `_int`, `_double`).
 - **R5** — Call `_require_mutable_f64` before any in-place array mutation.
-- **R6** — For every Java bug: quote the **exact Java source line** in the comment (`# JAVA-BUG-N: Java source: \`return x > 0 ? x : 0;\``), add an entry in `BUG_LEDGER`, and provide an optional `*_strict` companion. Do not infer bugs from behaviour without citing the Java line — fabricated entries cause false parity failures. If no bugs exist (or Java source is unavailable), write `BUG_LEDGER: tuple = ()  # no bugs identified`.
+- **R6** — Maintain the `BUG_LEDGER` per **BUG_GUIDE.md**: quote the exact Java source line at a `# JAVA-BUG-N` marker, add a tuple entry, and provide an optional `*_strict` companion. Never infer a bug without citing the Java line. If no bugs exist, write `BUG_LEDGER: tuple = ()  # no bugs identified`.
 - **R7** — Every Java `/` between integer types → Python `//`. Every `Math.round(x)` → `int(math.floor(x + 0.5))`.
 - **R8** — `Math.signum(0)` → `0.0 if v == 0.0 else math.copysign(1.0, v)`.
 - **R9** — Annotate every parameter, return type, class field, and non-obvious local variable. Use `F64Array` for `double[]`. Explicitly cast `int` fields returned by `double`-declared methods: `return float(self.mField)`.
@@ -93,11 +223,12 @@ except ImportError:
 - [ ] Every public non-abstract mathematical method has both `foo()` and `foo_literal()`
 - [ ] `public abstract` methods use the **un-prefixed** Java name (e.g. `compute`, not `_compute`)
 - [ ] `equals()`/`hashCode()`/`toString()` have both a dunder and a named alias
-- [ ] `BUG_LEDGER` entries each cite the exact Java source line; empty tuple if none
+- [ ] `BUG_LEDGER` maintained per BUG_GUIDE.md (exact Java line cited; empty tuple if none)
 - [ ] All parameters, returns, fields, and non-obvious locals annotated
 - [ ] Abstract class → `abc.ABC`; abstract methods → `@abc.abstractmethod`
 - [ ] Java Javadoc copied verbatim into module docstring
-- [ ] Three-tier import fallback used for `_epq_compat`
+- [ ] Three-tier import fallback used for `_epq_compat` **and any sibling port modules**
+- [ ] Sibling module filenames taken from `UTILITY_LEDGER.md` "Port file" column — never guessed
 - [ ] No test code written
 
 ---
@@ -106,23 +237,30 @@ except ImportError:
 
 **Attach before sending:**
 1. The Java source file
-2. The completed Python port (`<CLASS_NAME>_ver1_1_0.py`)
+2. `spec/<CLASS_NAME>.spec.md` — the approved conversion spec (produced by Prompt 0)
 3. `_parity_lib.py`
 4. `TESTING_GUIDE.md`
 
 ---
 
-You are writing the parity test harness for an already-completed Python port.
-Your only task is to produce the test file. Do **not** modify the port file or
-any other file.
+You are writing the parity test harness **before the Python port exists**.
+Your inputs are the Java source and the approved conversion spec.
+Your only task is to produce the test file. Do **not** write any port code or
+modify any other file.
+
+The port module (`<CLASS_NAME>_ver1_1_0.py`) does not exist yet — write imports
+referencing its expected filename and the agent that writes the port will
+produce a file that satisfies them.
 
 ### Step 1 — Parse the inputs
 
-Extract:
-- `CLASS_NAME` — from the port file or Java source
-- `IS_ABSTRACT` — whether the class is declared `abstract`
+Extract from the **Java source and spec file**:
+- `CLASS_NAME` — from the spec or Java `public [abstract] class <NAME>`
+- `IS_ABSTRACT` — from the spec's "Abstract class strategy" section
 - All `public` method signatures and their documented behaviour
-- Any `BUG_LEDGER` entries in the Python port
+- Any suspected Java bugs listed in the spec's "Suspected Java bugs" section
+  (use these to plan `TestPreservedBugs` / `TestStrictVariants` — do NOT invent bugs
+  not listed in the spec)
 
 Output filename: `tests/test_parity_<class_name_lower>_ver1_1_0.py`
 
@@ -148,6 +286,10 @@ from _parity_lib import (
 from <CLASS_NAME>_ver1_1_0 import <CLASS_NAME> as Py<CLASS_NAME>
 from _epq_compat import EPQException
 
+# NEVER use the full dotted path (gov.nist.microanalysis.PyEPQ.Utility.<CLASS_NAME>_ver...).
+# _parity_lib.py adds PyEPQ/Utility/ to sys.path on import, so the bare module
+# name above is the ONLY correct form. The full path causes "No module named 'gov'"
+# because sys.path contains Utility/, not the repo root.
 ctx = setup_parity("gov.nist.microanalysis.Utility.<CLASS_NAME>")
 Java<CLASS_NAME> = ctx.java_class
 
@@ -169,7 +311,7 @@ if __name__ == "__main__":
 - `TOL_LITERAL` (1e-14) for same-algorithm comparisons
 - `TOL_NR_LIB` (1e-4) for scipy vs Java Numerical Recipes
 
-**For `BUG_LEDGER` entries:**
+**For bugs listed in the spec's "Suspected Java bugs" section:**
 - `TestPreservedBugs` — parity test: buggy Java output == buggy Python output
 - `TestStrictVariants` — unit-test the `*_strict` Python companion (no Java call)
 
@@ -180,11 +322,13 @@ if __name__ == "__main__":
 - [ ] `TestHypothesis` with `@given` + `@slow` present
 - [ ] Abstract → parity section is `@pytest.mark.skip(M4)` with concrete subclass validation
 - [ ] Concrete → `@needs_java` parity tests cover all public methods
-- [ ] `BUG_LEDGER` entries have both a preserved-bug parity test and a strict-variant test
+- [ ] Spec bugs (Suspected Java bugs section) have both a preserved-bug parity test and a strict-variant test; no bugs invented beyond what the spec lists
 - [ ] `if __name__ == "__main__":` block at bottom of file
-- [ ] No port code written
+- [ ] No port code written — the port does not exist yet; the harness is pre-written
+- [ ] Expected values derived from Java source or closed-form math, NOT from the port's algorithm (the port doesn't exist yet — see TESTING_GUIDE "Read the port before fixing the expected value" once the port exists)
 - [ ] Item/argument types in every test call match the **Java method signature** — if Java requires `int item`, never use a string, list, or other object as the value
-- [ ] `@needs_java` parity tests call Java constructors with the **actual Java signature** (look it up in the Java source), not the Python port's generalized form; add a comment showing the Java constructor when they differ
+- [ ] `@needs_java` parity tests call Java constructors with the **actual Java signature** (look it up in the Java source), not any generalized Python form; add a comment showing the Java constructor when they differ
+- [ ] Port module imported with the **bare module name** (`from <CLASS_NAME>_ver1_1_0 import ...`), never with the full dotted path (`gov.nist.microanalysis.PyEPQ.Utility.<CLASS_NAME>_ver1_1_0`). The three-tier import pattern in CONVERSION_GUIDE R3 is for port files importing `_epq_compat` — it does NOT apply here.
 
 ---
 

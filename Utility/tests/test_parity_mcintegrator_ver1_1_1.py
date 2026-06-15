@@ -1,5 +1,5 @@
 ﻿r"""
-test_parity_mcintegrator_ver1_1_0.py — parity harness for MCIntegrator_ver1_1_0.py
+test_parity_mcintegrator_ver1_1_1.py — parity harness for MCIntegrator_ver1_1_1.py
 
 MCIntegrator is abstract (M4: JPype cannot extend abstract Java classes).
 Concrete subclasses implement:
@@ -28,10 +28,11 @@ from hypothesis import given, settings as hyp_settings, strategies as st
 from _parity_lib import (
     setup_parity, needs_java, PARITY_ENABLED,
     TOL_NR_LIB,
+    slow,
     _close,
 )
 
-from MCIntegrator_ver1_1_0 import MCIntegrator as PyMCIntegrator
+from MCIntegrator_ver1_1_2 import MCIntegrator as PyMCIntegrator
 
 ctx = setup_parity("gov.nist.microanalysis.Utility.MCIntegrator")
 JavaMCIntegrator = ctx.java_class
@@ -178,6 +179,20 @@ class TestEdgeCases:
         ig = _SphereVolumeIntegrator()
         result = ig.compute(1000)
         assert len(result) == 1
+
+
+# ---------------------------------------------------------------------------
+# TestHypothesis
+# ---------------------------------------------------------------------------
+
+class TestHypothesis:
+    @given(st.integers(1, 50_000))
+    @slow
+    def test_empty_region_always_zero(self, n):
+        """Empty region: any sample count ≥ 1 must yield a zero result array."""
+        ig = _EmptyRegionIntegrator()
+        result = ig.compute(n)
+        assert result[0] == 0.0
 
 
 # ---------------------------------------------------------------------------

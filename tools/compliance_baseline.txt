@@ -1,0 +1,4 @@
+# compliance_baseline.txt -- pre-existing compliance debt.
+# Each line is a failure key check_compliance.py downgrades to WARN.
+# Resolved entries are auto-pruned; do NOT add new ports here.
+

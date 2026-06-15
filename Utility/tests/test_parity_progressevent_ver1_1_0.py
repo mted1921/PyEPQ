@@ -25,7 +25,7 @@ from _parity_lib import (
     _close,
 )
 
-from ProgressEvent import ProgressEvent as PyProgressEvent
+from ProgressEvent_ver1_1_0 import ProgressEvent as PyProgressEvent
 
 ctx = setup_parity("gov.nist.microanalysis.Utility.ProgressEvent")
 JavaProgressEvent = ctx.java_class

@@ -1,5 +1,5 @@
 """
-AdaptiveRungeKutta_ver1.py -- Faithful Python port of
+AdaptiveRungeKutta_ver1_1_2.py -- Faithful Python port of
 gov.nist.microanalysis.Utility.AdaptiveRungeKutta.
 
 Java class hierarchy: AdaptiveRungeKutta (abstract).
@@ -94,7 +94,10 @@ from typing import Optional
 import numpy as np
 
 from _epq_compat import F64Array
-from gov.nist.microanalysis.PyEPQ.Utility.UtilException import UtilException
+try:
+    from .UtilException_ver1_1_0 import UtilException
+except ImportError:
+    from UtilException_ver1_1_0 import UtilException  # type: ignore[no-redef]
 
 
 # IEEE-754 double maximum — identical to Java's Double.MAX_VALUE.
@@ -230,6 +233,9 @@ class AdaptiveRungeKutta(abc.ABC):
             self.mWs5 = np.empty(self.mNVariables, dtype=np.float64)
             self.mWs6 = np.empty(self.mNVariables, dtype=np.float64)
             self.mYTemp = np.empty(self.mNVariables, dtype=np.float64)
+        assert (self.mWs2 is not None and self.mWs3 is not None
+                and self.mWs4 is not None and self.mWs5 is not None
+                and self.mWs6 is not None and self.mYTemp is not None)
         # First step
         for i in range(self.mNVariables):
             self.mYTemp[i] = y[i] + (b21 * h * dydx[i])
@@ -282,6 +288,7 @@ class AdaptiveRungeKutta(abc.ABC):
         if self.mYErr is None:
             self.mYErr = np.empty(self.mNVariables, dtype=np.float64)
             self.mQcYTemp = np.empty(self.mNVariables, dtype=np.float64)
+        assert self.mYErr is not None and self.mQcYTemp is not None
         h: float = htry
         # errmax = 2.0 seeds the while-loop to guarantee the first iteration
         # runs — this replicates Java's do-while semantics exactly.
@@ -349,10 +356,12 @@ class AdaptiveRungeKutta(abc.ABC):
 
     def getX(self, i: int) -> float:
         """x-coordinate of the i-th saved point (i < getNSaved())."""
+        assert self.mXSave is not None
         return float(self.mXSave[i])
 
     def getY(self, i: int) -> F64Array:
         """y-values of the i-th saved point; array of length getNVariables()."""
+        assert self.mYSave is not None
         return self.mYSave[i]
 
     def getStepCount(self) -> int:

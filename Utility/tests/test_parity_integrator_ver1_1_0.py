@@ -19,16 +19,18 @@ from __future__ import annotations
 
 import math
 
+import numpy as np
 import pytest
 from hypothesis import given, strategies as st
 
 from _parity_lib import (
     setup_parity, needs_java, PARITY_ENABLED,
     TOL_LITERAL, TOL_NR_LIB,
+    slow,
     _close,
 )
 
-from Integrator_ver1_1_0 import Integrator as PyIntegrator
+from Integrator_ver1_1_2 import Integrator as PyIntegrator
 
 ctx = setup_parity("gov.nist.microanalysis.Utility.Integrator")
 JavaIntegrator = ctx.java_class
@@ -163,16 +165,37 @@ class TestIntegrateExp:
 
 
 # ---------------------------------------------------------------------------
+# TestDerivatives
+# ---------------------------------------------------------------------------
+
+class TestDerivatives:
+    def test_derivatives_sets_dydx(self):
+        """derivatives() must write getValue(x) into dydx[0]."""
+        ig = _ConstantIntegrator()
+        y = np.zeros(1, dtype=np.float64)
+        dydx = np.zeros(1, dtype=np.float64)
+        ig.derivatives(0.5, y, dydx)
+        assert dydx[0] == 1.0
+
+    def test_derivatives_linear(self):
+        ig = _LinearIntegrator()
+        y = np.zeros(1, dtype=np.float64)
+        dydx = np.zeros(1, dtype=np.float64)
+        ig.derivatives(3.0, y, dydx)
+        assert dydx[0] == 3.0
+
+
+# ---------------------------------------------------------------------------
 # TestHypothesis
 # ---------------------------------------------------------------------------
 
 class TestHypothesis:
     @given(st.floats(0.0, 10.0), st.floats(0.0, 10.0))
+    @slow
     def test_constant_integral_equals_interval_length(self, a, b):
         ig = _ConstantIntegrator()
         result = ig.integrate(a, b)
-        expected = abs(b - a)
-        assert _close(result, expected, 1e-4)
+        assert _close(result, b - a, 1e-4)  # FIX-1: signed integral; abs() was wrong
 
 
 # ---------------------------------------------------------------------------

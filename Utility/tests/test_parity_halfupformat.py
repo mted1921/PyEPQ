@@ -68,7 +68,7 @@ from _parity_lib import (
     _close,
 )
 
-from HalfUpFormat import (
+from HalfUpFormat_ver1_1_1 import (
     HalfUpFormat as PyHalfUpFormat,
     DecimalFormatSymbols as PyDecimalFormatSymbols,
     _MEDIUM_MATHEMATICAL_SPACE as SPACE,

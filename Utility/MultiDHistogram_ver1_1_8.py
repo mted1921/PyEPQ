@@ -1,5 +1,5 @@
 r"""
-MultiDHistogram_ver1_1_0.py — Python port of gov.nist.microanalysis.Utility.MultiDHistogram
+MultiDHistogram_ver1_1_8.py — Python port of gov.nist.microanalysis.Utility.MultiDHistogram
 
 Guide version : 1
 Generation    : 1
@@ -57,12 +57,12 @@ except ImportError:
 _TreeSet = JavaTreeSet  # local alias: TreeSet was an implementation detail in the Java source
 
 try:
-    from .Math2 import Math2
+    from .Math2_ver8_1_5 import Math2
 except ImportError:
     try:
-        from Math2 import Math2  # type: ignore
+        from Math2_ver8_1_5 import Math2  # type: ignore
     except ImportError:
-        from gov.nist.microanalysis.PyEPQ.Utility.Math2 import Math2  # type: ignore
+        from gov.nist.microanalysis.PyEPQ.Utility.Math2_ver8_1_5 import Math2  # type: ignore
 
 
 __all__ = ["MultiDHistogram", "LinearBins", "IBinning", "Bin"]

@@ -29,10 +29,11 @@ from hypothesis import given, settings as hyp_settings, strategies as st
 from _parity_lib import (
     setup_parity, needs_java, PARITY_ENABLED,
     TOL_LITERAL,
+    slow,
     _close,
 )
 
-from PoissonDeviate import PoissonDeviate as PyPoissonDeviate
+from PoissonDeviate_ver1_1_0 import PoissonDeviate as PyPoissonDeviate
 
 ctx = setup_parity("gov.nist.microanalysis.Utility.PoissonDeviate")
 JavaPoissonDeviate = ctx.java_class
@@ -164,6 +165,20 @@ class TestReproducibility:
         seq1 = [pd1.randomDeviate(m) for m in means]
         seq2 = [pd2.randomDeviate(m) for m in means]
         assert seq1 == seq2
+
+
+# ---------------------------------------------------------------------------
+# TestHypothesis
+# ---------------------------------------------------------------------------
+
+class TestHypothesis:
+    @given(st.floats(0.1, 100.0))
+    @slow
+    def test_all_samples_non_negative(self, lam):
+        """randomDeviate must always return a non-negative value for any mean."""
+        pd = PyPoissonDeviate(_SEED)
+        samples = [pd.randomDeviate(lam) for _ in range(50)]
+        assert all(s >= 0 for s in samples)
 
 
 # ---------------------------------------------------------------------------

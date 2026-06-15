@@ -44,7 +44,7 @@ from _parity_lib import (
     slow,
 )
 
-from UtilException import UtilException as PyUtilException
+from UtilException_ver1_1_0 import UtilException as PyUtilException
 from _epq_compat import EPQException
 
 ctx = setup_parity("gov.nist.microanalysis.Utility.UtilException")

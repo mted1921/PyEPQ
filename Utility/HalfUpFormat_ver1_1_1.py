@@ -1,5 +1,5 @@
 """
-HalfUpFormat_ver1.py -- Faithful Python port of
+HalfUpFormat_ver1_1_1.py -- Faithful Python port of
 gov.nist.microanalysis.Utility.HalfUpFormat.
 
 Java class hierarchy: HalfUpFormat extends DecimalFormat extends NumberFormat.

@@ -1,5 +1,5 @@
 """
-UtilException_ver1.py -- Faithful Python port of
+UtilException_ver1_1_0.py -- Faithful Python port of
 gov.nist.microanalysis.Utility.UtilException.
 
 CHANGES

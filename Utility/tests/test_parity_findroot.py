@@ -47,7 +47,7 @@ from _parity_lib import (
     _NAN, _INF,
 )
 
-from FindRoot import FindRoot as PyFindRoot
+from FindRoot_ver1_1_1 import FindRoot as PyFindRoot
 from _epq_compat import EPQException
 
 ctx = setup_parity("gov.nist.microanalysis.Utility.FindRoot")
@@ -287,7 +287,7 @@ def _make_java_linear_root(target: float):
 
 @pytest.mark.skip(
     reason=(
-        "JPype cannot instantiate Java abstract classes from Python. "
+        "M4: JPype cannot instantiate Java abstract classes from Python. "
         "FindRoot is not a Java interface, so neither @JImplements nor "
         "subclassing works. To enable: compile a concrete Java subclass "
         "(e.g. LinearFindRoot.java) and update _make_java_linear_root. "

@@ -42,12 +42,12 @@ except ImportError:
         from gov.nist.microanalysis.PyEPQ.Utility._epq_compat import EPQException, F64Array, JavaRandom  # type: ignore
 
 try:
-    from .Math2 import Math2
+    from .Math2_ver8_1_5 import Math2
 except ImportError:
     try:
-        from Math2 import Math2  # type: ignore
+        from Math2_ver8_1_5 import Math2  # type: ignore
     except ImportError:
-        from gov.nist.microanalysis.PyEPQ.Utility.Math2 import Math2  # type: ignore
+        from gov.nist.microanalysis.PyEPQ.Utility.Math2_ver8_1_5 import Math2  # type: ignore
 
 __all__ = ["PoissonDeviate"]
 

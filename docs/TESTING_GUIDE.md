@@ -1,13 +1,19 @@
 # EPQ Parity Test Harness Guide
 
-Infrastructure, templates, and disciplines for writing and running parity tests
+Version 1 · 2026-06-15
+
+Infrastructure, templates, and disciplines for **writing** parity-test harnesses
 against the Java EPQ library.
 
 ## How to use
 
-This guide covers **parity-test harness construction only**. For conversion
-rules (R1-R10, overloads, bug ledger, etc.) see **CONVERSION_GUIDE.md**. For
-copy-paste agent prompts see **PROMPTS.md**.
+This guide covers **parity-test harness construction** — how to author the
+test file.
+
+See also:
+- **CONVERSION_GUIDE.md** — code-conversion rules (R1-R10, overloads).
+- **BUG_GUIDE.md** — the shared bug/deviation-tracking convention.
+- **PROMPTS.md** — the copy-paste agent prompts.
 
 ---
 
@@ -41,7 +47,7 @@ is `N² · ε`, which exceeds absolute tolerance for N > ~10.
 All shared parity-test infrastructure lives in
 **`PyEPQ/Utility/tests/_parity_lib.py`**. Per-file test code imports
 from it and contains only file-specific logic. Reference implementation:
-[`test_parity_math2.py`](Utility/tests/test_parity_math2.py).
+[`test_parity_math2_ver1_1_3.py`](Utility/tests/test_parity_math2_ver1_1_3.py).
 
 ### What `_parity_lib.py` provides
 
@@ -158,10 +164,63 @@ def test_chiSquaredConfidenceLevel(self, confidence, df):
     assert _close(j, p, TOL_FINDROOT)
 ```
 
-**Bug-aware tests** (for `BUG_LEDGER` entries with `has_strict_variant=True`):
+**Bug-aware tests.** A `BUG_LEDGER` entry with `has_strict_variant=True` carries
+a two-part test obligation (defined in BUG_GUIDE.md). The two test classes:
 
 1. `TestPreservedBugs` — parity test: buggy Java vs buggy Python.
 2. `TestStrictVariants` — unit-test the `*_strict` companion (no Java comparison).
+
+> **Pitfall — dead code after a raising call.**
+> `TestPreservedBugs` tests that `compute()` *raises*; `TestEdgeCases`/
+> `TestStrictVariants` tests that `compute_strict()` *returns correctly*.
+> These behaviors are mutually exclusive — never test both in the same
+> method body. A common agent mistake is to append a `compute_strict()`
+> call underneath the still-present `compute()` call:
+>
+> ```python
+> # WRONG — compute() raises TypeError; the strict line is dead code.
+> result = ig.compute(0)
+> result = ig.compute_strict(0)   # never reached
+> assert result is not None
+> ```
+>
+> ```python
+> # RIGHT — two separate tests, one per behavior.
+> class TestEdgeCases:
+>     def test_zero_samples(self):
+>         assert ig.compute_strict(0) is not None
+>
+> class TestPreservedBugs:
+>     def test_zero_samples_raises(self):
+>         with pytest.raises(TypeError):
+>             ig.compute(0)
+> ```
+>
+> When reviewing an agent-generated repair for a `BUG_LEDGER` failure,
+> check that no code appears after an exception-raising call in the same
+> test body — it will never execute and the test will still fail.
+
+**`_literal` vs library: two separate Part 2 test entries required.**
+When a method has both a `_literal` port and a library-substituted version,
+each needs its own `@needs_java` test at the appropriate tolerance:
+
+```python
+@given(small)
+@slow
+def test_erf_lib(self, x):
+    # scipy vs Java NR: drift up to ~1e-8; use TOL_NR_LIB.
+    assert _close(JavaMath2.erf(x), PyMath2.erf(x), TOL_NR_LIB)
+
+@given(small)
+@slow
+def test_erf_literal(self, x):
+    # Identical NR algorithm on both sides: expect near-exact match.
+    assert _close(JavaMath2.erf(x), PyMath2.erf_literal(x), TOL_LITERAL)
+```
+
+Do NOT test both through a single entry. They exercise different code paths
+at different tolerances. A method that has a `_literal` companion but only
+a single parity test is silently undertested.
 
 ### Extending `_parity_lib.py`
 
@@ -190,6 +249,35 @@ Add a boundary case **after every fuzz finding** (pin it so the
 deterministic suite catches it next time) and **when porting a new
 function** (identify boundaries before writing the test).
 
+### Read the port before fixing the expected value
+
+A **port-only test** — one with no Java comparison, e.g. a coverage test
+that just exercises a method's branch — takes its expected value from
+*the port's algorithm*, not from textbook math. Faithfully-ported
+algorithms preserve Java's numerical degeneracies, so the mathematically
+"obvious" answer can be wrong, and all three expected-value sources above
+will hand you that wrong answer with full confidence.
+
+Worked example: `solvePoly([-1.0, 0.0, 1.0])` (x² − 1 = 0) "should"
+return ±1. But the port routes through the Numerical-Recipes stable
+quadratic, whose `b == 0` branch computes `q = -0.5·(0 + 0·√r) = -0.0`
+and returns `[-0.0, +inf]`. The port matches Java exactly — the ±1
+assumption was the bug, in the test.
+
+Before adding a port-only test:
+
+1. **Read the method and everything it delegates to** before choosing
+   inputs. Look for degenerate branches: `b == 0` in a stable quadratic,
+   exact-float `==` guards, preserved bugs, IEEE-754 `0/0`/`x/0` paths.
+2. Either pick an input that exercises the target branch *without*
+   landing on a degeneracy (use x² − 3x + 2 = 0, `b ≠ 0`), **or** pin the
+   degenerate output as the expected value with a comment explaining why
+   it is correct.
+
+This is distinct from the BUG_LEDGER discipline: a degeneracy like this
+is inherent to the faithful algorithm, not a logged JAVA-BUG, so the
+compliance checker will not flag it. The only defense is reading the port.
+
 ### Hypothesis profiles
 
 ```python
@@ -204,6 +292,67 @@ slow_fuzz = settings(max_examples=10000, deadline=None)
 When `slow_fuzz` finds a new failure: pin the input as a boundary case;
 fix the bug or recalibrate the tolerance; re-run `slow` to confirm green.
 
+### `capsys` + hypothesis incompatibility
+
+The pytest `capsys` fixture is incompatible with hypothesis `@given`.
+Hypothesis treats every parameter named `capsys` as a strategy argument,
+not a pytest fixture, causing a `TypeError` at collection time.
+
+For methods with a JAVA-BUG-N whose effect is printing to stdout
+(e.g. JAVA-BUG-4 `toContinuedFraction`), write **two separate tests**:
+
+```python
+# Part 1 — plain pytest test; capsys is safe here.
+def test_toContinuedFraction_silent_mode(self, capsys):
+    PyMath2.toContinuedFraction(3.14159, 1e-6, verbose=False)
+    assert capsys.readouterr().out == ""
+
+# Part 2 — hypothesis parity test; accepts Java stdout noise.
+@given(st.floats(-100.0, 100.0, ...), st.floats(1e-9, 1e-3))
+@slow
+def test_toContinuedFraction_parity(self, val, tol):
+    j = JavaMath2.toContinuedFraction(float(val), float(tol))
+    p = PyMath2.toContinuedFraction(val, tol, verbose=False)
+    assert [int(x) for x in j] == [int(x) for x in p]
+```
+
+The Java side will emit noise to stdout during the hypothesis test — this
+is unavoidable without rerouting `java.lang.System.out`. Accept it.
+
+### FIX-N boundary divergence: two-file discipline
+
+When a port-code fix (FIX-N) changes Python behavior at a specific input
+boundary relative to Java, a symmetric two-file update is required:
+
+**Part 1 (boundary table)** — add the boundary input with the FIXED expected
+value (not Java's), and comment the test with the FIX-N that produced it:
+
+```python
+def test_x1_is_exact_root(self):
+    # fl == 0.0: FIX-1 returns x1 immediately; Java loops and converges slowly.
+    r = PyMath2.findRoot([-1.0, 1.0], 1.0, 2.0, 1e-12)
+    assert _bdry_close(r, 1.0, atol=1e-10)
+```
+
+**Part 2 (parity test)** — skip the boundary input with an explicit `return`
+guard, citing the FIX-N in a comment:
+
+```python
+@given(...)
+@slow
+def test_findRoot_parity(self, coeffs, x1, x2):
+    fl = PyMath2.polynomial(coeffs, x1)
+    fh = PyMath2.polynomial(coeffs, x2)
+    # Endpoint-is-root cases covered in TestBoundaryFindRoot (FIX-1/FIX-3).
+    if fl == 0.0 or fh == 0.0:
+        return
+    ...
+```
+
+Neither file alone is sufficient: Part 1 without Part 2 leaves the
+divergence untested in the hypothesis space; Part 2 without Part 1 leaves
+the specific boundary uncovered by the deterministic suite.
+
 ### Branch coverage
 
 Run periodically, not every commit.
@@ -212,7 +361,7 @@ Run periodically, not every commit.
 python -m pip install coverage
 
 python -m coverage run --branch --include="*Math2_ver*.py" `
-    -m pytest src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py
+    -m pytest src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2_ver1_0_3.py
 python -m coverage report
 python -m coverage html  # browsable htmlcov/index.html
 ```

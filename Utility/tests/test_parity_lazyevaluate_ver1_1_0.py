@@ -17,14 +17,16 @@ import threading
 from typing import Generic, TypeVar
 
 import pytest
+from hypothesis import given, strategies as st
 
 from _parity_lib import (
     setup_parity, needs_java, PARITY_ENABLED,
     TOL_EXACT,
+    slow,
     _close,
 )
 
-from LazyEvaluate import LazyEvaluate as PyLazyEvaluate
+from LazyEvaluate_ver1_1_2 import LazyEvaluate as PyLazyEvaluate
 
 ctx = setup_parity("gov.nist.microanalysis.Utility.LazyEvaluate")
 JavaLazyEvaluate = ctx.java_class
@@ -202,6 +204,31 @@ class TestConcurrency:
 
         assert all(r == 100 for r in results)
         assert lz.call_count == 1
+
+
+# ---------------------------------------------------------------------------
+# TestHypothesis
+# ---------------------------------------------------------------------------
+
+class TestHypothesis:
+    @given(st.integers(1, 50))
+    @slow
+    def test_repeated_get_always_returns_same_value(self, n):
+        """get() must return the same cached value regardless of call count."""
+        lz = _ConstantLazy(99)
+        results = [lz.get() for _ in range(n)]
+        assert all(r == 99 for r in results)
+        assert lz.call_count == 1
+
+    @given(st.integers(1, 20))
+    @slow
+    def test_reset_cycles_recompute_exactly_once_each(self, n_cycles):
+        """Each reset-then-get cycle must invoke compute() exactly once."""
+        lz = _ConstantLazy(7)
+        for _ in range(n_cycles):
+            lz.get()
+            lz.reset()
+        assert lz.call_count == n_cycles
 
 
 # ---------------------------------------------------------------------------

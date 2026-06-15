@@ -1,5 +1,5 @@
 """
-FindRoot_ver1.py -- Faithful Python port of
+FindRoot_ver1_1_1.py -- Faithful Python port of
 gov.nist.microanalysis.Utility.FindRoot.
 
 CHANGES

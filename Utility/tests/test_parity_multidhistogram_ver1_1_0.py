@@ -35,10 +35,11 @@ from hypothesis import given, settings as hyp_settings, strategies as st
 from _parity_lib import (
     setup_parity, needs_java, PARITY_ENABLED,
     TOL_NR_LIB,
+    slow,
     _close,
 )
 
-from MultiDHistogram import (
+from MultiDHistogram_ver1_1_8 import (
     MultiDHistogram as PyMultiDHistogram,
     LinearBins as PyLinearBins,
 )
@@ -289,6 +290,98 @@ class TestChiSquaredTest:
             h2.add([v], 1)
         result = h1.chiSquaredTest(h2, 1, 0.05)
         assert isinstance(result, bool)
+
+
+# ---------------------------------------------------------------------------
+# TestBinMethods — Bin and LinearBins inner-class methods
+# ---------------------------------------------------------------------------
+
+class TestBinMethods:
+
+    def _bin(self, indices):
+        return PyMultiDHistogram.Bin(indices, 0)
+
+    def test_getDimension(self):
+        b = self._bin([2, 3])
+        assert b.getDimension() == 2
+
+    def test_getDimensions_on_linear_bins(self):
+        lb = PyLinearBins([0.0, 0.0], [1.0, 1.0], [5, 10])
+        assert lb.getDimensions() == (5, 10)
+
+    def test_limits_first_bin(self):
+        lb = PyLinearBins([0.0], [1.0], [4])
+        result = lb.limits(0, 0)
+        assert result is not None
+        assert abs(result[0] - 0.0) < 1e-12
+        assert abs(result[1] - 0.25) < 1e-12
+
+    def test_limits_out_of_range_returns_none(self):
+        lb = PyLinearBins([0.0], [1.0], [4])
+        assert lb.limits(10, 0) is None
+
+    def test_contains_item_present(self):
+        b = self._bin([0, 0])
+        b.add(42)
+        assert b.contains(42)
+
+    def test_contains_item_absent(self):
+        b = self._bin([0, 0])
+        assert not b.contains(99)
+
+    def test_distance_same_bin(self):
+        b = self._bin([1, 1])
+        assert b.distance(b) == 0.0
+
+    def test_distance_adjacent(self):
+        b1 = self._bin([0, 0])
+        b2 = self._bin([1, 0])
+        assert b1.distance(b2) == 1.0
+
+    def test_adjacent_bin_face_sharing(self):
+        # adjacent_bin uses m=1: exactly one coordinate differs by 1.
+        assert self._bin([0, 0]).adjacent_bin(self._bin([1, 0]))
+
+    def test_adjacent_bin_diagonal_not_adjacent(self):
+        # Diagonal neighbour: face-sharing (m=1) excludes it.
+        assert not self._bin([0, 0]).adjacent_bin(self._bin([1, 1]))
+
+    def test_adjacent_bin_far_not_adjacent(self):
+        assert not self._bin([0, 0]).adjacent_bin(self._bin([2, 0]))
+
+    def test_adjacent_bin_m_includes_diagonal(self):
+        # m=2 counts the diagonal neighbour (Manhattan distance 2 <= 2).
+        assert self._bin([0, 0]).adjacent_bin_m(self._bin([1, 1]), 2)
+
+    def test_compareTo_equal(self):
+        b1 = self._bin([2, 3])
+        b2 = self._bin([2, 3])
+        assert b1.compareTo(b2) == 0
+
+    def test_compareTo_less(self):
+        b1 = self._bin([1, 0])
+        b2 = self._bin([2, 0])
+        assert b1.compareTo(b2) == -1
+
+    def test_compareTo_greater(self):
+        b1 = self._bin([3, 0])
+        b2 = self._bin([2, 0])
+        assert b1.compareTo(b2) == 1
+
+
+# ---------------------------------------------------------------------------
+# TestHypothesis
+# ---------------------------------------------------------------------------
+
+class TestHypothesis:
+    @given(st.integers(1, 100))
+    @slow
+    def test_total_count_equals_items_added(self, n):
+        """getTotalCount() must equal the number of add() calls made."""
+        h = _make_2d_histo()
+        for i in range(n):
+            h.add([0.05 + (i * 0.009) % 0.9, 0.05], i)
+        assert h.getTotalCount() == n
 
 
 # ---------------------------------------------------------------------------

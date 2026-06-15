@@ -57,8 +57,8 @@ from _parity_lib import (
     _NAN, _INF,
 )
 
-from AdaptiveRungeKutta import AdaptiveRungeKutta as PyARK
-from UtilException import UtilException
+from AdaptiveRungeKutta_ver1_1_2 import AdaptiveRungeKutta as PyARK
+from UtilException_ver1_1_0 import UtilException
 
 
 # ---------------------------------------------------------------------------

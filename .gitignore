@@ -1,0 +1,10 @@
+# Python (PyEPQ port + parity harness)
+__pycache__/
+*.py[cod]
+.hypothesis/
+.pytest_cache/
+.coverage
+htmlcov/
+**/tests/test_output.txt
+**/tests/archive/
+.claude/

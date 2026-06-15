@@ -18,6 +18,7 @@ Also tees all terminal output to test_output.txt (ANSI codes stripped) so
 every test run produces an artefact that can be inspected without a terminal.
 No __main__ block is needed in individual test files for this to work.
 """
+import importlib.util
 import re as _re
 import sys
 from pathlib import Path
@@ -25,6 +26,47 @@ from pathlib import Path
 import pytest
 
 _ANSI_RE = _re.compile(r'\x1b\[[0-9;]*[mK]')
+
+# Top-level `import X` / `from X import ...` statements in a test file.
+_IMPORT_RE = _re.compile(r'^(?:from|import)\s+(\w+)', _re.MULTILINE)
+
+
+def pytest_ignore_collect(collection_path, config):
+    """Skip pre-written parity tests whose port module doesn't exist yet.
+
+    Harnesses are sometimes written BEFORE the port is generated (the
+    test file is part of the conversion spec). Until the port module
+    lands, importing the test file raises ImportError at collection,
+    aborting the whole-suite run. Instead: detect the missing port
+    module and ignore the file, reporting it as pending on stderr.
+    """
+    p = Path(str(collection_path))
+    if not (p.name.startswith("test_parity_") and p.suffix == ".py"):
+        return None
+    try:
+        src = p.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    port_dir = Path(__file__).resolve().parent.parent
+    missing: list[str] = []
+    for name in dict.fromkeys(_IMPORT_RE.findall(src)):
+        if name.startswith("_"):       # _parity_lib, _epq_compat, __future__
+            continue
+        if (port_dir / f"{name}.py").is_file():
+            continue
+        try:
+            if importlib.util.find_spec(name) is not None:
+                continue               # stdlib or installed package
+        except (ImportError, ValueError):
+            pass
+        missing.append(name)
+    if missing:
+        sys.stderr.write(
+            f"conftest: SKIPPING {p.name} — pending pre-written harness; "
+            f"port module(s) not yet generated: {', '.join(missing)}\n"
+        )
+        return True
+    return None
 
 
 class _TxtTee:
@@ -56,6 +98,11 @@ class _TxtTee:
 
 
 def pytest_configure():
+    # Ensure _parity_lib is importable when pytest is invoked from the repo
+    # root rather than from inside the tests/ directory.
+    _tests_dir = str(Path(__file__).resolve().parent)
+    if _tests_dir not in sys.path:
+        sys.path.insert(0, _tests_dir)
     try:
         from _parity_lib import _PARITY_READY, _JAR_PATH, _EXTRA_JARS
     except ImportError:

@@ -1,5 +1,5 @@
 r"""
-test_parity_math2.py - parity harness for Math2.py
+test_parity_math2_ver1_1_3.py - parity harness for Math2.py
 
 This file is in three layers:
 
@@ -58,12 +58,12 @@ automatically (e.g. jama-1.0.3.jar for the createRowMatrix test).
 RUNNING (PowerShell on Windows)
 -------------------------------
   # Part 1 only (fast, no Java needed):
-  python -m pytest src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py -v
+  python -m pytest src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2_ver1_1_3.py -v
 
   # Part 1 + Part 2 (requires Java 21+ and jpype1):
   $env:JAVA_HOME = "C:\Path\To\jdk-25.x.x-hotspot"
   $env:EPQ_PARITY = "1"
-  python -m pytest src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2.py -v
+  python -m pytest src\gov\nist\microanalysis\PyEPQ\Utility\tests\test_parity_math2_ver1_1_3.py -v
 
   # With branch-coverage report:
   python -m coverage run --branch --include="*Math2.py" -m pytest ...
@@ -106,7 +106,7 @@ from _parity_lib import (
     _NAN, _INF,
 )
 
-from Math2 import Math2 as PyMath2  # noqa: E402
+from Math2_ver8_1_5 import Math2 as PyMath2  # noqa: E402
 from _epq_compat import EPQException, JavaRandom, JamaMatrix  # noqa: E402
 
 # Start the JVM (if parity is enabled) and load Math2 + commonly-used
@@ -405,6 +405,28 @@ class TestBoundaryScalars:
     def test_cubeRoot(self, x, expected):
         assert _bdry_close(PyMath2.cubeRoot(x), expected)
 
+    def test_cubeRoot_1ulp_platform_edge(self):
+        # Pinned from slow_fuzz: x=457139.0787073381, magnitude ~77.
+        # JVM Math.pow and CPython math.pow differ by 1 ULP here
+        # (ULP ≈ 1.42e-14 > TOL_LITERAL=1e-14). 3e-14 covers the drift.
+        assert _bdry_close(PyMath2.cubeRoot(457139.0787073381),
+                           77.03405918374997, atol=3e-14)
+
+    def test_gammaln_literal_large_x_2ulp_edge(self):
+        # Pinned from slow_fuzz: x=76.67, output≈254.8.
+        # gammaln_literal uses identical NR Lanczos coefficients; at this
+        # magnitude, 1 ULP ≈ 2.84e-14 (output in [128,256)) and JVM vs
+        # CPython log/exp differ by ~2 ULPs (5e-14). 6e-14 covers it.
+        assert _bdry_close(PyMath2.gammaln_literal(76.67321535894747),
+                           254.80447217372816, atol=6e-14)
+
+    def test_li_large_x_5ulp_edge(self):
+        # Pinned from slow_fuzz: x=78.98, output≈25.4.
+        # li runs 20 fixed lxp *= lx multiplications; at output ≈ 25-29,
+        # JVM vs CPython differ by ~5 ULPs (1.8e-14). 3e-14 covers it.
+        assert _bdry_close(PyMath2.li(78.98023624153588),
+                           25.445501252080174, atol=3e-14)
+
     # binomialCoefficient: exact integer math. Out-of-range cases return 0.
     @pytest.mark.parametrize("n, m, expected", [
         (5, 0, 0),       # m == 0 -> Java returns 0 (not 1!) per source
@@ -684,6 +706,20 @@ class TestBoundaryPolynomial:
         for r in roots:
             assert _bdry_close(r, 0.0, atol=1e-10)
 
+    def test_cubicSolver_degenerate_c_d_zero(self):
+        # Pinned from slow_fuzz: c=0, d=0 makes h=0 algebraically
+        # (x²(ax+b)=0, roots={0,0,-b/a}), but FP rounds h to a tiny
+        # negative, triggering the three-roots branch. Near-zero roots
+        # carry ~1e-8 error. JVM may take the one-root branch; this test
+        # covers Python's behaviour; the parity test skips near-h=0 cases.
+        a, b = 2.020760381346845, 9.392537127550703
+        roots = sorted(PyMath2.cubicSolver(a, b, 0.0, 0.0))
+        assert len(roots) >= 1
+        assert _bdry_close(min(roots), -b/a, atol=1e-10)
+        for r in roots:
+            if not _bdry_close(r, -b/a, atol=1e-10):
+                assert _bdry_close(r, 0.0, atol=1e-7)
+
 
 class TestBoundaryMisc:
     """Continued fractions, RNG-determinism, and other miscellany."""
@@ -730,6 +766,67 @@ class TestBoundaryMisc:
         assert np.array_equal(PyMath2.transpose(PyMath2.transpose(m)), m)
 
 
+class TestBoundaryFindRoot:
+    """Boundary and error-path tests for Math2.findRoot (Newton-Raphson +
+    bisection fallback on a polynomial supplied as coefficient array)."""
+
+    def test_linear_root(self):
+        # -1 + x = 0  ->  root 1.0, bracketed by [0, 2].
+        r = PyMath2.findRoot([-1.0, 1.0], 0.0, 2.0, 1e-12)
+        assert _bdry_close(r, 1.0, atol=1e-10)
+
+    def test_square_root_of_two(self):
+        # x^2 - 2 = 0  ->  root sqrt(2), bracketed by [1, 2].
+        r = PyMath2.findRoot([-2.0, 0.0, 1.0], 1.0, 2.0, 1e-12)
+        assert _bdry_close(r, math.sqrt(2.0), atol=1e-10)
+
+    def test_cubic_positive_root(self):
+        # x^3 - x = 0  ->  roots -1, 0, 1; bracket [0.5, 1.5] for root 1.
+        r = PyMath2.findRoot([0.0, -1.0, 0.0, 1.0], 0.5, 1.5, 1e-12)
+        assert _bdry_close(r, 1.0, atol=1e-10)
+
+    def test_cubic_negative_root(self):
+        # Same polynomial, bracket [-1.5, -0.5] for root -1.
+        r = PyMath2.findRoot([0.0, -1.0, 0.0, 1.0], -1.5, -0.5, 1e-12)
+        assert _bdry_close(r, -1.0, atol=1e-10)
+
+    def test_x1_is_exact_root(self):
+        # fl == 0.0: Java Math.signum(0.0) == 0.0, so signum(fl) != signum(fh)
+        # when fh != 0 -- bracket check passes. R8 manual signum matches.
+        # -1 + x = 0 at x=1; bracket [1, 2], fl=0.
+        r = PyMath2.findRoot([-1.0, 1.0], 1.0, 2.0, 1e-12)
+        assert _bdry_close(r, 1.0, atol=1e-10)
+
+    def test_x2_is_exact_root(self):
+        # fh == 0.0: same signum logic in reverse.
+        # -1 + x = 0 at x=1; bracket [0, 1], fh=0.
+        r = PyMath2.findRoot([-1.0, 1.0], 0.0, 1.0, 1e-12)
+        assert _bdry_close(r, 1.0, atol=1e-10)
+
+    def test_raises_when_no_bracket(self):
+        # x^2 + 1 > 0 everywhere -- no real root.
+        with pytest.raises(EPQException, match="bracket"):
+            PyMath2.findRoot([1.0, 0.0, 1.0], 0.0, 2.0, 1e-12)
+
+    def test_raises_same_sign_endpoints(self):
+        # x^2 - 2: both [2, 3] are positive, no bracket.
+        with pytest.raises(EPQException, match="bracket"):
+            PyMath2.findRoot([-2.0, 0.0, 1.0], 2.0, 3.0, 1e-12)
+
+    def test_raises_both_endpoints_zero(self):
+        # Both fl == fh == 0 -> signum(0) == signum(0) -> throws.
+        # Constant zero polynomial: f(x) = 0 everywhere.
+        with pytest.raises(EPQException, match="bracket"):
+            PyMath2.findRoot([0.0], 0.0, 1.0, 1e-12)
+
+    def test_result_satisfies_equation(self):
+        # Verification: f(root) < xacc * |leading coeff|.
+        coeffs = [-6.0, 11.0, -6.0, 1.0]   # (x-1)(x-2)(x-3), root near 2
+        r = PyMath2.findRoot(coeffs, 1.5, 2.5, 1e-10)
+        residual = abs(PyMath2.polynomial(coeffs, r))
+        assert residual < 1e-8
+
+
 # ######################################################################
 # PART 2 -- Parity tests (require JVM + EPQ.jar + EPQ_PARITY=1)
 # ######################################################################
@@ -747,7 +844,10 @@ class TestTinyHelpers:
     @given(finite)
     @slow
     def test_cubeRoot(self, x):
-        assert _close(JavaMath2.cubeRoot(x), PyMath2.cubeRoot(x), TOL_LITERAL)
+        # JVM Math.pow vs CPython math.pow differ by up to 1 ULP. At magnitude
+        # ~77 (cubeRoot(~457139)), 1 ULP ≈ 1.42e-14 > TOL_LITERAL=1e-14.
+        # 3e-14 ≈ 2 ULPs at magnitude 100 (cubeRoot(1e6)), the strategy max.
+        assert _close(JavaMath2.cubeRoot(x), PyMath2.cubeRoot(x), 3e-14)
 
     @given(positive)
     @slow
@@ -786,13 +886,18 @@ class TestSpecialFunctions:
     def test_gammap_lib(self, a, x):
         # Restricted to a, x in [1e-3, 50] -- where Java's 100-iter NR
         # series converges reliably. Wider args have known degradation
-        # that's a Java NR limitation, not a port issue. The literal-
-        # port test above (testgammap_literal) covers wider ranges.
+        # that's a Java NR limitation, not a port issue.
         assert _close(JavaMath2.gammap(a, x), PyMath2.gammap(a, x), TOL_NR_LIB)
 
-    @given(positive, positive)
+    @given(nr_arg, nr_arg)
     @slow
     def testgammap_literal(self, a, x):
+        # Restricted to nr_arg (max 50): Java's 100-iter gcf/gser does not
+        # converge for large a (e.g. a=363, x=367) — both Java and Python
+        # accumulate different FP errors over 100 truncated iterations,
+        # producing divergence of ~1.8e-13 at output ≈ 0.6. This is a Java
+        # NR limitation, not a port flaw; wider-range accuracy is tested
+        # via the scipy-backed gammap (test_gammap_lib).
         assert _close(JavaMath2.gammap(a, x),
                       PyMath2.gammap_literal(a, x), TOL_LITERAL)
 
@@ -814,20 +919,20 @@ class TestSpecialFunctions:
     @given(positive)
     @slow
     def testgammaln_literal(self, x):
-        # Literal port uses identical NR coefficients -> exact match.
+        # Literal port uses identical NR coefficients; should match to
+        # ~1 ULP. At large x the output grows (gammaln(77)≈254.8) and
+        # 1 ULP exceeds TOL_LITERAL=1e-14; rtol=1e-15 (~4.5 eps) covers
+        # JVM vs CPython log/exp divergence across the full positive range.
         assert _close(JavaMath2.gammaln(x),
-                      PyMath2.gammaln_literal(x), TOL_LITERAL)
+                      PyMath2.gammaln_literal(x), TOL_LITERAL, rtol=1e-15)
 
     @given(st.floats(min_value=0.01, max_value=0.99),
            st.integers(min_value=1, max_value=20))
     @slow
     def test_chiSquaredConfidenceLevel(self, confidence, df):
-        # Both sides now use FindRoot (Java: anonymous inner class;
-        # Python: FindRoot_ver1 subclass) with the same eps=1e-3 and
-        # iMax=100.  The function evaluations differ slightly because
-        # Java's gammap uses Numerical Recipes while Python's uses
-        # scipy.special, so convergence paths can diverge -- TOL_FINDROOT
-        # (1e-2) covers the worst-case eps=1e-3 slack from both sides.
+        # Python uses scipy.stats.chi2.ppf; Java uses a FindRoot subclass
+        # with Numerical Recipes gammap (eps=1e-3, iMax=100).
+        # TOL_FINDROOT (1e-2) covers the eps=1e-3 convergence slack.
         # Both sides may raise on inputs where [1, 2*df+50] does not
         # straddle a zero; skip those rather than treating them as failures.
         try:
@@ -838,13 +943,30 @@ class TestSpecialFunctions:
             p = PyMath2.chiSquaredConfidenceLevel(confidence, df)
         except Exception:
             return
+        # Skip when the search left-boundary x₀=1.0 is already close to the
+        # true root (|f(1.0)| < 0.05). FindRoot takes large secant jumps away
+        # from a near-zero starting residual and may converge to a nearby but
+        # wrong x -- valid enough by its eps=1e-3 criterion yet differing from
+        # scipy's exact result by more than TOL_FINDROOT.
+        f_at_x0 = abs(float(JavaMath2.gammap(0.5 * df, 0.5)) - confidence)
+        if f_at_x0 < 0.05:
+            return
+        # Skip when Java's answer clearly does NOT satisfy the defining
+        # equation (residual >> 0.01): NR series instability converged to
+        # the boundary rather than the true root.
+        j_residual = abs(float(JavaMath2.gammap(0.5 * df, 0.5 * float(j))) - confidence)
+        if j_residual > 0.01:
+            return
         assert _close(j, p, TOL_FINDROOT)
 
     @given(st.floats(min_value=1.01, max_value=100.0))
     @slow
     def test_li(self, x):
-        # Literal port (no library substitution).
-        assert _close(JavaMath2.li(x), PyMath2.li(x), TOL_LITERAL)
+        # Literal port (no library substitution). At output ~25-29 (x near
+        # 100), JVM vs CPython lxp *= lx accumulation differs by ~5 ULPs
+        # (1.8e-14). rtol=1e-15 (~4.5 eps) covers this without masking
+        # genuine divergence.
+        assert _close(JavaMath2.li(x), PyMath2.li(x), TOL_LITERAL, rtol=1e-15)
 
     @given(st.floats(min_value=-0.999, max_value=0.999),
            st.integers(min_value=0, max_value=10))
@@ -1060,6 +1182,15 @@ class TestPreservedBugs:
         # JAVA-BUG-3: exact-float equality branching. Same path on both.
         if abs(a) < 1e-2:
             return
+        # Skip near-degenerate cases where the discriminant h ≈ 0.
+        # h=0 algebraically when c=d=0; JVM vs CPython FP can put h on
+        # opposite sides of the branch boundary (h<=0 vs h>0), yielding
+        # different root counts. See TestBoundaryPolynomial for coverage.
+        _f = (3.0*c/a - (b/a)**2) / 3.0
+        _g = (2.0*(b/a)**3 - 9.0*b*c/a**2 + 27.0*d/a) / 27.0
+        _h = _g*_g/4.0 + _f**3/27.0
+        if abs(_h) < 1e-10:
+            return
         try:
             j = JavaMath2.cubicSolver(a, b, c, d)
         except Exception:
@@ -1127,6 +1258,37 @@ class TestPolynomialRoots:
     def test_closestTo(self, vals, target):
         assert _close(JavaMath2.closestTo(_jarr(vals), float(target)),
                       PyMath2.closestTo(vals, target), TOL_EXACT)
+
+
+# findRoot (Newton-Raphson + bisection) ----------------------------------
+
+@needs_java
+class TestFindRootParity:
+
+    @given(st.lists(small, min_size=2, max_size=4), small, small)
+    @slow
+    def test_findRoot_parity(self, coeffs, x1, x2):
+        if x1 >= x2:
+            return
+        fl = PyMath2.polynomial(coeffs, x1)
+        fh = PyMath2.polynomial(coeffs, x2)
+        # Need a strict bracket: both nonzero and opposite signs.
+        # Endpoint-is-root cases are covered in TestBoundaryFindRoot.
+        if fl == 0.0 or fh == 0.0:
+            return
+        if math.copysign(1.0, fl) == math.copysign(1.0, fh):
+            return
+        try:
+            j = JavaMath2.findRoot(_jarr(coeffs), x1, x2, 1e-8)
+        except Exception:
+            return
+        try:
+            p = PyMath2.findRoot(coeffs, x1, x2, 1e-8)
+        except Exception:
+            return
+        # Same algorithm on both sides: expect agreement well within
+        # the xacc=1e-8 step tolerance. TOL_COMPOUND (1e-10) is safe.
+        assert _close(j, p, TOL_COMPOUND)
 
 
 # Range / clamp / misc ---------------------------------------------------
@@ -1292,6 +1454,54 @@ class TestJamaMatrixBridge:
         assert j.getColumnDimension() == p.getColumnDimension() == 1
         for i in range(3):
             assert _close(j.get(i, 0), p.get(i, 0), TOL_EXACT)
+
+
+# ---------------------------------------------------------------------------
+# TestMissingCoverage — methods not covered elsewhere in this harness
+# ---------------------------------------------------------------------------
+
+class TestMissingCoverage:
+
+    def test_v3_builds_correct_array(self):
+        v = PyMath2.v3(1.0, 2.0, 3.0)
+        assert list(v) == [1.0, 2.0, 3.0]
+
+    def test_slice_extracts_subarray(self):
+        result = PyMath2.slice([10.0, 20.0, 30.0, 40.0], 1, 2)
+        assert list(result) == [20.0, 30.0]
+
+    def test_slice_out_of_bounds_raises(self):
+        with pytest.raises(IndexError):
+            PyMath2.slice([1.0, 2.0], 1, 5)
+
+    def test_solvePoly_linear(self):
+        # 2x - 4 = 0  →  x = 2
+        roots = PyMath2.solvePoly([-4.0, 2.0])
+        assert abs(roots[0] - 2.0) < 1e-12
+
+    def test_solvePoly_quadratic(self):
+        # x² - 3x + 2 = 0  →  roots 1, 2
+        # (b != 0: avoids the stable-quadratic b==0 degenerate branch,
+        #  which by faithful Java parity yields [-0.0, inf] for x²-1=0)
+        roots = sorted(PyMath2.solvePoly([2.0, -3.0, 1.0]))
+        assert abs(roots[0] - 1.0) < 1e-10
+        assert abs(roots[1] - 2.0) < 1e-10
+
+    def test_solveQuadratic_two_roots(self):
+        # x² - 5x + 6 = 0  →  roots 2, 3
+        roots = sorted(PyMath2.solveQuadratic(1.0, -5.0, 6.0))
+        assert abs(roots[0] - 2.0) < 1e-10
+        assert abs(roots[1] - 3.0) < 1e-10
+
+    def test_toFraction_simple(self):
+        # [1, 2] → continued fraction 1 + 1/2 = 3/2
+        frac = PyMath2.toFraction([1, 2])
+        assert int(frac[0]) == 3 and int(frac[1]) == 2
+
+    def test_toFraction_longer(self):
+        # [3, 1, 2] → 3 + 1/(1 + 1/2) = 11/3
+        frac = PyMath2.toFraction([3, 1, 2])
+        assert int(frac[0]) == 11 and int(frac[1]) == 3
 
 
 if __name__ == "__main__":

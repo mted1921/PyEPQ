@@ -22,7 +22,7 @@ from _parity_lib import (
     _NAN, _INF,
 )
 
-from Simplex import Simplex as PySimplex
+from Simplex_ver1_1_0 import Simplex as PySimplex
 from _epq_compat import EPQException
 
 ctx = setup_parity("gov.nist.microanalysis.Utility.Simplex")

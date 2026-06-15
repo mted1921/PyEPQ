@@ -1,24 +1,33 @@
 # EPQ Java → Python Conversion Guide
 
+Guide version: 1 · 2026-06-15
+
 Rulebook for porting `gov.nist.microanalysis` (NIST DTSA-II's EPQ library)
 from Java to Python. Designed for AI-agent-driven refactoring.
 
 ## How to use
 
-This guide covers **code conversion only** — the rules for translating Java
-source to a correct, idiomatic Python port.
+This guide covers **code conversion only** — the rules for translating a Java
+source (plus its approved spec) into a correct, idiomatic Python port. It does
+not prescribe when conversion happens relative to other steps; that ordering is
+controlled at the project level.
 
-- **TESTING_GUIDE.md** covers parity-test harness construction, tolerances,
-  hypothesis profiles, and JVM/JPype setup.
-- **PROMPTS.md** holds the copy-paste agent prompts for both workflows.
+See also (no ordering implied):
+- **TESTING_GUIDE.md** — parity-test harness construction.
+- **BUG_GUIDE.md** — the shared bug/deviation-tracking convention.
+- **PROMPTS.md** — the copy-paste agent prompts.
 
 Every conversion prompt should include the line:
-**"Follow CONVERSION_GUIDE.md R1-R10 and produce the artifacts in Per-File Workflow."**
+**"Follow CONVERSION_GUIDE.md R1-R10 and produce the port per Producing the Port."**
 
 Files are named `<X>_ver{G}_{N}_{F}.py` during migration, where:
-- `G` = guide version (increment when CONVERSION_GUIDE.md rules change materially)
+- `G` = guide version (this guide's version stamp above; increment when these
+  rules change materially)
 - `N` = generation index (increment per independent agent run on the same guide version)
 - `F` = port-code fix count (increment each time port code itself is patched; test-only changes do not increment)
+
+> Note: `Math2_ver8_*` is a pre-existing filename anomaly (many regenerations),
+> not evidence of guide versions 2–7. The current guide version is 1.
 
 ---
 
@@ -240,11 +249,12 @@ def addInPlace(target: F64Array, source: ArrayLike) -> F64Array:
 
 ### R6 — Maintain the bug ledger
 
-Each preserved Java bug gets three artifacts:
-
-1. A `# JAVA-BUG-N` marker at the offending line.
-2. An entry in the class-level `BUG_LEDGER` tuple.
-3. Where reasonable, a `*_strict` companion that fixes the bug.
+Preserve each Java bug behind a `# JAVA-BUG-N` marker that quotes the exact
+Java line, record it in the class-level `BUG_LEDGER` tuple, and add a `*_strict`
+companion where reasonable. **See BUG_GUIDE.md for the full convention** —
+tuple format, marker vocabulary, the source-citation requirement, and the
+two-part test obligation that `has_strict_variant=True` creates. Do not
+duplicate those rules here.
 
 ```python
 class Math2:
@@ -256,7 +266,7 @@ class Math2:
 
     @staticmethod
     def abs(data: ArrayLike) -> F64Array:
-        # JAVA-BUG-1: returns max(x, 0) per element, NOT |x|. Preserved.
+        # JAVA-BUG-1: Java source: `return data > 0 ? data : 0;` — clamps negatives.
         arr: F64Array = np.asarray(data, dtype=np.float64)
         return np.where(arr > 0.0, arr, 0.0)
 
@@ -266,27 +276,8 @@ class Math2:
         return np.abs(np.asarray(data, dtype=np.float64))
 ```
 
-Tuple format: `("JAVA-BUG-N", "method_name", "description", has_strict_variant)`.
-
-**Source citation required.** Every BUG_LEDGER entry must quote the exact
-Java source line that contains the bug (copy it as a comment). Do NOT infer
-a bug from the method's behaviour or the ported code alone — only add an
-entry when you can point to the offending Java line. Fabricated entries
-mislead parity tests and can cause false `TestPreservedBugs` failures.
-
-```python
-# RIGHT — cites the actual Java line
-# JAVA-BUG-1: Java source: `return data > 0 ? data : 0;` — clamps negatives.
-
-# WRONG — inferred, not cited; likely to be wrong
-# JAVA-BUG-1: uses reference identity instead of .equals()
-```
-
-If no bugs are found (or the Java source is not available), include an
-explicit empty tuple:
-```python
-BUG_LEDGER: tuple = ()  # no bugs identified; Java source not attached
-```
+When no bugs are found (or the Java source is not available), state it
+explicitly: `BUG_LEDGER: tuple = ()  # no bugs identified; Java source not attached`.
 
 ### R7 — Java integer division
 
@@ -346,27 +337,18 @@ Any deliberate deviation from Java requires:
 
 1. A comment at the call site.
 2. An entry in the file's docstring `CHANGES` section.
-3. An entry in `BUG_LEDGER` if observable (see R6 for format).
+3. An entry in `BUG_LEDGER` if observable (see BUG_GUIDE.md for format).
 
 ---
 
-## Per-File Workflow
+## Producing the Port
 
-For each Java file:
+The conversion takes two inputs: the **Java source** and its **approved spec**
+(`PyEPQ/<Package>/spec/<ClassName>.spec.md`, authored per PROMPTS.md Prompt 0).
+Work from the spec's API surface, overload plan, mutable-output list, and
+suspected-bug dispositions; this guide governs how that becomes correct Python.
 
-**Step 1 — Conversion specification** (planning artifact). Before writing
-code, produce the spec file at `PyEPQ/<Package>/spec/<ClassName>.spec.md`.
-
-The spec must list:
-- Inbound dependencies (Java imports).
-- Outbound dependents (`grep` for callers of every public method).
-- Public API surface with signatures.
-- Overloaded methods (split plan).
-- Mutable-output methods (`*Equals`, `addInPlace`, ...).
-- Touchpoints into Jama, javax.swing, java.awt, java.io.
-- Suspected Java bugs with disposition (preserve / fix / flag).
-
-**Step 2 — Literal port AND library substitution.** Begin by writing the
+**Literal port AND library substitution.** Begin by writing the
 module docstring. **Preserve the original Java class-level Javadoc comment
 verbatim** inside a clearly delimited section of the docstring:
 
@@ -394,13 +376,6 @@ add a scipy/numpy primary where a natural substitution exists:
 - Name the faithful translation `<method>_literal` (e.g. `integrate_literal`).
 - Name the library version `<method>` — the primary public name.
 - Document each deviation in the scipy version with a `SCIPY-DEV-N` comment.
-
-**Step 3 — Parity harness.** See **TESTING_GUIDE.md** for the full harness
-specification and template. Use the prompt in **PROMPTS.md** to generate it
-via an independent agent session.
-
-**Step 4 — Run parity harness + coverage.** All tests must pass. See
-TESTING_GUIDE.md for coverage targets and how to run branch coverage.
 
 ---
 
@@ -449,7 +424,7 @@ TESTING_GUIDE.md for coverage targets and how to run branch coverage.
 
 ---
 
-## Appendix B: Known limits of this methodology
+## Appendix A: Known limits of this methodology
 
 | ID | Issue | Mitigation |
 |---|---|---|
@@ -467,29 +442,3 @@ TESTING_GUIDE.md for coverage targets and how to run branch coverage.
 | **U1** | Bug-for-bug exact Monte Carlo sequence | Retire output-pinned tests; use statistical-property tests (mean, variance, KS-distance) |
 | **U2** | Third-party Java plugins against EPQ's API | Keep Java EPQ alive in parallel, write Python→Java bridge, or deprecate plugin API |
 | **U3** | Performance parity with HotSpot JIT | Port hot loops to Cython/numba/Rust; accept 5-50× slowdown elsewhere |
-
----
-
-## Appendix C: Current status
-
-**Phase 1 — Foundation** (in progress)
-- `_epq_compat` (EPQException, JavaRandom, JamaMatrix) — **DONE**
-- `Math2` — **DONE** (209 tests green, ~99% branch coverage)
-- `_parity_lib` — **DONE** at `PyEPQ/Utility/tests/_parity_lib.py`
-- `FindRoot` — **DONE** (22 passed, 8 skipped; direct parity blocked by M4)
-- `UtilException` — **DONE** (40 passed)
-- `HalfUpFormat` — **DONE** (219 collected, 216 passed)
-- `AdaptiveRungeKutta` — **DONE** (40 passed, 1 skipped; M4)
-- `Simplex` — **DONE** (20 passed, 1 skipped; M4)
-- `DescriptiveStatistics`, `Histogram` — pending
-
-**Phase 2 — EPQLibrary core**: `Element`, `Composition`, `Material`,
-`AlgorithmClass`, `AlgorithmUser`, `XRayTransition`.
-
-**Phase 3 — EPQLibrary algorithms**: `MassAbsorptionCoefficient`,
-`EdgeEnergy`, `FluorescenceYield`, `BremsstrahlungAngularDistribution`.
-
-**Phase 4 — EPQTools / GUI**: choose framework (PyQt5 recommended).
-
-**Phase 5 — Pythonification**: snake_case sweep, retire shims, drop
-`_ver{G}_{N}_{F}` suffix.

@@ -1,33 +1,2 @@
-=================== test session starts ====================
-platform win32 -- Python 3.14.5, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\admin\AppData\Local\Python\pythoncore-3.14-64\python.exe
-cachedir: .pytest_cache
-hypothesis profile 'default'
-rootdir: C:\Users\admin\Documents\GitHub\EPQ-master
-plugins: hypothesis-6.155.1
-collecting ... collecting 3 items                                          collected 23 items                                          
-
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestConstruction::test_basic_construction ]9;4;1;0\PASSED [  4%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestConstruction::test_construction_progress_0 ]9;4;1;4\PASSED [  8%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestConstruction::test_construction_progress_100 ]9;4;1;8\PASSED [ 13%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestGetProgress::test_progress_mid_value ]9;4;1;13\PASSED [ 17%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestGetProgress::test_progress_1 ]9;4;1;17\PASSED [ 21%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestGetProgress::test_progress_99 ]9;4;1;21\PASSED [ 26%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestClamping::test_negative_clamped_to_0 ]9;4;1;26\PASSED [ 30%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestClamping::test_very_negative_clamped ]9;4;1;30\PASSED [ 34%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestClamping::test_101_clamped_to_100 ]9;4;1;34\PASSED [ 39%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestClamping::test_500_clamped_to_100 ]9;4;1;39\PASSED [ 43%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestClamping::test_100_not_clamped ]9;4;1;43\PASSED [ 47%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestClamping::test_0_not_clamped ]9;4;1;47\PASSED [ 52%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestCommandString::test_command_contains_percent ]9;4;1;52\PASSED [ 56%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestCommandString::test_command_contains_value ]9;4;1;56\PASSED [ 60%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestCommandString::test_command_clamped_value ]9;4;1;60\PASSED [ 65%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestHypothesis::test_progress_always_in_0_100 ]9;4;1;65\PASSED [ 69%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestHypothesis::test_valid_progress_unmodified ]9;4;1;69\PASSED [ 73%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestProgressEventParity::test_parity_progress_50 ]9;4;1;73\PASSED [ 78%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestProgressEventParity::test_parity_progress_0 ]9;4;1;78\PASSED [ 82%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestProgressEventParity::test_parity_progress_100 ]9;4;1;82\PASSED [ 86%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestProgressEventParity::test_parity_clamp_negative ]9;4;1;86\PASSED [ 91%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestProgressEventParity::test_parity_clamp_high ]9;4;1;91\PASSED [ 95%]
-src/gov/nist/microanalysis/PyEPQ/Utility/tests/test_parity_progressevent_ver1_1_0.py::TestProgressEventParity::test_parity_hypothesis ]9;4;1;95\PASSED [100%]]9;4;0;\
-
-==================== 23 passed in 0.81s ====================
+........................................                                 [100%]
+40 passed in 1.01s

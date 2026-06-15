@@ -892,8 +892,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         default="all",
         help="Output format(s) to write (default: all).",
     )
-    # parents[6] from .../src/gov/nist/microanalysis/PyEPQ/DependencyTraversal/
-    # is the repo root (the directory that contains src/).
+    # This script lives at .../src/gov/nist/microanalysis/PyEPQ/tools/, so
+    # parents[6] is the repo root (the directory that contains src/).
     parser.add_argument(
         "--src-root", type=Path,
         default=Path(__file__).resolve().parents[6],

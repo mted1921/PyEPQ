@@ -1,5 +1,5 @@
 r"""
-LazyEvaluate_ver1_1_0.py — Python port of gov.nist.microanalysis.Utility.LazyEvaluate
+LazyEvaluate_ver1_1_2.py — Python port of gov.nist.microanalysis.Utility.LazyEvaluate
 
 Guide version : 1
 Generation    : 1
