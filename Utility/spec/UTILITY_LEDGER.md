@@ -20,7 +20,7 @@ Java → Python port pipeline.
 
 | Class | Spec | Port | Port file | Test | Test harness | Unresolved deps |
 |---|:---:|:---:|---|:---:|---|---|
-| `UtilException` | ✓ | ~ | `UtilException.py` | ~ | `test_parity_utilexception.py` | — |
+| `UtilException` | ✓ | ✓ | `UtilException_ver1_1_0.py` | ✓ | `test_parity_utilexception_ver1_1_0.py` | — |
 | `FindRoot` | ✓ | ✓ | `FindRoot_ver1_1_1.py` | ~ | `test_parity_findroot.py` | — |
 | `HalfUpFormat` | ✓ | ✓ | `HalfUpFormat_ver1_1_1.py` | ~ | `test_parity_halfupformat.py` | — |
 | `LazyEvaluate` | ✓ | ✓ | `LazyEvaluate_ver1_1_2.py` | ✓ | `test_parity_lazyevaluate_ver1_1_0.py` | — |
@@ -117,15 +117,15 @@ connected classes are done.
 
 | Tier | Classes | Spec ✓ | Port (✓/~) | Test ✓ |
 |---|:---:|:---:|:---:|:---:|
-| 0 — Foundation | 4 | 4 | 4 | 1 |
+| 0 — Foundation | 4 | 4 | 4 | 2 |
 | 1 — Depends only on Tier 0 | 10 | 8 | 8 | 10 |
 | 2 — Depends on Tier 1 | 4 | 0 | 0 | 0 |
 | 3 — Depends on Tier 2 | 6 | 0 | 0 | 0 |
 | 4 — Depends on Tier 3 | 3 | 0 | 0 | 0 |
 | 5 — Depends on Tier 4 | 1 | 0 | 0 | 0 |
-| **Connected total** | **28** | **12** | **12** | **11** |
+| **Connected total** | **28** | **12** | **12** | **12** |
 | Grey / deferred | 16 | 0 | 0 | 0 |
-| **Grand total** | **44** | **12** | **12** | **11** |
+| **Grand total** | **44** | **12** | **12** | **12** |
 
 > **Next milestone:** port remaining Tier 1 classes (`ExponentFormat`, `HTMLFormat`) to unlock Tier 2.
 > `UncertainValue2` is the highest-leverage single class: it unblocks 6 Tier 3 dependents.

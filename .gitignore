@@ -1,4 +1,4 @@
-# Python (PyEPQ port + parity harness)
+# Python (PyEPQ port + parity harness)candidates
 __pycache__/
 *.py[cod]
 .hypothesis/
@@ -8,3 +8,11 @@ htmlcov/
 **/tests/test_output.txt
 **/tests/archive/
 .claude/
+**/tests/run_parity.txt
+
+
+# agent_evaluations: raw AI-response bundles dropped in for comparison
+agent_evaluations/candidates/*/*.zip
+agent_evaluations/reports/variance_candidates.json
+agent_evaluations/reports/variance_candidates.md
+
