@@ -47,11 +47,18 @@ of a Python port referencing a class that hasn't been ported yet.
 
 Output formats
 --------------
-  --format csv     one CSV per dataframe per package
-  --format xlsx    one .xlsx workbook per package (all sheets)
-  --format dot     Graphviz file; render with: dot -Tsvg <pkg>.dot > svg
-  --format md      Markdown summary report (good for committing)
-  --format all     all of the above (default)
+The default (``all``) is tuned for human reading: it writes only the
+Markdown reports and the Graphviz graphs. The tabular dumps (CSV, xlsx)
+carry the same data as flat tables and are opt-in for when you need the
+raw numbers.
+
+  --format md      Markdown only — per-package dependency TIERS, plus a
+                   cross-package INTERCONNECTION report for each linked pair.
+  --format dot     Graphviz only — per-package graph (tier-ranked) and a
+                   bipartite cross-package graph. Render: dot -Tsvg x.dot > x.svg
+  --format all     default: the Markdown reports AND the DOT graphs.
+  --format csv     raw data dump — one CSV per dataframe per package.
+  --format xlsx    raw data dump — one .xlsx workbook per package (all sheets).
 
 Usage
 -----
@@ -174,6 +181,21 @@ class PackageAnalysis:
     sccs: list[set[str]]               # strongly connected components
     cycles: list[list[str]]            # enumerated simple cycles
     conversion_order: list[str]        # recommended port sequence
+
+
+@dataclass(frozen=True)
+class CrossPackageEdge:
+    """One deduplicated import edge from a class in one package to a top-level
+    class in another NIST package.
+
+    *dep_fqn* is the original import FQN and may reference an inner class
+    (e.g. ``...LevenbergMarquardt2.FitFunction``); *target_class* is always
+    the enclosing top-level class (``LevenbergMarquardt2``).
+    """
+    source_class: str
+    source_file: str
+    target_class: str   # simple top-level class name in the target package
+    dep_fqn: str        # original import FQN
 
 
 # ============================================================================
@@ -512,6 +534,41 @@ def analyze_package(
     )
 
 
+def build_cross_package_edges(
+    src: PackageAnalysis,
+    tgt_pkg_fqn: str,
+) -> list[CrossPackageEdge]:
+    """Return one CrossPackageEdge per (source_class, target_class) pair
+    where a class in *src* imports from *tgt_pkg_fqn*.
+
+    Edges are deduplicated: if a source class imports both
+    ``Utility.Math2`` and ``Utility.Math2.SomeInner``, only one edge is
+    emitted for ``Math2``.  Wildcard imports (``Utility.*``) are skipped
+    because the referenced class cannot be determined statically.
+    """
+    tgt_prefix: str = tgt_pkg_fqn + "."
+    edges: list[CrossPackageEdge] = []
+    for c in src.classes:
+        if not c.class_name:
+            continue
+        seen: set[str] = set()
+        for fqn in c.imports:
+            if not fqn.startswith(tgt_prefix):
+                continue
+            remainder: str = fqn[len(tgt_prefix):]     # "Math2" or "LM2.FitFunction"
+            tgt_class: str = remainder.split(".")[0]    # "Math2" or "LM2"
+            if not tgt_class or tgt_class == "*" or tgt_class in seen:
+                continue
+            seen.add(tgt_class)
+            edges.append(CrossPackageEdge(
+                source_class=c.class_name,
+                source_file=c.file,
+                target_class=tgt_class,
+                dep_fqn=fqn,
+            ))
+    return edges
+
+
 # ============================================================================
 # DataFrame builders
 # ============================================================================
@@ -671,6 +728,23 @@ def port_order_dataframe(a: PackageAnalysis) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def cross_package_dataframe(edges: list[CrossPackageEdge]) -> pd.DataFrame:
+    """One row per (source_class, target_class) cross-package import pair."""
+    if not edges:
+        return pd.DataFrame(
+            columns=["source_class", "source_file", "target_class", "dep_fqn"],
+        )
+    return pd.DataFrame([
+        {
+            "source_class": e.source_class,
+            "source_file": e.source_file,
+            "target_class": e.target_class,
+            "dep_fqn": e.dep_fqn,
+        }
+        for e in edges
+    ])
+
+
 # ============================================================================
 # Reporters
 # ============================================================================
@@ -735,108 +809,224 @@ def write_dot(a: PackageAnalysis, path: Path) -> Path:
         lines.append(f'  "{n}"{attr_str};')
     for u, v in a.graph.edges:
         lines.append(f'  "{u}" -> "{v}";')
+    # Pin each tier (topological depth) to the same rank so the rendered
+    # graph reads as horizontal layers: foundations on one side, the most
+    # dependent classes on the other. Dead/isolated classes (no edges) have
+    # no real tier — leave them out of the rank groups so graphviz floats
+    # them freely instead of pinning them into the foundation rank.
+    by_depth: dict[int, list[str]] = {}
+    for n, m in a.metrics.items():
+        if m.is_dead:
+            continue
+        by_depth.setdefault(m.depth, []).append(n)
+    for depth in sorted(by_depth):
+        group: str = " ".join(f'"{n}";' for n in sorted(by_depth[depth]))
+        lines.append(f'  {{ rank=same; {group} }}')
     lines.append('}')
     path.write_text("\n".join(lines), encoding="utf-8")
     return path
 
 
-def write_markdown_report(a: PackageAnalysis, path: Path) -> Path:
-    """Human-readable summary; good for committing alongside the data files."""
+def write_tiers_report(a: PackageAnalysis, path: Path) -> Path:
+    """Human-readable dependency-tier report for one package.
+
+    Classes are grouped into tiers by their depth in the internal dependency
+    graph: tier 0 depends on nothing else in the package (foundations), and a
+    class in tier N depends only on classes in lower tiers. Members of a
+    dependency cycle can't be separated, so they share a tier and are flagged;
+    the cyclic clusters are also listed on their own at the end.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
+    short: str = a.package_fqn.rsplit(".", 1)[-1]
     G: nx.DiGraph = a.graph
-    nodes_df: pd.DataFrame = nodes_dataframe(a)
 
-    n_scc_clusters: int = sum(1 for s in a.sccs if len(s) > 1)
-    n_dead: int = int(nodes_df["is_dead"].sum())
-
-    top_in: pd.DataFrame = nodes_df.nlargest(
-        10, "in_degree"
-    )[["class_name", "in_degree", "instability", "pagerank"]]
-    top_out: pd.DataFrame = nodes_df.nlargest(
-        10, "out_degree"
-    )[["class_name", "out_degree", "instability", "reachable"]]
+    tiers: dict[int, list[str]] = {}
+    for name, m in a.metrics.items():
+        tiers.setdefault(m.depth, []).append(name)
+    max_tier: int = max(tiers) if tiers else 0
+    clusters: list[set[str]] = [s for s in a.sccs if len(s) > 1]
 
     lines: list[str] = [
-        f"# Dependency Map: {a.package_fqn}",
+        f"# Dependency Tiers: {short}",
         "",
-        f"- **Files analyzed**: {len(a.classes)}",
-        f"- **Nodes (classes)**: {G.number_of_nodes()}",
+        f"Classes grouped by dependency tier. **Tier 0** depends on nothing "
+        f"else inside {short} (the foundations); a class in tier _N_ depends "
+        "only on classes in lower tiers. Classes bound together in a "
+        "dependency cycle share a tier and are marked _(cycle)_.",
+        "",
+        f"- **Classes**: {G.number_of_nodes()}",
+        f"- **Tiers**: {max_tier + 1}",
         f"- **Internal edges**: {G.number_of_edges()}",
-        f"- **Weakly-connected components**: {len(a.wccs)}",
-        f"- **Strongly-connected clusters (size > 1)**: {n_scc_clusters}",
-        f"- **Simple cycles enumerated**: {len(a.cycles)}",
-        f"- **Dead-code candidates**: {n_dead}",
+        f"- **Cyclic clusters**: {len(clusters)}",
         "",
-        "## Recommended port order (first 50)",
-        "",
-        "Topological depth ascending, then in_degree descending. "
-        "Port foundations first; classes inside a cycle must be ported "
-        "as a group.",
-        "",
-        "| # | Class | Depth | In | Out | In Cycle |",
-        "|---|-------|------:|---:|---:|:--------:|",
     ]
-    for i, cls in enumerate(a.conversion_order[:50], 1):
-        m: DependencyMetrics = a.metrics[cls]
-        in_cyc: str = "Y" if m.in_cycle else ""
-        lines.append(
-            f"| {i} | {cls} | {m.depth} | {m.in_degree} | "
-            f"{m.out_degree} | {in_cyc} |"
-        )
-    if len(a.conversion_order) > 50:
-        lines.append(
-            f"| ... | (+{len(a.conversion_order) - 50} more) | | | | |"
-        )
 
-    lines += [
-        "",
-        "## Most depended-upon (high in_degree)",
-        "",
-        "| Class | In | Instability | PageRank |",
-        "|-------|---:|------------:|---------:|",
-    ]
-    for _, r in top_in.iterrows():
-        lines.append(
-            f"| {r['class_name']} | {r['in_degree']} | "
-            f"{r['instability']:.3f} | {r['pagerank']:.4f} |"
-        )
+    for tier in range(max_tier + 1):
+        members: list[str] = sorted(tiers.get(tier, []))
+        if not members:
+            continue
+        suffix: str = " — foundations" if tier == 0 else ""
+        lines.append(f"## Tier {tier}{suffix} ({len(members)} classes)")
+        lines.append("")
+        for cls in members:
+            mark: str = " _(cycle)_" if a.metrics[cls].in_cycle else ""
+            lines.append(f"- {cls}{mark}")
+        lines.append("")
 
-    lines += [
-        "",
-        "## Most depending (high out_degree)",
-        "",
-        "| Class | Out | Instability | Reachable |",
-        "|-------|----:|------------:|----------:|",
-    ]
-    for _, r in top_out.iterrows():
-        lines.append(
-            f"| {r['class_name']} | {r['out_degree']} | "
-            f"{r['instability']:.3f} | {r['reachable']} |"
-        )
-
-    if a.cycles:
-        lines += ["", "## Cycles (top 10 by length)", ""]
-        top_cycles: list[list[str]] = sorted(
-            a.cycles, key=len, reverse=True
-        )[:10]
-        for i, cyc in enumerate(top_cycles, 1):
-            chain: str = " -> ".join(cyc) + f" -> {cyc[0]}"
-            lines.append(f"{i}. ({len(cyc)} nodes) {chain}")
-
-    if n_dead > 0:
+    if clusters:
         lines += [
+            "## Cyclic clusters",
             "",
-            "## Dead-code candidates",
-            "",
-            "(Zero internal in-degree AND zero internal out-degree -- "
-            "might be entry points, test fixtures, or genuinely unused.)",
+            "Each group imports itself (directly or transitively) and must be "
+            "ported together — no member stands alone.",
             "",
         ]
-        for cls in nodes_df[nodes_df["is_dead"]]["class_name"].head(50):
-            lines.append(f"- {cls}")
+        for i, cl in enumerate(sorted(clusters, key=len, reverse=True), 1):
+            lines.append(f"{i}. ({len(cl)}) " + " ↔ ".join(sorted(cl)))
+        lines.append("")
 
     path.write_text("\n".join(lines), encoding="utf-8")
     return path
+
+
+# ============================================================================
+# Cross-package reporters
+# ============================================================================
+
+def write_cross_package_csv(
+    edges: list[CrossPackageEdge],
+    path: Path,
+) -> Path:
+    """Write cross-package edges to a CSV file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    cross_package_dataframe(edges).to_csv(path, index=False)
+    return path
+
+
+def write_cross_package_dot(
+    edges: list[CrossPackageEdge],
+    src_pkg_fqn: str,
+    tgt_pkg_fqn: str,
+    path: Path,
+) -> Path:
+    """Write a bipartite Graphviz DOT showing cross-package import edges.
+
+    Left cluster: source-package classes that import from the target.
+    Right cluster: target-package classes that are imported.
+    Fan-in count (how many source classes reference a target class) is
+    appended to each right-side node label.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    src_short: str = src_pkg_fqn.rsplit(".", 1)[-1]
+    tgt_short: str = tgt_pkg_fqn.rsplit(".", 1)[-1]
+
+    src_nodes: set[str] = {e.source_class for e in edges}
+    tgt_nodes: set[str] = {e.target_class for e in edges}
+
+    tgt_fan_in: dict[str, int] = {}
+    for e in edges:
+        tgt_fan_in[e.target_class] = tgt_fan_in.get(e.target_class, 0) + 1
+
+    lines: list[str] = [
+        f'digraph "{src_short}_uses_{tgt_short}" {{',
+        "  rankdir=LR;",
+        "  node [style=filled];",
+        "",
+        f"  subgraph cluster_{src_short} {{",
+        f'    label="{src_short}";',
+        "    node [fillcolor=lightblue, shape=box];",
+    ]
+    for n in sorted(src_nodes):
+        lines.append(f'    "{n}";')
+    lines += [
+        "  }",
+        "",
+        f"  subgraph cluster_{tgt_short} {{",
+        f'    label="{tgt_short}";',
+        "    node [fillcolor=lightyellow, shape=ellipse];",
+    ]
+    for n in sorted(tgt_nodes):
+        fi: int = tgt_fan_in.get(n, 0)
+        lines.append(f'    "{n}" [label="{n}\\n({fi})"];')
+    lines.append("  }")
+    lines.append("")
+    for e in sorted(edges, key=lambda x: (x.source_class, x.target_class)):
+        lines.append(f'  "{e.source_class}" -> "{e.target_class}";')
+    lines.append("}")
+
+    path.write_text("\n".join(lines), encoding="utf-8")
+    return path
+
+
+def write_cross_package_markdown(
+    edges: list[CrossPackageEdge],
+    src_pkg_fqn: str,
+    tgt_pkg_fqn: str,
+    path: Path,
+) -> Path:
+    """Human-readable interconnection report between two packages.
+
+    Lists every point where *src* reaches into *tgt*, grouped by the target
+    class (the shared connection point) and, most-shared first, the source
+    classes that depend on it.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    src_short: str = src_pkg_fqn.rsplit(".", 1)[-1]
+    tgt_short: str = tgt_pkg_fqn.rsplit(".", 1)[-1]
+
+    by_target: dict[str, set[str]] = {}
+    for e in edges:
+        by_target.setdefault(e.target_class, set()).add(e.source_class)
+
+    n_src: int = len({e.source_class for e in edges})
+    n_tgt: int = len(by_target)
+
+    md_lines: list[str] = [
+        f"# Interconnection: {src_short} → {tgt_short}",
+        "",
+        f"Every point where **{src_short}** depends on **{tgt_short}**. Each "
+        f"row is a {tgt_short} connection point and the {src_short} classes "
+        "that reach into it (most-shared first).",
+        "",
+        f"- **{tgt_short} connection points**: {n_tgt}",
+        f"- **{src_short} classes that cross over**: {n_src}",
+        f"- **Interconnection edges**: {len(edges)}",
+        "",
+        f"| {tgt_short} class | Used by | {src_short} classes |",
+        "|---|---:|---|",
+    ]
+    for tgt_cls, srcs in sorted(
+        by_target.items(), key=lambda kv: (-len(kv[1]), kv[0]),
+    ):
+        src_list: str = ", ".join(f"`{s}`" for s in sorted(srcs))
+        md_lines.append(
+            f"| `{tgt_cls}` | {len(srcs)} | {src_list} |"
+        )
+
+    path.write_text("\n".join(md_lines), encoding="utf-8")
+    return path
+
+
+def _print_cross_package_summary(
+    src_short: str,
+    tgt_short: str,
+    edges: list[CrossPackageEdge],
+) -> None:
+    n_src: int = len({e.source_class for e in edges})
+    n_tgt: int = len({e.target_class for e in edges})
+    print(
+        f"{src_short}→{tgt_short}: {len(edges)} cross-package edges "
+        f"({n_src} {src_short} classes → {n_tgt} {tgt_short} classes)"
+    )
+    tgt_counts: dict[str, int] = {}
+    for e in edges:
+        tgt_counts[e.target_class] = tgt_counts.get(e.target_class, 0) + 1
+    top: list[tuple[str, int]] = sorted(
+        tgt_counts.items(), key=lambda kv: kv[1], reverse=True,
+    )[:5]
+    print(f"  Top {tgt_short} classes by fan-in:")
+    for name, cnt in top:
+        print(f"    {name:<40} referenced by {cnt} {src_short} class(es)")
 
 
 # ============================================================================
@@ -890,7 +1080,10 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--format",
         choices=["csv", "xlsx", "dot", "md", "all"],
         default="all",
-        help="Output format(s) to write (default: all).",
+        help=("Output format(s) to write (default: all). 'all' writes only "
+              "the human-readable artifacts: the per-package TIERS report and "
+              "cross-package INTERCONNECTION report (md) plus the graphs "
+              "(dot). 'csv'/'xlsx' are opt-in raw data dumps."),
     )
     # This script lives at .../src/gov/nist/microanalysis/PyEPQ/tools/, so
     # parents[6] is the repo root (the directory that contains src/).
@@ -911,6 +1104,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="Cap on enumerated elementary cycles (default: 1000).",
     )
     parser.add_argument(
+        "--no-cross-package", action="store_true",
+        help=("Skip cross-package dependency analysis when multiple packages "
+              "are specified."),
+    )
+    parser.add_argument(
         "-v", "--verbose", action="store_true",
         help="Enable INFO-level logging.",
     )
@@ -925,6 +1123,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     cycle_limit: int = 0 if args.no_cycles else args.cycle_limit
 
     exit_code: int = 0
+    analyses: dict[str, PackageAnalysis] = {}
     for pkg_short in args.packages:
         try:
             target, pkg_fqn = _resolve_target(pkg_short, args.src_root)
@@ -945,10 +1144,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             exit_code = 1
             continue
 
-        if args.format in ("xlsx", "all"):
+        if args.format == "xlsx":
             p: Path = write_xlsx(analysis, args.out / f"{pkg_short}.xlsx")
             log.info("  wrote %s", p)
-        if args.format in ("csv", "all"):
+        if args.format == "csv":
             for p in write_csvs(analysis, args.out, pkg_short):
                 log.info("  wrote %s", p)
         if args.format in ("dot", "all"):
@@ -956,12 +1155,47 @@ def main(argv: Sequence[str] | None = None) -> int:
             log.info("  wrote %s  (render: dot -Tsvg %s > %s.svg)",
                      p, p.name, pkg_short)
         if args.format in ("md", "all"):
-            p = write_markdown_report(
-                analysis, args.out / f"{pkg_short}_report.md",
+            p = write_tiers_report(
+                analysis, args.out / f"{pkg_short}_tiers.md",
             )
             log.info("  wrote %s", p)
 
         _print_summary(pkg_short, analysis)
+        analyses[pkg_short] = analysis
+
+    # Cross-package analysis: every ordered (src, tgt) pair where edges exist.
+    if not args.no_cross_package and len(analyses) > 1:
+        for src_short, src_a in analyses.items():
+            for tgt_short, tgt_a in analyses.items():
+                if src_short == tgt_short:
+                    continue
+                xedges: list[CrossPackageEdge] = build_cross_package_edges(
+                    src_a, tgt_a.package_fqn,
+                )
+                if not xedges:
+                    continue
+                prefix: str = f"{src_short}_uses_{tgt_short}"
+                _print_cross_package_summary(src_short, tgt_short, xedges)
+                if args.format == "csv":
+                    xp: Path = write_cross_package_csv(
+                        xedges, args.out / f"{prefix}_edges.csv",
+                    )
+                    log.info("  wrote %s", xp)
+                if args.format in ("dot", "all"):
+                    xp = write_cross_package_dot(
+                        xedges, src_a.package_fqn, tgt_a.package_fqn,
+                        args.out / f"{prefix}.dot",
+                    )
+                    log.info(
+                        "  wrote %s  (render: dot -Tsvg %s > %s.svg)",
+                        xp, xp.name, prefix,
+                    )
+                if args.format in ("md", "all"):
+                    xp = write_cross_package_markdown(
+                        xedges, src_a.package_fqn, tgt_a.package_fqn,
+                        args.out / f"{prefix}.md",
+                    )
+                    log.info("  wrote %s", xp)
 
     return exit_code
 

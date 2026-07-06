@@ -23,13 +23,17 @@ Pre-written harnesses (test file exists, port not yet generated) are reported
 as PENDING, never as failures, and are not run.
 
 Supporting documents stay fresh automatically on a normal run:
-  * UTILITY_LEDGER.md  auto-synced from the filesystem
+  * <Subpkg>_LEDGER.md  auto-GENERATED when absent (class list from the Java
+                   package; tiers/dependencies/grey nodes from
+                   reports/<base>.dot), then synced from the filesystem
   * BUG_LEDGER.md  per-subpackage registry, generated from each port's
                    class-level BUG_LEDGER tuple (see docs/BUG_GUIDE.md)
   * baseline       resolved entries auto-PRUNED (never auto-added)
-  * report         markdown written to tools/reports/Compliance_report.md
+  * report         one markdown report PER subpackage, named after the package:
+                   tools/reports/compliance_<Subpkg>.md
+                   (e.g. compliance_Utility_ver2.md)
 --check-only suppresses all file mutation (ledger/baseline/registry) for pure
-CI gating; the report is still written.
+CI gating; the reports are still written.
 
 Baseline file (compliance_baseline.txt next to this script): one failure key
 per line; matching failures downgrade to WARN (pre-existing debt). New
@@ -40,7 +44,7 @@ Usage:
     python check_compliance.py --no-parity      # static checks only (fast)
     python check_compliance.py --check-only      # gate without mutating files
     python check_compliance.py --update-baseline # accept current debt
-    python check_compliance.py --sync-ledger     # update UTILITY_LEDGER.md, then exit
+    python check_compliance.py --sync-ledger     # (re)generate the ledgers, then exit
     python check_compliance.py Utility EPQLibrary   # explicit subpackages
 """
 
@@ -61,9 +65,40 @@ _HERE: Path = Path(__file__).resolve().parent
 _PYEPQ: Path = _HERE.parent                       # .../PyEPQ
 _MICROANALYSIS: Path = _PYEPQ.parent              # .../gov/nist/microanalysis
 _BASELINE_PATH: Path = _HERE / "compliance_baseline.txt"
-_MD_REPORT_PATH: Path = _HERE / "reports" / "Compliance_report.md"
+_REPORTS_DIR: Path = _HERE / "reports"
 
-_DEFAULT_SUBPKGS: tuple[str, ...] = ("Utility",)
+
+def _report_path(subpkg: str) -> Path:
+    """Markdown report path for one subpackage, named after the package.
+
+    e.g. ``Utility_ver2`` -> ``tools/reports/compliance_Utility_ver2.md``."""
+    return _REPORTS_DIR / f"compliance_{subpkg}.md"
+
+
+def _base_package(subpkg: str) -> str:
+    """Strip a port-variant suffix so the Java sources and dependency graph
+    (both named after the base package) resolve: ``Utility_ver2`` -> ``Utility``."""
+    return re.sub(r"_ver\d+$", "", subpkg)
+
+
+def _ledger_path(subpkg: str) -> Path:
+    """Conversion ledger for one subpackage, named after the package:
+    ``PyEPQ/<Subpkg>/spec/<Subpkg>_LEDGER.md``."""
+    return _PYEPQ / subpkg / "spec" / f"{subpkg}_LEDGER.md"
+
+
+def _find_spec(spec_dir: Path, cls: str) -> Path | None:
+    """Locate a class's spec file, version-tolerant.
+
+    Prefers the plain ``<Class>.spec.md``; otherwise the newest versioned
+    ``<Class>_ver*.spec.md`` (the project names specs ``<Class>_ver{G}_{N}_{F}.spec.md``)."""
+    plain = spec_dir / f"{cls}.spec.md"
+    if plain.is_file():
+        return plain
+    versioned = sorted(spec_dir.glob(f"{cls}_ver*.spec.md"))
+    return versioned[-1] if versioned else None
+
+_DEFAULT_SUBPKGS: tuple[str, ...] = ("Utility_ver2",)
 
 # Java members whose Python counterparts are dunders or entry points; their
 # absence from a harness by literal name is not a coverage gap.
@@ -95,6 +130,10 @@ _PYTEST_SUMMARY_LINE_RE = re.compile(
     r"\b\d+\s+(?:passed|failed|error|errors|skipped|deselected|xfailed|xpassed|no tests ran)"
 )
 _PYTEST_COUNT_RE = re.compile(r"(\d+)\s+(passed|failed|errors?|skipped)")
+# Per-test verbose outcome line: "<file>::<Class>::<test> FAILED [ 51%]".
+# The leading token must contain "::" so the "FAILED <nodeid>" short-summary
+# lines (which start with the outcome word) never match here.
+_PYTEST_VERBOSE_FAIL_RE = re.compile(r"^(\S+::\S+)\s+(?:FAILED|ERROR)\b")
 
 # Ledger table patterns (used by --sync-ledger).
 _LEDGER_TIER_RE    = re.compile(r"^## Tier (\d+)\s*[-—]?\s*(.*)")
@@ -105,6 +144,10 @@ _LEDGER_ROW7_RE    = re.compile(r"^\|\s*`(\w+)`\s*\|(?:[^|]*\|){5}[^|]*\|")
 # 2-column grey row:  | `Name` | notes |
 _LEDGER_ROW2_RE    = re.compile(r"^\|\s*`(\w+)`\s*\|[^|]*\|$")
 
+# Graphviz dependency-graph patterns (used to auto-generate a ledger from scratch).
+_DOT_EDGE_RE = re.compile(r'^\s*"(\w+)"\s*->\s*"(\w+)"')
+_DOT_NODE_RE = re.compile(r'^\s*"(\w+)"\s*(\[[^\]]*\])?\s*;')
+
 
 @dataclass
 class ClassReport:
@@ -112,6 +155,7 @@ class ClassReport:
     failures: list[str] = field(default_factory=list)   # stable keys
     warnings: list[str] = field(default_factory=list)   # informational
     pending: bool = False
+    port_file: str = ""      # actual port filename, e.g. "ExponentFormat_ver2_1_2.py"
     # parity-run results (populated only when the suite is run)
     parity_ran: bool = False
     parity_passed: int = 0
@@ -119,6 +163,7 @@ class ClassReport:
     parity_errors: int = 0
     parity_skipped: int = 0
     parity_note: str = ""    # e.g. "pytest unavailable"
+    parity_failures: list[str] = field(default_factory=list)  # failing test node names
 
     @property
     def parity_failed_gate(self) -> bool:
@@ -160,36 +205,61 @@ def _strip_python_noise(src: str) -> str:
         return src
 
 
-def _parse_pytest(out: str) -> dict[str, int]:
-    """Extract pass/fail/error/skip counts from pytest's summary line."""
-    counts = {"passed": 0, "failed": 0, "error": 0, "skipped": 0}
+def _parse_pytest(out: str) -> dict[str, object]:
+    """Extract pass/fail/error/skip counts and failing test names from pytest.
+
+    Counts come from the summary line ("2 failed, 25 passed in 3.53s"); the
+    failing test node names come from the verbose per-test lines ("<file>::
+    <Class>::<test> FAILED [ 51%]"). Each name is shortened to
+    ``<Class>.<test>`` (the file prefix is dropped — it is already the harness)."""
+    counts: dict[str, object] = {"passed": 0, "failed": 0, "error": 0, "skipped": 0}
+    lines = out.splitlines()
     summary = next(
-        (ln for ln in reversed(out.splitlines())
-         if _PYTEST_SUMMARY_LINE_RE.search(ln)),
+        (ln for ln in reversed(lines) if _PYTEST_SUMMARY_LINE_RE.search(ln)),
         None,
     )
     if summary:
         for m in _PYTEST_COUNT_RE.finditer(summary):
             n, kind = int(m.group(1)), m.group(2)
             counts["error" if kind.startswith("error") else kind] = n
+
+    failures: list[str] = []
+    for ln in lines:
+        m = _PYTEST_VERBOSE_FAIL_RE.match(ln)
+        if m:
+            nodeid = m.group(1)
+            short = nodeid.split("::", 1)[1].replace("::", ".") if "::" in nodeid else nodeid
+            failures.append(short)
+    counts["failures"] = failures
     return counts
 
 
 def _run_parity(test_path: Path) -> dict[str, object]:
     """Run one parity suite as a subprocess and return its result counts.
 
-    Uses the bare filename with cwd set to the tests directory so the harness's
-    `from <Class>_ver... import ...` resolves (mirrors run_parity.py)."""
+    Streams pytest output to stdout line by line so the user can see each
+    test result as it runs. Uses -v so individual test names are visible.
+    cwd is the tests directory so `from <Class>_ver... import ...` resolves."""
     try:
-        proc = subprocess.run(
+        proc = subprocess.Popen(
             [sys.executable, "-m", "pytest", test_path.name,
-             "-q", "--no-header", "-p", "no:cacheprovider"],
-            capture_output=True, text=True, cwd=str(test_path.parent),
+             "-v", "--no-header", "-p", "no:cacheprovider"],
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            text=True, cwd=str(test_path.parent),
         )
     except (FileNotFoundError, OSError) as e:
         return {"ran": False, "note": f"pytest unavailable: {e}"}
 
-    counts = _parse_pytest(proc.stdout + "\n" + proc.stderr)
+    lines: list[str] = []
+    assert proc.stdout is not None
+    for line in proc.stdout:
+        sys.stdout.write(line)
+        sys.stdout.flush()
+        lines.append(line)
+    proc.wait()
+    out = "".join(lines)
+
+    counts = _parse_pytest(out)
     # rc 5 = no tests collected; 2/3/4 = interrupted/internal/usage error.
     if proc.returncode in (2, 3, 4) and counts["error"] == 0:
         counts["error"] = 1
@@ -202,8 +272,13 @@ def _java_public_api(java_src: str, class_name: str) -> tuple[set[str], bool]:
     Only methods declared directly in a named type body (class/interface/enum)
     count. Methods inside an anonymous class or a method body are skipped — e.g.
     an `@Override public double function(...)` on a `new FindRoot.Function(){...}`
-    is not part of the enclosing class's public API. A brace scan classifies each
-    open brace by whether its header contains a class/interface/enum keyword."""
+    is not part of the enclosing class's public API. A *local* named class inside
+    a method body (e.g. `class RefineCalibration extends Simplex { public double
+    function(...) }` declared inside `calibrate()`) is likewise not public API:
+    its methods are unreachable from outside the method. A brace scan classifies
+    each open brace by whether its header contains a class/interface/enum keyword;
+    a method counts only when EVERY enclosing brace on the stack opens a type body
+    (so any intervening method-body brace disqualifies it)."""
     stripped = _JAVA_STRING_RE.sub('""', _JAVA_COMMENT_RE.sub("", java_src))
 
     # Ordered scan of braces, statement terminators, and method declarations.
@@ -228,8 +303,8 @@ def _java_public_api(java_src: str, class_name: str) -> tuple[set[str], bool]:
             seg_start = pos + 1
         elif kind == ";":
             seg_start = pos + 1
-        elif name != class_name and stack and stack[-1]:  # method in a type body
-            names.add(name)
+        elif name != class_name and stack and all(stack):  # method in a type body,
+            names.add(name)                                 # not nested under any method body
 
     # Modifier order varies in this codebase: both `public abstract class X`
     # and `abstract public class X` occur. Match `abstract` anywhere on the
@@ -271,8 +346,8 @@ def _find_test_file(tests_dir: Path, class_name: str) -> Path | None:
 
 
 def _ledger_spec(cls: str, spec_dir: Path) -> str:
-    """Symbol for the Spec column: ✓ present / ✗ missing."""
-    return "✓" if (spec_dir / f"{cls}.spec.md").is_file() else "✗"
+    """Symbol for the Spec column: ✓ present / ✗ missing (version-tolerant)."""
+    return "✓" if _find_spec(spec_dir, cls) else "✗"
 
 
 def _ledger_port(cls: str, port_dir: Path) -> tuple[str, str]:
@@ -299,8 +374,131 @@ def _ledger_test(cls: str, tests_dir: Path) -> tuple[str, str]:
     return "✗", "—"
 
 
+def _parse_dependency_dot(dot_path: Path) -> tuple[dict[str, set[str]], set[str]]:
+    """Parse a Graphviz dependency graph (``reports/<base>.dot``).
+
+    Returns ``(deps, grey)`` where ``deps[X]`` is the set of classes ``X`` depends
+    on (an edge ``"X" -> "Y"``), and ``grey`` is the set of nodes flagged
+    ``fillcolor=lightgrey`` (GUI / deferred, no place in the tier graph)."""
+    deps: dict[str, set[str]] = {}
+    grey: set[str] = set()
+    for line in _read(dot_path).splitlines():
+        em = _DOT_EDGE_RE.match(line)
+        if em:
+            a, b = em.group(1), em.group(2)
+            deps.setdefault(a, set()).add(b)
+            deps.setdefault(b, set())
+            continue
+        nm = _DOT_NODE_RE.match(line)
+        if nm:
+            name, attrs = nm.group(1), nm.group(2) or ""
+            deps.setdefault(name, set())
+            if "lightgrey" in attrs:
+                grey.add(name)
+    return deps, grey
+
+
+def _dependency_tiers(deps: dict[str, set[str]], grey: set[str]) -> dict[str, int]:
+    """Topological tier per non-grey class: Tier 0 has no intra-package
+    dependencies; Tier N depends on a class at Tier N-1 (longest chain). Grey
+    classes are excluded from the tiering."""
+    tier: dict[str, int] = {}
+
+    def depth(x: str, path: frozenset[str]) -> int:
+        if x in tier:
+            return tier[x]
+        if x in path:                      # cycle guard: treat back-edge as depth 0
+            return 0
+        sub = path | {x}
+        ds = [d for d in deps.get(x, ()) if d != x and d not in grey]
+        t = 0 if not ds else 1 + max(depth(d, sub) for d in ds)
+        tier[x] = t
+        return t
+
+    for c in deps:
+        if c not in grey:
+            depth(c, frozenset())
+    return tier
+
+
+def _generate_ledger(subpkg: str, ledger_path: Path) -> None:
+    """Create a conversion ledger from scratch.
+
+    The class list comes from the Java package directory; tiers, dependencies and
+    grey (GUI/deferred) nodes come from ``reports/<base>.dot`` when present. Status
+    and summary columns are left blank here and filled by the subsequent
+    ``_sync_ledger`` pass. Tier labels, dependency cells and grey notes written here
+    are thereafter preserved across syncs (hand-editable)."""
+    base = _base_package(subpkg)
+    java_dir = _MICROANALYSIS / base
+    dot_path = _REPORTS_DIR / f"{base}.dot"
+
+    classes: set[str] = (
+        {p.stem for p in java_dir.glob("*.java")} if java_dir.is_dir() else set()
+    )
+    deps: dict[str, set[str]] = {}
+    grey: set[str] = set()
+    if dot_path.is_file():
+        deps, grey = _parse_dependency_dot(dot_path)
+        classes |= set(deps)                       # the graph is authoritative
+    if not classes:                                # no Java/graph: fall back to ports
+        classes = set(_discover_ports(_PYEPQ / subpkg))
+    if not classes:
+        return
+
+    grey &= classes
+    connected = classes - grey
+    tiers = _dependency_tiers({c: deps.get(c, set()) for c in classes}, grey)
+
+    by_tier: dict[int, list[str]] = {}
+    for c in connected:
+        by_tier.setdefault(tiers.get(c, 0), []).append(c)
+
+    def deps_cell(c: str) -> str:
+        ds = sorted(d for d in deps.get(c, ()) if d != c and d in classes)
+        return ", ".join(f"`{d}`" for d in ds) if ds else "—"
+
+    out: list[str] = [
+        f"# {subpkg} Conversion Ledger",
+        "",
+        f"_Auto-generated by check_compliance.py. Class list, tiers and "
+        f"dependencies derive from the Java package and `reports/{base}.dot`; the "
+        f"status columns and progress summary refresh on every run. Tier labels, "
+        f"dependency cells and grey-node notes are hand-editable and preserved._",
+        "",
+        "**Status symbols** — `✓` present · `~` present (off-scheme filename) · `✗` missing",
+        "",
+    ]
+    for n in sorted(by_tier):
+        label = "Foundation (no intra-package dependencies)" if n == 0 \
+            else f"Depends on Tier {n - 1}"
+        out += [
+            f"## Tier {n} — {label}",
+            "",
+            "| Class | Spec | Port | Port file | Test | Test harness | Deps |",
+            "|---|:---:|:---:|---|:---:|---|---|",
+        ]
+        for c in sorted(by_tier[n]):
+            out.append(f"| `{c}` | ✗ | ✗ | — | ✗ | — | {deps_cell(c)} |")
+        out.append("")
+    out += [
+        "## Grey — deferred (GUI / no dependency edges)",
+        "",
+        "| Class | Notes |",
+        "|---|---|",
+    ]
+    for c in sorted(grey):
+        out.append(f"| `{c}` | deferred |")
+    out += ["", "## Progress summary", ""]
+
+    ledger_path.parent.mkdir(parents=True, exist_ok=True)
+    ledger_path.write_text("\n".join(out) + "\n", encoding="utf-8")
+    print(f"ledger generated: {len(connected)} connected class(es), "
+          f"{len(grey)} grey → {ledger_path.name}")
+
+
 def _sync_ledger(subpkg: str) -> None:
-    """Rewrite UTILITY_LEDGER.md status/filename columns from the current filesystem.
+    """Rewrite the ledger's status/filename columns from the current filesystem.
 
     Updates the Spec symbol, Port symbol, Port filename, Test symbol, and Test
     filename columns for every 7-column class row.  All hand-authored content
@@ -311,11 +509,13 @@ def _sync_ledger(subpkg: str) -> None:
     Section headers (``## Tier N — Label``) control the tier-label text used in
     the summary; rename headers there to get shorter summary row labels.
     """
-    ledger_path = _PYEPQ / subpkg / "spec" / "UTILITY_LEDGER.md"
+    ledger_path = _ledger_path(subpkg)
     if not ledger_path.is_file():
-        print(f"  no UTILITY_LEDGER.md at {ledger_path}; skipping ledger sync",
-              file=sys.stderr)
-        return
+        _generate_ledger(subpkg, ledger_path)
+        if not ledger_path.is_file():
+            print(f"  could not generate a ledger for {subpkg} (no Java sources, "
+                  "graph or ports found); skipping ledger sync", file=sys.stderr)
+            return
 
     port_dir  = _PYEPQ / subpkg
     tests_dir = port_dir / "tests"
@@ -487,7 +687,11 @@ def check_subpackage(subpkg: str, run_parity: bool = False
 
     When run_parity is True, each ported class's harness is executed and the
     pass/fail/skip counts are recorded on its ClassReport."""
-    java_dir = _MICROANALYSIS / subpkg
+    # Java sources live under the BASE package (Utility), not the port-variant
+    # directory (Utility_ver2); fall back to the literal name if that is absent.
+    java_dir = _MICROANALYSIS / _base_package(subpkg)
+    if not java_dir.is_dir():
+        java_dir = _MICROANALYSIS / subpkg
     port_dir = _PYEPQ / subpkg
     tests_dir = port_dir / "tests"
     spec_dir = port_dir / "spec"
@@ -500,11 +704,11 @@ def check_subpackage(subpkg: str, run_parity: bool = False
 
     reports: list[ClassReport] = []
     for cls, port_path in ports.items():
-        rep = ClassReport(name=f"{subpkg}.{cls}")
+        rep = ClassReport(name=f"{subpkg}.{cls}", port_file=port_path.name)
         java_path = java_dir / f"{cls}.java"
         test_path = _find_test_file(tests_dir, cls) if tests_dir.is_dir() else None
 
-        if not (spec_dir / f"{cls}.spec.md").is_file():
+        if _find_spec(spec_dir, cls) is None:
             rep.failures.append(f"{subpkg}.{cls}.spec-missing")
 
         if test_path is None:
@@ -543,6 +747,7 @@ def check_subpackage(subpkg: str, run_parity: bool = False
             rep.failures.append(f"{subpkg}.{cls}.no-given-fuzz")
 
         if run_parity:
+            print(f"\n  --- parity: {cls}  [{test_path.name}] ---", flush=True)
             res = _run_parity(test_path)
             if res.get("ran"):
                 rep.parity_ran = True
@@ -550,6 +755,8 @@ def check_subpackage(subpkg: str, run_parity: bool = False
                 rep.parity_failed = int(res.get("failed", 0))
                 rep.parity_errors = int(res.get("error", 0))
                 rep.parity_skipped = int(res.get("skipped", 0))
+                fails = res.get("failures", [])
+                rep.parity_failures = list(fails) if isinstance(fails, list) else []
             else:
                 rep.parity_note = str(res.get("note", "not run"))
 
@@ -568,13 +775,20 @@ def check_subpackage(subpkg: str, run_parity: bool = False
 
 
 def _status(rep: ClassReport, baseline: set[str]) -> str:
-    if any(k not in baseline for k in rep.failures):
+    """Overall status for a class.
+
+    FAIL  — any non-baselined compliance failure, OR a parity run below 100%
+            (any failing/erroring parity test; see ``parity_failed_gate``).
+    WARN  — coverage/informational warnings only (parity clean or not run).
+    PASS  — no failures, no warnings, parity clean (or not run).
+    """
+    if any(k not in baseline for k in rep.failures) or rep.parity_failed_gate:
         return "FAIL"
     if rep.failures:
         return "WARN (baselined)"
     if rep.warnings:
         return "WARN"
-    return "OK"
+    return "PASS"
 
 
 def _parity_cell(rep: ClassReport) -> str:
@@ -585,26 +799,27 @@ def _parity_cell(rep: ClassReport) -> str:
     if rep.parity_errors:
         return f"ERROR ({rep.parity_errors})"
     if rep.parity_failed:
-        return f"FAIL {rep.parity_failed}✗/{ran}"
+        return f"{rep.parity_passed}/{ran} FAIL"
     if ran == 0:
         return f"skipped ({rep.parity_skipped})" if rep.parity_skipped else "no tests"
     return f"{rep.parity_passed}/{ran} (100%)"
 
 
-def _write_md_report(reports: list[ClassReport], pending: list[str],
+def _write_md_report(subpkg: str, reports: list[ClassReport], pending: list[str],
                      baseline: set[str], new_failures: list[str],
                      baselined: list[str], path: Path) -> None:
-    """Render the run as markdown. Written on EVERY run so the report file
-    always reflects the latest check (consumed by reviewers and agents)."""
+    """Render one subpackage's run as markdown. Written on EVERY run so the
+    report file always reflects the latest check (consumed by reviewers and
+    agents)."""
     parity_run = any(r.parity_ran for r in reports)
     parity_fails = [r for r in reports if r.parity_failed_gate]
-    overall = "FAILED" if (new_failures or parity_fails) else "PASSED"
+    overall = "FAILED" if new_failures else "PASSED"
     parity_clause = (
         f", {len(parity_fails)} parity failure(s)" if parity_run else
         " (parity not run)"
     )
     lines: list[str] = [
-        "# Parity compliance report",
+        f"# Parity compliance report — {subpkg}",
         "",
         f"_Generated by `check_compliance.py` on "
         f"{datetime.now():%Y-%m-%d %H:%M}._",
@@ -615,17 +830,19 @@ def _write_md_report(reports: list[ClassReport], pending: list[str],
         "",
         "## Ported classes",
         "",
-        "| Class | Status | Parity | Findings |",
-        "|---|---|---|---|",
+        "| Class | Port file | Status | Parity | Findings |",
+        "|---|---|---|---|---|",
     ]
     for rep in reports:
         findings: list[str] = []
         for key in rep.failures:
             tag = "baselined" if key in baseline else "**FAIL**"
             findings.append(f"{tag}: `{key}`")
+        findings += [f"**parity FAIL**: `{name}`" for name in rep.parity_failures]
         findings += [f"warn: {msg}" for msg in rep.warnings]
+        port_cell = f"`{rep.port_file}`" if rep.port_file else "—"
         lines.append(
-            f"| {rep.name} | {_status(rep, baseline)} | {_parity_cell(rep)} | "
+            f"| {rep.name} | {port_cell} | {_status(rep, baseline)} | {_parity_cell(rep)} | "
             f"{'<br>'.join(findings) if findings else '—'} |"
         )
     if pending:
@@ -663,8 +880,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--update-baseline", action="store_true",
                     help="accept all current failures as pre-existing debt")
     ap.add_argument("--sync-ledger", action="store_true",
-                    help="regenerate UTILITY_LEDGER.md and BUG_LEDGER.md from the "
-                         "filesystem, then exit")
+                    help="generate/refresh <Subpkg>_LEDGER.md and BUG_LEDGER.md "
+                         "from the filesystem, then exit")
     args = ap.parse_args(argv)
 
     if args.sync_ledger:
@@ -684,11 +901,13 @@ def main(argv: list[str] | None = None) -> int:
     run_parity = not args.no_parity
     all_reports: list[ClassReport] = []
     all_pending: list[str] = []
+    per_subpkg: list[tuple[str, list[ClassReport], list[str]]] = []
     for subpkg in subpkgs:
         if run_parity:
             print(f"running parity suites for {subpkg} "
                   "(use --no-parity to skip)...")
         reports, pending = check_subpackage(subpkg, run_parity=run_parity)
+        per_subpkg.append((subpkg, reports, pending))
         all_reports.extend(reports)
         all_pending.extend(pending)
 
@@ -712,14 +931,20 @@ def main(argv: list[str] | None = None) -> int:
         for key in rep.failures:
             tag = "baselined" if key in baseline else "FAIL"
             print(f"        {tag:>9}: {key}")
+        for name in rep.parity_failures:
+            print(f"     parity FAIL: {name}")
         for msg in rep.warnings:
             print(f"             warn: {msg}")
     for name in all_pending:
         print(f"  [         PENDING] {name} (pre-written harness; port not yet generated)")
 
-    _write_md_report(all_reports, all_pending, baseline,
-                     new_failures, baselined, _MD_REPORT_PATH)
-    print(f"\nmarkdown report written to {_MD_REPORT_PATH}")
+    for subpkg, reports, pending in per_subpkg:
+        sub_new = [k for rep in reports for k in rep.failures if k not in baseline]
+        sub_baselined = [k for rep in reports for k in rep.failures if k in baseline]
+        report_path = _report_path(subpkg)
+        _write_md_report(subpkg, reports, pending, baseline,
+                         sub_new, sub_baselined, report_path)
+        print(f"markdown report for {subpkg} written to {report_path}")
 
     # ---- keep supporting documents fresh (skipped under --check-only) ------
     stale = baseline - {k for rep in all_reports for k in rep.failures}
@@ -742,15 +967,18 @@ def main(argv: list[str] | None = None) -> int:
     print(f"\nsummary: {len(new_failures)} new failure(s), "
           f"{len(baselined)} baselined, {len(all_pending)} pending harness(es), "
           f"{len(parity_fails)} parity failure(s)")
-    if new_failures or parity_fails:
+    if new_failures:
         print("FAILED -- gate not met:")
         for key in new_failures:
             print(f"    compliance: {key}")
+        print("  (accept deliberate compliance debt with --update-baseline)")
+        return 1
+    if parity_fails:
+        print("note: parity failures present (informational only, not gating):")
         for r in parity_fails:
             print(f"    parity: {r.name} ({_parity_cell(r)})")
-        if new_failures:
-            print("  (accept deliberate compliance debt with --update-baseline)")
-        return 1
+            for name in r.parity_failures:
+                print(f"        - {name}")
     print("PASSED")
     return 0
 

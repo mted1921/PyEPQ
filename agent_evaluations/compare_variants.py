@@ -663,6 +663,53 @@ def _render_markdown(result: dict) -> str:
                 f"{rouge_cells}"
             )
 
+        # ---- ranked model averages (agent layout only) --------------------
+        # Collapse each model's per-port canonical scores into a mean and rank
+        # the models high-to-low by mean CodeBLEU. Computed from the per-port
+        # rows above; no change to the underlying scoring.
+        if result["agent_layout"]:
+            by_agent: dict[str, list[dict]] = {}
+            for cs in result["canonical_scores"]:
+                by_agent.setdefault(cs["agent"], []).append(cs)
+
+            def _mean(scores: list[dict], key: str) -> float:
+                return statistics.fmean(s["codebleu"].get(key, 0.0) for s in scores)
+
+            model_rows = []
+            for ag, scores in by_agent.items():
+                model_rows.append((
+                    ag,
+                    _mean(scores, "codebleu"),
+                    _mean(scores, "ngram_match_score"),
+                    _mean(scores, "weighted_ngram_match_score"),
+                    _mean(scores, "syntax_match_score"),
+                    _mean(scores, "dataflow_match_score"),
+                    {n: statistics.fmean(s["rouge"][str(n)]["f1"] for s in scores)
+                     for n in rouge_orders},
+                    len(scores),
+                ))
+            model_rows.sort(key=lambda r: r[1], reverse=True)
+
+            lines += [
+                "",
+                "### Ranked model averages",
+                "",
+                "Each model's mean score across its candidate ports, "
+                "ranked by mean CodeBLEU.",
+                "",
+                f"| Rank | Agent | CodeBLEU | n-gram | w-ngram | syntax | "
+                f"dataflow |{rouge_h} Ports |",
+                f"|---:|---|---:|---:|---:|---:|---:|{rouge_a} ---: |",
+            ]
+            for rank, row in enumerate(model_rows, 1):
+                ag, cb_m, ng_m, wng_m, syn_m, df_m, rouge_m, n_ports = row
+                rouge_cells = "".join(f" {_fmt(rouge_m[n])} |" for n in rouge_orders)
+                lines.append(
+                    f"| {rank} | `{ag}` | {_fmt(cb_m)} | {_fmt(ng_m)} | "
+                    f"{_fmt(wng_m)} | {_fmt(syn_m)} | {_fmt(df_m)} |"
+                    f"{rouge_cells} {n_ports} |"
+                )
+
     # ---- aggregate sections -----------------------------------------------
     agg = result["aggregate"]
     if result["agent_layout"]:

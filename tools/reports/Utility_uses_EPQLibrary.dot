@@ -1,0 +1,49 @@
+digraph "Utility_uses_EPQLibrary" {
+  rankdir=LR;
+  node [style=filled];
+
+  subgraph cluster_Utility {
+    label="Utility";
+    node [fillcolor=lightblue, shape=box];
+    "CSVReader";
+    "ElementComboBoxModel";
+    "Histogram";
+    "LevenbergMarquardt2";
+    "LevenbergMarquardtConstrained";
+    "LevenbergMarquardtParameterized";
+    "LinearLeastSquares";
+    "LinearLeastSquaresMS";
+    "Math2";
+    "SpectrumPropertiesTableModel";
+    "StageRelocation";
+    "UncertainValue2";
+  }
+
+  subgraph cluster_EPQLibrary {
+    label="EPQLibrary";
+    node [fillcolor=lightyellow, shape=ellipse];
+    "Composition" [label="Composition\n(1)"];
+    "EPQException" [label="EPQException\n(10)"];
+    "EPQFatalException" [label="EPQFatalException\n(2)"];
+    "Element" [label="Element\n(1)"];
+    "ISpectrumData" [label="ISpectrumData\n(1)"];
+    "SpectrumProperties" [label="SpectrumProperties\n(1)"];
+  }
+
+  "CSVReader" -> "EPQFatalException";
+  "ElementComboBoxModel" -> "Element";
+  "Histogram" -> "EPQException";
+  "Histogram" -> "EPQFatalException";
+  "LevenbergMarquardt2" -> "EPQException";
+  "LevenbergMarquardtConstrained" -> "EPQException";
+  "LevenbergMarquardtParameterized" -> "EPQException";
+  "LinearLeastSquares" -> "EPQException";
+  "LinearLeastSquaresMS" -> "EPQException";
+  "Math2" -> "EPQException";
+  "SpectrumPropertiesTableModel" -> "Composition";
+  "SpectrumPropertiesTableModel" -> "EPQException";
+  "SpectrumPropertiesTableModel" -> "ISpectrumData";
+  "SpectrumPropertiesTableModel" -> "SpectrumProperties";
+  "StageRelocation" -> "EPQException";
+  "UncertainValue2" -> "EPQException";
+}

@@ -261,10 +261,10 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "Bremsstrahlung" -> "ToSI";
   "Bremsstrahlung" -> "Element";
   "Bremsstrahlung" -> "EPQFatalException";
+  "BremsstrahlungAnalytic" -> "LitReference";
   "BremsstrahlungAnalytic" -> "DetectorLineshapeModel";
   "BremsstrahlungAnalytic" -> "EDSDetector";
   "BremsstrahlungAnalytic" -> "AlgorithmClass";
-  "BremsstrahlungAnalytic" -> "LitReference";
   "BremsstrahlungAnalytic" -> "MassAbsorptionCoefficient";
   "BremsstrahlungAnalytic" -> "Composition";
   "BremsstrahlungAnalytic" -> "FromSI";
@@ -321,10 +321,10 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "CompositionFromKRatios" -> "SampleShape";
   "CompositionFromKRatios" -> "EPQFatalException";
   "CompositionFromKRatios" -> "AtomicShell";
-  "CompositionOptimizer" -> "EDSDetector";
-  "CompositionOptimizer" -> "EPMAOptimizer";
   "CompositionOptimizer" -> "RegionOfInterestSet";
   "CompositionOptimizer" -> "StandardsDatabase2";
+  "CompositionOptimizer" -> "EDSDetector";
+  "CompositionOptimizer" -> "EPMAOptimizer";
   "CompositionOptimizer" -> "Composition";
   "CompositionOptimizer" -> "SpectrumProperties";
   "CompositionOptimizer" -> "EPQException";
@@ -355,8 +355,8 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "ConductiveCoating" -> "XRayTransition";
   "ConductiveCoating" -> "EPQException";
   "ConductiveCoating" -> "FromSI";
-  "CorrectionAlgorithm" -> "AlgorithmClass";
   "CorrectionAlgorithm" -> "AbsorptionCorrection";
+  "CorrectionAlgorithm" -> "AlgorithmClass";
   "CorrectionAlgorithm" -> "Composition";
   "CorrectionAlgorithm" -> "XRayTransition";
   "CorrectionAlgorithm" -> "SpectrumProperties";
@@ -565,10 +565,10 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "Element" -> "AlgorithmUser";
   "Element" -> "XRayTransition";
   "Element" -> "EPQException";
-  "EPMAOptimizer" -> "EDSDetector";
   "EPMAOptimizer" -> "RegionOfInterestSet";
   "EPMAOptimizer" -> "SpectrumSimulator";
   "EPMAOptimizer" -> "StandardsDatabase2";
+  "EPMAOptimizer" -> "EDSDetector";
   "EPMAOptimizer" -> "Composition";
   "EPMAOptimizer" -> "SpectrumProperties";
   "EPMAOptimizer" -> "EPQException";
@@ -586,8 +586,8 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "ExtremumSpectrum" -> "ISpectrumTransformation";
   "ExtremumSpectrum" -> "EPQException";
   "ExtremumSpectrum" -> "SpectrumUtils";
-  "FilteredSpectrum" -> "DerivedSpectrum";
   "FilteredSpectrum" -> "RegionOfInterestSet";
+  "FilteredSpectrum" -> "DerivedSpectrum";
   "FilteredSpectrum" -> "Element";
   "FilteredSpectrum" -> "FittingFilter";
   "FilteredSpectrum" -> "VariableWidthFittingFilter";
@@ -597,9 +597,9 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "FilteredSpectrum" -> "SpectrumProperties";
   "FilteredSpectrum" -> "EPQException";
   "FilteredSpectrum" -> "XRayTransitionSet";
+  "FilterFit" -> "RegionOfInterestSet";
   "FilterFit" -> "EDSDetector";
   "FilterFit" -> "LinearSpectrumFit";
-  "FilterFit" -> "RegionOfInterestSet";
   "FilterFit" -> "Element";
   "FilterFit" -> "FilteredSpectrum";
   "FilterFit" -> "VariableWidthFittingFilter";
@@ -724,8 +724,8 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "MapImage" -> "Composition";
   "MapImage" -> "EPQException";
   "MapImage" -> "StageCoordinate";
-  "MassAbsorptionCoefficient" -> "AlgorithmClass";
   "MassAbsorptionCoefficient" -> "LitReference";
+  "MassAbsorptionCoefficient" -> "AlgorithmClass";
   "MassAbsorptionCoefficient" -> "AtomicShell";
   "MassAbsorptionCoefficient" -> "ToSI";
   "MassAbsorptionCoefficient" -> "FromSI";
@@ -768,8 +768,8 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "MicrocalSpectrumFitter" -> "PeakROISearch";
   "MicrocalSpectrumFitter" -> "EditableSpectrum";
   "MicrocalSpectrumFitter" -> "ToSI";
-  "MLLSQSignature" -> "EDSDetector";
   "MLLSQSignature" -> "ParticleSignature";
+  "MLLSQSignature" -> "EDSDetector";
   "MLLSQSignature" -> "Element";
   "MLLSQSignature" -> "ISpectrumData";
   "MLLSQSignature" -> "XRayTransitionSet";
@@ -867,12 +867,12 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "QuantificationOptimizer" -> "QuantificationPlan";
   "QuantificationOptimizer" -> "Composition";
   "QuantificationOptimizer" -> "EPQException";
-  "QuantificationOptimizer2" -> "QuantificationOptimizer";
   "QuantificationOptimizer2" -> "CompositionFromKRatios";
   "QuantificationOptimizer2" -> "QuantificationOutline";
   "QuantificationOptimizer2" -> "QuantificationPlan";
   "QuantificationOptimizer2" -> "QuantifyUsingStandards";
   "QuantificationOptimizer2" -> "RegionOfInterestSet";
+  "QuantificationOptimizer2" -> "QuantificationOptimizer";
   "QuantificationOptimizer2" -> "SpectrumSimulator";
   "QuantificationOptimizer2" -> "Composition";
   "QuantificationOptimizer2" -> "ISpectrumData";
@@ -883,9 +883,9 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "QuantificationOptimizer2" -> "Element";
   "QuantificationOptimizer2" -> "FilterFit";
   "QuantificationOptimizer2" -> "KRatioSet";
-  "QuantificationOutline" -> "EDSDetector";
   "QuantificationOutline" -> "CompositionFromKRatios";
   "QuantificationOutline" -> "RegionOfInterestSet";
+  "QuantificationOutline" -> "EDSDetector";
   "QuantificationOutline" -> "Composition";
   "QuantificationOutline" -> "Element";
   "QuantificationOutline" -> "EPQException";
@@ -916,11 +916,11 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "QuantificationPlan" -> "QuantificationOutline";
   "QuantificationPlan" -> "QuantifyUsingStandards";
   "QuantificationPlan" -> "ToSI";
-  "QuantifyUsingStandards" -> "EDSDetector";
-  "QuantifyUsingStandards" -> "QuantificationOutline";
   "QuantifyUsingStandards" -> "CompositionFromKRatios";
   "QuantifyUsingStandards" -> "FilterFit";
   "QuantifyUsingStandards" -> "RegionOfInterestSet";
+  "QuantifyUsingStandards" -> "EDSDetector";
+  "QuantifyUsingStandards" -> "QuantificationOutline";
   "QuantifyUsingStandards" -> "Element";
   "QuantifyUsingStandards" -> "ISpectrumData";
   "QuantifyUsingStandards" -> "XRayTransitionSet";
@@ -940,9 +940,9 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "QuantifyUsingStandards" -> "DerivedSpectrum";
   "QuantifyUsingStandards" -> "FromSI";
   "QuantifyUsingStandards" -> "AlgorithmClass";
-  "QuantifyUsingSTEMinSEM" -> "EDSDetector";
   "QuantifyUsingSTEMinSEM" -> "FilterFit";
   "QuantifyUsingSTEMinSEM" -> "RegionOfInterestSet";
+  "QuantifyUsingSTEMinSEM" -> "EDSDetector";
   "QuantifyUsingSTEMinSEM" -> "Element";
   "QuantifyUsingSTEMinSEM" -> "ISpectrumData";
   "QuantifyUsingSTEMinSEM" -> "STEMinSEMCorrection";
@@ -1010,8 +1010,8 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "ROISpectrum" -> "BremsstrahlungAnalytic";
   "ROISpectrum" -> "SpectrumMath";
   "ROISpectrum" -> "EPQException";
-  "ROISpectrumNaive" -> "DerivedSpectrum";
   "ROISpectrumNaive" -> "RegionOfInterestSet";
+  "ROISpectrumNaive" -> "DerivedSpectrum";
   "ROISpectrumNaive" -> "ISpectrumData";
   "ROISpectrumNaive" -> "SpectrumUtils";
   "ROISpectrumNaive" -> "SpectrumProperties";
@@ -1028,9 +1028,9 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "ScreenedRutherfordScatteringAngle" -> "LitReference";
   "ScreenedRutherfordScatteringAngle" -> "RandomizedScatterFactory";
   "ScreenedRutherfordScatteringAngle" -> "Element";
+  "SpectrumFitResult" -> "BremsstrahlungAnalytic";
   "SpectrumFitResult" -> "EDSCalibration";
   "SpectrumFitResult" -> "SDDCalibration";
-  "SpectrumFitResult" -> "BremsstrahlungAnalytic";
   "SpectrumFitResult" -> "ISpectrumData";
   "SpectrumFitResult" -> "Composition";
   "SpectrumFitResult" -> "XRayTransition";
@@ -1047,10 +1047,10 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "SpectrumFitResult" -> "FromSI";
   "SpectrumFitResult" -> "EditableSpectrum";
   "SpectrumFitResult" -> "SpectrumMath";
-  "SpectrumFitter8" -> "DetectorLineshapeModel";
-  "SpectrumFitter8" -> "EDSDetector";
   "SpectrumFitter8" -> "RegionOfInterestSet";
   "SpectrumFitter8" -> "SpectrumProperties";
+  "SpectrumFitter8" -> "DetectorLineshapeModel";
+  "SpectrumFitter8" -> "EDSDetector";
   "SpectrumFitter8" -> "EPQException";
   "SpectrumFitter8" -> "Element";
   "SpectrumFitter8" -> "XRayTransition";
@@ -1065,8 +1065,8 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "SpectrumFitter8" -> "EditableSpectrum";
   "SpectrumFitter8" -> "SpectrumUtils";
   "SpectrumFitter8" -> "DuaneHuntLimit";
-  "SpectrumMath" -> "DerivedSpectrum";
   "SpectrumMath" -> "SpectrumProperties";
+  "SpectrumMath" -> "DerivedSpectrum";
   "SpectrumMath" -> "ISpectrumData";
   "SpectrumMath" -> "EPQFatalException";
   "SpectrumMath" -> "SpectrumUtils";
@@ -1101,9 +1101,9 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "SpectrumSimulator" -> "SpectrumUtils";
   "SpectrumSimulator" -> "PhysicalConstants";
   "SpectrumSimulator" -> "Element";
+  "SpectrumSmoothing" -> "LitReference";
   "SpectrumSmoothing" -> "AlgorithmClass";
   "SpectrumSmoothing" -> "ISpectrumTransformation";
-  "SpectrumSmoothing" -> "LitReference";
   "SpectrumSmoothing" -> "ISpectrumData";
   "SpectrumSmoothing" -> "EditableSpectrum";
   "SpectrumSmoothing" -> "SpectrumProperties";
@@ -1126,9 +1126,9 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "SpectrumUtils" -> "RegionOfInterestSet";
   "SpectrumUtils" -> "SpectrumMath";
   "StageCoordinate" -> "EPQException";
-  "StandardBundle" -> "EDSDetector";
   "StandardBundle" -> "RegionOfInterestSet";
   "StandardBundle" -> "SpectrumProperties";
+  "StandardBundle" -> "EDSDetector";
   "StandardBundle" -> "Element";
   "StandardBundle" -> "ISpectrumData";
   "StandardBundle" -> "QuantificationOutline";
@@ -1191,8 +1191,8 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "VectorSet" -> "XRayTransition";
   "VectorSet" -> "KRatioSet";
   "VectorSet" -> "XRayTransitionSet";
-  "XPP1989Ext" -> "XPP1991";
   "XPP1989Ext" -> "LitReference";
+  "XPP1989Ext" -> "XPP1991";
   "XPP1989Ext" -> "BackscatterFactor";
   "XPP1989Ext" -> "BackscatterCoefficient";
   "XPP1989Ext" -> "Composition";
@@ -1237,4 +1237,15 @@ digraph "gov.nist.microanalysis.EPQLibrary" {
   "ZetaFactor" -> "MassAbsorptionCoefficient";
   "ZetaFactor" -> "XRayTransition";
   "ZetaFactor" -> "FromSI";
+  { rank=same; "CaveatBase"; "EPQException"; "EPQFatalException"; "FittingFilter"; "ITransform"; "PhysicalConstants"; "SampleShape"; }
+  { rank=same; "FromSI"; "StageCoordinate"; "ToSI"; }
+  { rank=same; "AbsorptionCorrection"; "AlgorithmClass"; "AlgorithmUser"; "Armstrong1982Base"; "Armstrong1982Correction"; "Armstrong1982ParticleCorrection"; "AtomicShell"; "BackscatterCoefficient"; "BackscatterFactor"; "BaseSpectrum"; "BasicSiLiLineshape"; "BetheElectronEnergyLoss"; "Bremsstrahlung"; "BremsstrahlungAnalytic"; "BremsstrahlungAngularDistribution"; "Composition"; "ConductiveCoating"; "CorrectionAlgorithm"; "DerivedSpectrum"; "DetectorCalibration"; "DetectorLineshapeModel"; "DetectorProperties"; "DuaneHuntLimit"; "EDSCalibration"; "EDSDetector"; "EdgeEnergy"; "EditableSpectrum"; "ElectronProbe"; "ElectronRange"; "Element"; "FanoSiLiLineshape"; "FilterFit"; "FilteredSpectrum"; "Fluorescence"; "FluorescenceYield"; "FluorescenceYieldMean"; "GridMountedWindow"; "ISpectrumData"; "ISpectrumTransformation"; "IXRayDetector"; "IXRayWindowProperties"; "IonizationCrossSection"; "IonizationDepthRatio"; "JumpRatio"; "KRatioSet"; "LenardCoefficient"; "LinearSpectrumFit"; "LitReference"; "MassAbsorptionCoefficient"; "Material"; "MaterialFactory"; "MeanIonizationPotential"; "MicrocalCalibration"; "Oxidizer"; "PAP1991"; "ParticleSignature"; "PeakROISearch"; "PeakStripping"; "ProportionalIonizationCrossSection"; "QuantifyUsingSTEMinSEM"; "ROISpectrum"; "ROISpectrumNaive"; "RegionOfInterestSet"; "Riveros1993"; "SDDCalibration"; "STEMinSEMCorrection"; "SiLiCalibration"; "SpectrumMath"; "SpectrumProperties"; "SpectrumSmoothing"; "SpectrumUtils"; "StoppingPower"; "Strategy"; "SurfaceIonization"; "TransitionEnergy"; "TransitionProbabilities"; "VariableWidthFittingFilter"; "XPP1989Ext"; "XPP1991"; "XRayTransition"; "XRayTransitionSet"; "XRayWindow"; "XRayWindow2"; "XRayWindow3"; "XRayWindowFactory"; }
+  { rank=same; "AbsoluteIonizationCrossSection"; "Armstrong1982ParticleMC"; "AverageSpectrum"; "BadgerFilmExport"; "BrowningEmpiricalCrossSection"; "CITZAF"; "ComputeZAF"; "CzyzewskiMottCrossSection"; "ExtremumSpectrum"; "Gas"; "GaussianSumSpectrum"; "IterationAlgorithm"; "MACCache"; "MLLSQSignature"; "MajorMinorTrace"; "MicrocalSpectrumFitter"; "MuCal"; "MultiSpectrumMetrics"; "NISTXRayTransitionDB"; "NoisySpectrum"; "PandPDatabase"; "RandomizedScatter"; "SamplePreparation"; "SpectrumFitResult"; "StandardsDatabase2"; "VectorSet"; "ZetaFactor"; }
+  { rank=same; "CharacteristicXRayGeneration"; "CompositionFromKRatios"; "CzyzewskiMottScatteringAngle"; "GasMixture"; "GasScatteringCrossSection"; "NISTMottScatteringAngle"; "QuantifyUsingZetaFactors"; "RandomizedScatterFactory"; "ScreenedRutherfordScatteringAngle"; "SpectrumFitter8"; "SpectrumSimulator"; }
+  { rank=same; "EPMAOptimizer"; "MapImage"; "MeasuredCalibration"; "QuantificationOutline"; }
+  { rank=same; "CompositionOptimizer"; "StandardBundle"; }
+  { rank=same; "QuantifyUsingStandards"; }
+  { rank=same; "QuantificationPlan"; }
+  { rank=same; "QuantificationOptimizer"; }
+  { rank=same; "QuantificationOptimizer2"; }
 }
