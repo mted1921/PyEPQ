@@ -87,7 +87,7 @@ digraph "gov.nist.microanalysis.Utility" {
   "UncertainValue2" -> "UtilException";
   "UncertainValue2" -> "Math2";
   "UncertainValueMC" -> "UncertainValue2";
-  { rank=same; "AutoComplete"; "CSVReader"; "ComboBoxCellEditor"; "EachRowEditor"; "ElementComboBoxModel"; "ElementTreePanel"; "FindRoot"; "HTMLList"; "HalfUpFormat"; "Histogram"; "HtmlSelection"; "Interval"; "LazyEvaluate"; "MemberSet"; "Pair"; "PrintUtilities"; "SpectrumPropertiesTableModel"; "TextUtilities"; "Transform3D"; "UtilException"; }
+  { rank=same; "FindRoot"; "HalfUpFormat"; "LazyEvaluate"; "UtilException"; }
   { rank=same; "AdaptiveRungeKutta"; "ExponentFormat"; "HTMLFormat"; "Math2"; "Simplex"; }
   { rank=same; "Integrator"; "LinearRegression"; "MCIntegrator"; "MultiDHistogram"; "PoissonDeviate"; "ProgressEvent"; "StageRelocation"; "Translate2D"; "UncertainValue2"; }
   { rank=same; "Constraint"; "DescriptiveStatistics"; "LevenbergMarquardt2"; "LinearLeastSquares"; "UncertainValue"; "UncertainValueMC"; }

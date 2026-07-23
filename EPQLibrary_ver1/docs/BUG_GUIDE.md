@@ -1,0 +1,115 @@
+# EPQ Bug-Tracking Guide
+
+Version 2 · 2026-06-24
+
+The convention for how preserved Java bugs and deliberate deviations are recorded
+in a port. **CONVERSION_GUIDE.md** creates the entries; **TESTING_GUIDE.md**
+verifies them. Both reference this file rather than restating the rules.
+
+> Edit the `BUG_LEDGER` tuple in the port file. Do not modify any generated registry.
+
+---
+
+## The `BUG_LEDGER` tuple
+
+Every ported class carries a class-level `BUG_LEDGER` tuple. Each entry is:
+
+```python
+("MARKER-N", "method_name", "description", has_strict_variant)
+```
+
+| Field | Meaning |
+|---|---|
+| `MARKER-N` | The marker id, e.g. `JAVA-BUG-1` (see vocabulary below). |
+| `method_name` | The method the entry applies to. |
+| `description` | One-line human-readable summary. |
+| `has_strict_variant` | `True` iff a corrected `*_strict` companion exists (see obligation below). |
+
+When a class has no entries, state it explicitly so reviewers know the ledger
+was considered, not forgotten:
+
+```python
+BUG_LEDGER: tuple = ()  # no bugs identified; Java source not attached
+```
+
+---
+
+## Marker vocabulary
+
+| Marker | Meaning | Recorded in |
+|---|---|---|
+| `JAVA-BUG-N` | A faithful reproduction of a defect in the Java source. | call-site comment + `BUG_LEDGER` |
+| `SCIPY-DEV-N` | A scipy/numpy primary that diverges from the literal Java algorithm. | call-site comment + `BUG_LEDGER` + docstring `CHANGES` |
+| `RNG-DEVIATION-N` | A deviation in RNG seeding or stream behaviour. | call-site comment + `BUG_LEDGER` + docstring `CHANGES` |
+| `DEVIATION-N` | A structural deviation forced by an unavailable Java dependency (e.g. a Swing/AWT base class). | call-site comment + `BUG_LEDGER` + docstring `CHANGES` |
+| `FIX-N` | A port-code fix applied during repair. | call-site comment + docstring `CHANGES`; increments the `Port-code fixes` header counter |
+
+`JAVA-BUG-N` is the only marker that asserts the *Java* is wrong. The others
+record places where the *port* deliberately differs from a literal translation.
+
+---
+
+## Three required artifacts for every `JAVA-BUG-N`
+
+1. A `# JAVA-BUG-N` marker comment at the offending line that **quotes the exact
+   Java source line**.
+2. An entry in the class-level `BUG_LEDGER` tuple.
+3. Where reasonable, a `*_strict` companion that fixes the bug.
+
+```python
+class Math2:
+    BUG_LEDGER: tuple = (
+        ("JAVA-BUG-1", "abs",
+         "Clamps negatives to zero rather than computing |x|. "
+         "Use `abs_real()` for true absolute value.", True),
+    )
+
+    @staticmethod
+    def abs(data: ArrayLike) -> F64Array:
+        # JAVA-BUG-1: Java source: `return data > 0 ? data : 0;` — clamps negatives.
+        arr: F64Array = np.asarray(data, dtype=np.float64)
+        return np.where(arr > 0.0, arr, 0.0)
+
+    @staticmethod
+    def abs_real(data: ArrayLike) -> F64Array:
+        """Strict variant of abs: true element-wise absolute value."""
+        return np.abs(np.asarray(data, dtype=np.float64))
+```
+
+---
+
+## Source-citation requirement
+
+Every `JAVA-BUG-N` entry **must** quote the exact Java source line that contains
+the bug. Do **not** infer a bug from the method's behaviour or from the ported
+code alone — only add an entry when you can point to the offending Java line.
+Fabricated entries mislead parity tests and can cause false `TestPreservedBugs`
+failures.
+
+```python
+# RIGHT — cites the actual Java line
+# JAVA-BUG-1: Java source: `return data > 0 ? data : 0;` — clamps negatives.
+
+# WRONG — inferred, not cited; likely to be wrong
+# JAVA-BUG-1: uses reference identity instead of .equals()
+```
+
+---
+
+## `has_strict_variant=True` → mandatory two-part test obligation
+
+Setting `has_strict_variant=True` creates a test obligation that must be
+fulfilled before the parity suite is complete:
+
+1. A `TestPreservedBugs` parity test — verifies the Python buggy variant matches
+   Java's buggy output.
+2. A `TestStrictVariants` unit test — verifies the `*_strict` companion produces
+   the mathematically correct result (no Java comparison; Java has no
+   equivalent).
+
+These are part of the deliverable, not optional follow-up. See TESTING_GUIDE.md
+for how to write the two classes (and the dead-code-after-raise pitfall).
+
+> A `has_strict_variant=True` entry with no `TestStrictVariants` test is a silent
+> gap. Treat the two test entries as part of the obligation, not as optional
+> follow-up work.
